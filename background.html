@@ -117,7 +117,7 @@
             videoFeed.onerror = (e) => {
                 videoFeed.classList.add("hidden");
                 errorVideo += 1;
-                if (errorVideo > 3) {
+                if (errorVideo > 2) {
                     gradient.classList.remove("hidden");
                     return;
                 }

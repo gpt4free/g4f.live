@@ -180,18 +180,10 @@
     <script>
         const streamWidget = document.querySelector('.stream-widget');
         (async () => {
-            await window.connectToBackend();
-            window.addEventListener('load', async function() {
-                if (!localStorage.getItem(window.translationKey)) {
-                    try {
-                        if (await translateAll()) {
-                            window.location.reload();
-                        }
-                    } catch (e) {
-                        console.debug(e);
-                    }
-                }
+            framework.init({
+                translations: true
             });
+            await framework.connectToBackend();
             const randIdx = Math.floor(Math.random() * 12)
             if (randIdx < 3) {
                 search = "xtekky/gpt4free releases";
@@ -204,7 +196,7 @@
             summaryPrompt += "\nInclude a headline, a brief summary, key points, and one or more relevant images with proper attribution.";
             summaryPrompt += "\nEnsure the content is concise, well-structured, and visually appealing.";
             summaryPrompt += `\nResponse in language: ${navigator.language} (iso-code)`;
-            const url = `${window.backendUrl}/backend-api/v2/create?prompt=${summaryPrompt}&stream=1&web_search=${search}`;
+            const url = `${framework.backendUrl}/backend-api/v2/create?prompt=${summaryPrompt}&stream=1&web_search=${search}`;
             const response = await fetch(url, {
                 method: 'GET'
             });
@@ -223,7 +215,7 @@
             clearTimeout(scrollToBottom);
             if (text && text.indexOf('"error"') < 0) {
                 streamWidget.classList.add('show');
-                streamWidget.innerHTML = `${renderMarkdown(filterMarkdown(text, "markdown", text))}`;
+                streamWidget.innerHTML = `${framework.markdown(framework.filterMarkdown(text, null, text))}`;
                 streamWidget.scrollTop = "0px";
             }
         })();

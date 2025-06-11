@@ -121,20 +121,20 @@
                     gradient.classList.remove("hidden");
                     return;
                 }
-                videoFeed.src = window.backendUrl + videoUrl + skipVideo;
+                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
                 skipVideo++;
             };
             videoFeed.onended = () => {
-                videoFeed.src = window.backendUrl + videoUrl + skipVideo;
-                preload.src = window.backendUrl + videoUrl + (skipVideo + 1);
+                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
+                preload.src = framework.backendUrl + videoUrl + (skipVideo + 1);
                 skipVideo++;
             };
             videoFeed.onclick = () => {
-                videoFeed.src = window.backendUrl + videoUrl + skipVideo;
+                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
                 skipVideo++;
             };
-            videoFeed.src = window.backendUrl + videoUrl + skipVideo;
-            preload.src = window.backendUrl + videoUrl + (skipVideo + 1);
+            videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
+            preload.src = framework.backendUrl + videoUrl + (skipVideo + 1);
             skipVideo++;
             function initES() {
                 if (es == null || es.readyState == EventSource.CLOSED) {
@@ -182,21 +182,21 @@
                 }
             });
             setInterval(() => {
-                if ((window.backendUrl && errorVideo < 3) || !refreshOnHide) {
+                if ((framework.backendUrl && errorVideo < 3) || !refreshOnHide) {
                     return;
                 }
                 if (skipRefresh > 0) {
                     skipRefresh -= 1;
                     return;
                 }
-                if (window.backendUrl && errorImage < 3) {
-                    imageFeed.src = window.backendUrl + "/search/image+g4f?skip=" + skipImage;
+                if (framework.backendUrl && errorImage < 3) {
+                    imageFeed.src = framework.backendUrl + "/search/image+g4f?skip=" + skipImage;
                     skipImage++;
                     return;
                 }
                 if (images.length > 0) {
                     imageFeed.classList.remove("hidden");
-                    imageFeed.src = images.shift();
+                    imageFeed.src = images.pop();
                     gradient.classList.add("hidden");
                 } else {
                     initES();
@@ -212,14 +212,13 @@
                 gradient.classList.add("hidden");
             };
             imageFeed.onclick = () => {
-                if (window.backendUrl) {
-                    imageFeed.src = window.backendUrl + "/search/image?random=" + Math.random();
+                if (framework.backendUrl) {
+                    imageFeed.src = framework.backendUrl + "/search/image?random=" + Math.random();
                 }
                 else if (images.length > 0) {
-                    imageFeed.src = images.shift();
-                    gradient.classList.add("hidden");
+                    imageFeed.src = images.pop();
                 }
-                if (skipRefresh < 4) {
+                if (skipRefresh < 3) {
                     skipRefresh++;
                 }
             };

@@ -157,7 +157,11 @@
     </style>
     <link rel="stylesheet" href="dist/css/all.min.css">
     <script src="dist/js/framework.js"></script>
-    <script src="https://unpkg.com/es-module-shims@1.7.0/dist/es-module-shims.js"></script>
+    <script>
+        framework.init({
+            translations: true
+        })
+    </script>    <script src="https://unpkg.com/es-module-shims@1.7.0/dist/es-module-shims.js"></script>
     <script type="importmap">
         {
             "imports": {
@@ -204,19 +208,7 @@
             import * as hub from "@huggingface/hub";
             import { oauthLoginUrl, oauthHandleRedirectIfPresent } from "@huggingface/hub";
 
-            window.connectToBackend();
-
-            window.addEventListener('load', async function() {
-                if (!localStorage.getItem(window.translationKey)) {
-                    try {
-                        if (await translateAll()) {
-                            window.location.reload();
-                        }
-                    } catch (e) {
-                        console.debug(e);
-                    }
-                }
-            });
+            framework.connectToBackend(document.getElementById("connect_status"));
 
             const isIframe = window.self !== window.top;
             const button = document.querySelector('form a.button');
@@ -240,7 +232,7 @@
                     localStorage.removeItem("HuggingFace-api_key");
                     if (localStorage.getItem("oauth")) {
                         localStorage.removeItem("oauth");
-                        window.location.replace("/");
+                        window.location.href.replace((""+window.location.href).split("?")[0]);
                     }
                     return false;
                 }
@@ -252,7 +244,7 @@
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 if(await check_access_token()) {
-                    window.location.href = "/chat/";
+                    window.location.href = "chat/";
                 }
             });
 
@@ -278,7 +270,7 @@
                 document.getElementById("signout").onclick = async function() {
                     localStorage.removeItem("oauth");
                     localStorage.removeItem("HuggingFace-api_key");
-                    window.location.replace("?");
+                    window.location.href.replace((""+window.location.href).split("?")[0]);
                 }
             } else {
                 localStorage.removeItem("oauth");
@@ -297,25 +289,6 @@
     </div>
     <script>
         (async () => {
-            // const today = new Date().toJSON().slice(0, 10);
-            // const max = 6;
-            // const cache_id = Math.floor(Math.random() * max);
-            // if (cache_id > 3) {
-            //     let prompt;
-            //     if (cache_id % 2 == 0) {
-            //         prompt = `Today is ${new Date().toJSON().slice(0, 10)}.
-            //         Create a single-page HTML screensaver reflecting the current season (based on the date).
-            //         Avoid using any text.`;
-            //     } else {
-            //         prompt = `Create a single-page HTML screensaver. Avoid using any text.`;
-            //     }
-            //     const response = await fetch(`/backend-api/v2/create?prompt=${prompt}&filter_markdown=html&cache=${cache_id}`);
-            //     const text = await response.text()
-            //     if (text) {
-            //         background.src = `data:text/html;charset=utf-8,${encodeURIComponent(text)}`;
-            //     }
-            // }
-
             const container = document.querySelector('.container');
             const button = document.querySelector('.slide-button');
             const slideIcon = button.querySelector('i');

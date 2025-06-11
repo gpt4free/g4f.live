@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Scanner and QR Code Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js" defer></script>
-    <script src="dist/js/framework.js" async></script>
+    <script src="dist/js/framework.js"></script>
+    <script>
+        framework.init({
+            translations: true
+        })
+    </script>
     <style>
         :root {
             --colour-1: #000000;

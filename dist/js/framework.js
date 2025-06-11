@@ -3,6 +3,7 @@ window.oauthConfig = {
     scopes: ['inference-api']
 }
 
+window.framework = {}
 const checkUrls = [];
 if (window.location.protocol === "file:") {
     checkUrls.push("http://localhost:1337");
@@ -12,7 +13,7 @@ if (["https:", "http:"].includes(window.location.protocol)) {
     checkUrls.push(window.location.origin);
 }
 //checkUrls.push("https://g4f.hopto.org");
-async function checkUrl(url) {
+async function checkUrl(url, connectStatus) {
     let response;
     try {
         response = await fetch(`${url}/backend-api/v2/version?cache=true`);
@@ -21,66 +22,84 @@ async function checkUrl(url) {
         return false;
     }
     if (response.ok) {
-        const connectStatus = document.getElementById("connect_status");
         connectStatus ? connectStatus.innerText = url : null;
         localStorage.setItem("backendUrl", url);
-        window.backendUrl = url;
+        framework.backendUrl = url;
         return true;
     }
     return false;
 }
-window.backendUrl = ""; //localStorage.getItem('backendUrl') || "";
-window.connectToBackend = async () => {
+framework.backendUrl = ""; //localStorage.getItem('backendUrl') || "";
+framework.connectToBackend = async (connectStatus) => {
     for (const url of checkUrls) {
-        if(await checkUrl(url)) {
+        if(await checkUrl(url, connectStatus)) {
             return;
         }
     }
 };
 
-window.translationKey = "translations" + document.location.pathname;
-window.translations = JSON.parse(localStorage.getItem(window.translationKey) || "{}");
-window.translateElements = function (elements = null) {
-    elements = elements || document.querySelectorAll("p:not(:has(span, a)), h1, h2, h3, h4, h5, h6, button:not(:has(span, a, i)), title, span:not(:has(a, i)), strong, a, div[data-translate], input, textarea, label:not(:has(span, a, i)), i, option[value='']");
+framework.translationKey = "translations" + document.location.pathname;
+framework.translations = JSON.parse(localStorage.getItem(framework.translationKey) || "{}");
+framework.translateElements = function (elements = null) {
+    if (!framework.translations) {
+        return;
+    }
+    elements = elements || document.querySelectorAll("p:not(:has(span, a)), h1, h2, h3, h4, h5, h6, button:not(:has(span, a, i)), title, span:not(:has(a, i)), strong, a, [data-translate], input, textarea, label:not(:has(span, a, i)), i, option[value='']");
     elements.forEach(function (element) {
         if (element.textContent.trim()) {
-            element.textContent = window.translate(element.textContent);
+            element.textContent = framework.translate(element.textContent);
         }
         if (element.alt) {
-            element.alt = window.translate(element.alt);
+            element.alt = framework.translate(element.alt);
         }
         if (element.title) {
-            element.title = window.translate(element.title);
+            element.title = framework.translate(element.title);
         }
         if (element.placeholder) {
-            element.placeholder = window.translate(element.placeholder);
+            element.placeholder = framework.translate(element.placeholder);
         }
     });
 }
-document.addEventListener("DOMContentLoaded", (event) => {
-    if (!window.backendUrl) {
-        window.connectToBackend();
+framework.init = async (options) => {
+    if (options.translations) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", async () => {
+                framework.translateElements();
+            });
+        } else {
+            framework.translateElements();
+        }
+        window.addEventListener('load', async () => {
+            if (!localStorage.getItem(framework.translationKey)) {
+                try {
+                    if (!framework.backendUrl) {
+                        await framework.connectToBackend();
+                    }
+                    if (await framework.translateAll()) {
+                        window.location.reload();
+                    }
+                } catch (e) {
+                    console.debug(e);
+                }
+            }
+        });
     }
-    translateElements();
-});
+}
 let newTranslations = [];
-window.translate = (text) => {
+framework.translate = (text) => {
     if (text) {
         const endWithSpace = text.endsWith(" ");
         strip_text = text.trim();
-        if (strip_text in window.translations && window.translations[strip_text]) {
-            return window.translations[strip_text] + (endWithSpace ? " " : "");
+        if (strip_text in framework.translations && framework.translations[strip_text]) {
+            return framework.translations[strip_text] + (endWithSpace ? " " : "");
         }
         strip_text && !newTranslations.includes(strip_text) ? newTranslations.push(strip_text) : null;
     }
     return text;
 };
-window.translateAll = async () =>{
-    let allTranslations = {...window.translations};
+framework.translateAll = async () =>{
+    let allTranslations = {...framework.translations};
     for (const text of newTranslations) {
-        if (text === "" || text === "...") {
-            continue;
-        }
         allTranslations[text] = "";
     }
     console.log("newTranslations", newTranslations);
@@ -89,20 +108,43 @@ window.translateAll = async () =>{
     const json_language = "`" + navigator.language + "`";
     const prompt = `Translate the following text snippets in a JSON object to ${json_language} (iso code): ${json_translations}`;
     response = await query(prompt, true);
-    let translations = await response.text();
-    translations = JSON.parse(translations.split('\n---\n')[0]);
+    let translations = await response.json();
     if (translations[navigator.language]) {
         translations = translations[navigator.language];
     }
-    localStorage.setItem(window.translationKey, JSON.stringify(translations || allTranslations));
+    localStorage.setItem(framework.translationKey, JSON.stringify(translations || allTranslations));
     return allTranslations;
 }
-async function query(prompt, json=false) {
-    const liveUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}` + (json ? "?json=true" : "");
+async function query(prompt, options={ json: false, cache: true }) {
+    if (options === true || options === false) {
+        options = { json: options, cache: true };
+    }
+    const params = {};
+    if (options.json) {
+        params.json = true;
+    }
+    if (options.model) {
+        params.model = options.model;
+    }
+    const encodedParams = (new URLSearchParams(params)).toString();
+    let liveUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}`;
+    if (encodedParams) {
+        liveUrl += "?" + encodedParams
+    }
     const response = await fetch(liveUrl);
     if (response.status !== 200) {
-        let fallbackUrl = `${window.backendUrl}/backend-api/v2/create?prompt=${encodeURIComponent(prompt)}&cache=true`;
-        fallbackUrl += (json ? "&filter_markdown=true" : "");
+        const fallbackParams = { prompt: prompt };
+        if (options.model) {
+            fallbackParams.model = options.model;
+        }
+        if (options.json) {
+            fallbackParams.filter_markdown = true;
+        }
+        if (options.cache) {
+            fallbackParams.cache = true;
+        }
+        const fallbackEncodedParams = (new URLSearchParams(fallbackParams)).toString();
+        const fallbackUrl = `${framework.backendUrl}/backend-api/v2/create?${fallbackEncodedParams}`;
         const response = await fetch(fallbackUrl);
         if (response.status !== 200) {
             console.error("Error on query: ", response.statusText);
@@ -133,7 +175,7 @@ const renderMarkdown = (content) => {
             if (item.name.endsWith(".mp4") || item.name.endsWith(".webm")) {
                 return `<video controls src="${item.url}"></video>` + (item.text ? `\n${item.text}` : "");
             }
-            return `[![${item.name}](${item.url})]()`;
+            return `[![${item.name}](${item.url || item.image_url?.url})]()`;
         }).join("\n");
     }
     const markdown = window.markdownit({
@@ -146,7 +188,7 @@ const renderMarkdown = (content) => {
         .replaceAll('<iframe src="', '<iframe frameborder="0" height="400" width="400" src="')
         .replaceAll('<iframe type="text/html" src="', '<iframe type="text/html" frameborder="0" allow="fullscreen" height="224" width="400" src="')
         .replaceAll('"></iframe>', `?enablejsapi=1"></iframe>`)
-        .replaceAll('src="/', `src="${window.backendUrl}/`)
+        .replaceAll('src="/', `src="${framework.backendUrl}/`)
     if (window.sanitizeHtml) {
         content = window.sanitizeHtml(content, {
             allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'audio', 'video']),
@@ -179,7 +221,7 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     }
     return defaultValue;
 }
-window.framework = {
-    query: query,
-    renderMarkdown: renderMarkdown
-}
+framework.query = query;
+framework.markdown = renderMarkdown;
+framework.filterMarkdown = filterMarkdown;
+framework.escape = escapeHtml;

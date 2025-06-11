@@ -102,11 +102,10 @@
         const streamWidget = document.querySelector('.stream-widget');
         const streamContainer = document.querySelector('.stream-container');
         const updateContent = async () => {
-            //await window.connectToBackend();
+            await framework.connectToBackend();
             let prompt = window.location.hash.replace("#", "");
             prompt = prompt || `Generate a website (html) in language (${navigator.language}) for gpt4free (G4F)`;
-            const url = `${window.backendUrl}/backend-api/v2/create?prompt=${encodeURIComponent(prompt)}&stream=1&cache=1&provider=DeepSeekAPI`;
-            const response = await fetch(url);
+            const response = await framework.query(prompt);
             const text = await response.text()
             if (text /*&& text.indexOf('"error"') < 0*/) {
                 const html = filterMarkdown(text, "html");
@@ -117,7 +116,7 @@
                 } else {
                     streamWidget.classList.add('hidden');
                     streamContainer.classList.add("show");
-                    streamContainer.innerHTML = renderMarkdown(filterMarkdown(text, "markdown", text));
+                    streamContainer.innerHTML = framework.markdown(framework.filterMarkdown(text, null, text));
                 }
             }
         };

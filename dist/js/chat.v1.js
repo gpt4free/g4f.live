@@ -60,7 +60,11 @@ const modelTags = {
 translationSnipptes.push.apply(translationSnipptes, Object.values(modelTags));
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    translationSnipptes.forEach((text) => window.translate(text));
+    translationSnipptes.forEach((text) => framework.translate(text));
+});
+
+framework.init({
+    translations: true
 });
 
 let provider_storage = {};
@@ -103,7 +107,7 @@ function render_reasoning(reasoning, final = false) {
     return `<div class="reasoning_body">
         <div class="reasoning_title">
            <strong>${reasoning.label ? reasoning.label :'Reasoning <i class="brain">🧠</i>'}: </strong>
-           ${typeof reasoning.status === 'string' || reasoning.status instanceof String ? escapeHtml(reasoning.status) : '<i class="fas fa-spinner fa-spin"></i>'}
+           ${typeof reasoning.status === 'string' || reasoning.status instanceof String ? framework.escape(reasoning.status) : '<i class="fas fa-spinner fa-spin"></i>'}
         </div>
         ${inner_text}
     </div>`;
@@ -541,11 +545,11 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
         let formData = new FormData();
         formData.append('files', file); // Append as a file
         const bucket_id = generateUUID();
-        await fetch(`${window.backendUrl}/backend-api/v2/files/${bucket_id}`, {
+        await fetch(`${framework.backendUrl}/backend-api/v2/files/${bucket_id}`, {
             method: 'POST',
             body: formData
         });
-        connectToSSE(`${window.backendUrl}/backend-api/v2/files/${bucket_id}`, false, bucket_id); //Retrieve and refine
+        connectToSSE(`${framework.backendUrl}/backend-api/v2/files/${bucket_id}`, false, bucket_id); //Retrieve and refine
         return;
     }
     if (!message.length) {
@@ -814,10 +818,10 @@ async function load_provider_parameters(provider) {
                 if (Number.isInteger(value)) {
                     max = value == 42 || value >= 4096 ? 8192 : value >= 100 ? 4096 : value == 1 ? 10 : 100;
                     step = value >= 1024 ? 8 : 1;
-                    field_el.innerHTML += `<input type="range" id="${el_id}" name="${key}" value="${escapeHtml(value)}" class="slider" min="0" max="${max}" step="${step}"/><output>${escapeHtml(value)}</output>`;
+                    field_el.innerHTML += `<input type="range" id="${el_id}" name="${key}" value="${framework.escape(value)}" class="slider" min="0" max="${max}" step="${step}"/><output>${framework.escape(value)}</output>`;
                     field_el.innerHTML += `<i class="fa-solid fa-xmark"></i>`;
                 } else if (typeof value == "number") {
-                    field_el.innerHTML += `<input type="range" id="${el_id}" name="${key}" value="${escapeHtml(value)}" class="slider" min="0" max="2" step="0.1"/><output>${escapeHtml(value)}</output>`;
+                    field_el.innerHTML += `<input type="range" id="${el_id}" name="${key}" value="${framework.escape(value)}" class="slider" min="0" max="2" step="0.1"/><output>${framework.escape(value)}</output>`;
                     field_el.innerHTML += `<i class="fa-solid fa-xmark"></i>`;
                 } else {
                     field_el.innerHTML += `<textarea id="${el_id}" name="${key}"></textarea>`;
@@ -897,7 +901,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
         await save_conversation(conversation_id, get_conversation_data(conversation));
     } else if (message.type == "auth") {
         error_storage[message_id] = message.message
-        content_map.inner.innerHTML += renderMarkdown(`${window.translate('**An error occured:**')} ${message.message}`);
+        content_map.inner.innerHTML += renderMarkdown(`${framework.translate('**An error occured:**')} ${message.message}`);
         let provider = provider_storage[message_id]?.name;
         let configEl = document.querySelector(`.settings .${provider}-api_key`);
         if (configEl) {
@@ -912,7 +916,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
             <a href="${message.provider.url}" target="_blank">
                 ${message.provider.label ? message.provider.label : message.provider.name}
             </a>
-            ${message.provider.model ? ' ' + window.translate('with') + ' ' + message.provider.model : ''}
+            ${message.provider.model ? ' ' + framework.translate('with') + ' ' + message.provider.model : ''}
         `;
     } else if (message.type == "message") {
         console.error(message.message)
@@ -922,7 +926,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
         content_map.update_timeouts = [];
         error_storage[message_id] = message.message
         console.error(message.message);
-        content_map.inner.innerHTML += renderMarkdown(`${window.translate('**An error occured:**')} ${message.message}`);
+        content_map.inner.innerHTML += renderMarkdown(`${framework.translate('**An error occured:**')} ${message.message}`);
         if (finish_message) {
             await finish_message();
         }
@@ -1058,7 +1062,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         return;
     }
     await requestWakeLock();
-    messages = prepare_messages(conversation.items, message_index, action=="continue");
+    let messages = prepare_messages(conversation.items, message_index, action=="continue");
     message_storage[message_id] = "";
     stop_generating.classList.remove("stop_generating-hidden");
     let scroll = true;
@@ -1103,8 +1107,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         }
         parent_message.after(message_el);
     }
-
-    controller_storage[message_id] = new AbortController();
 
     let content_el = message_el.querySelector('.content');
     let content_map = content_storage[message_id] = {
@@ -1209,11 +1211,49 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         await load_conversations();
         regenerate_button.classList.remove("regenerate-hidden");
     }
+    const images = [];
+    if (provider == "Puter" || provider == "Live") {
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+        for (const file of Object.values(image_storage)) {
+            if (file instanceof File) {
+                images.push({
+                    "type": "image_url",
+                    "image_url": {
+                        "url": await toBase64(file),
+                    }
+                });
+            }
+        }
+        messages = messages.map((message) => {
+            return {
+                role: message.role,
+                content: Array.isArray(message.content) ? message.content.map((item) => {
+                    return {
+                        type: "text",
+                        text: item.text || ""
+                    }
+                }) : message.content
+            }
+        });
+    }
+    let last_message;
+    if (messages.length > 0) {
+        last_message = messages[messages.length-1];
+        last_message.content = images.length > 0 ? [
+            {"type": "text", "text": last_message.content},
+            ...images
+        ] : last_message.content;
+    }
+    if (!message) {
+        message = last_message?.content;
+    }
     if (provider == "Puter") {
         if (model == "dall-e-3" || model.includes("FLUX")) {
-            if (!message) {
-                message = messages[messages.length-1].content;
-            }
             puter.ai.txt2img(message, false).then(async (image)=>{
                 let dirName = puter.randName();
                 let fileName = sanitize(message, " ") + ".png";
@@ -1234,29 +1274,16 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     message_index,
                 );
                 await load_conversation(await get_conversation(conversation_id));
-                stop_generating.classList.add("stop_generating-hidden");
+                safe_remove_cancel_button();
                 load_conversations();
                 hide_sidebar();
             }).catch((error) => {
-                stop_generating.classList.add("stop_generating-hidden");
+                safe_remove_cancel_button();
                 console.error("Error on generate image:", error);
             });
             return;
         }
-        const filtered_messages = messages.map(
-            (message) => {
-                return {
-                    role: message.role,
-                    content: Array.isArray(message.content) ? message.content.map((item) => {
-                        return {
-                            type: "text",
-                            text: item.text || ""
-                        }
-                    }) : message.content
-                }
-            }
-        );
-        puter.ai.chat(messages=filtered_messages, options={"model": model}, testMode=false)
+        puter.ai.chat(messages=messages, options={"model": model}, testMode=false)
             .then(async (response) => {
                 await add_message(
                     window.conversation_id,
@@ -1272,63 +1299,52 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     response.message.reasoning_content ? {text: response.message.reasoning_content, status: ""} : null
                 );
                 await load_conversation(await get_conversation(conversation_id));
-                stop_generating.classList.add("stop_generating-hidden");
+                safe_remove_cancel_button();
                 load_conversations();
                 hide_sidebar();             
             })
             .catch((error) => {
-                stop_generating.classList.add("stop_generating-hidden");
+                safe_remove_cancel_button();
                 console.error("Error on generate text:", error);
             });
         return;
     } else if (provider == "Live") {
         async function generate_text(prompt, model) {
+            const apiKey = localStorage.getItem("PollinationsAI-api_key");
+            let headers = apiKey ? {"Authorization": apiKey} : {};
+            headers = {"Content-Type": "application/json", ...headers};
             let seed = regenerate ? Math.floor(Date.now() / 1000) : "";
             if (prompt == "hello") {
                 seed = "";
             }
-            const apiKey = localStorage.getItem("PollinationsAI-api_key");
-            const headers = apiKey ? {"Authorization": apiKey} : {};
-            const toBase64 = file => new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-            });
-            const textUrl = `https://text.pollinations.ai/`;
-            const files = Object.values(image_storage).filter(
-                (file)=>file instanceof File
-            ).map(async (file) => {
-                return {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": await toBase64(file),
-                    }
-                }
-            });
-            const body = {
+            let textUrl = `https://text.pollinations.ai/openai`;
+            let method = "POST";
+            let body = JSON.stringify({
+                messages: messages,
                 model: model,
-                messages: [{
-                    "role": "user",
-                    "content": files ? [
-                        {"type": "text", "text": prompt},
-                        ...files
-                    ] : prompt
-                }],
                 seed: seed
+            });
+            if (modelProvider.options[modelProvider.selectedIndex]?.dataset.audio) {
+                textUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${encodeURIComponent(model)}&seed=${seed}`;
+                method = "GET";
+                body = null
             }
-            await fetch(textUrl, {method: "POST", body: JSON.stringify(body), headers: headers})
+            await fetch(textUrl, {method: method, body: body, headers: headers})
                 .then(async (response) => {
                     if (!response.ok) {
+                        content_map.inner.innerHTML = framework.markdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
+                        safe_remove_cancel_button();
                         return;
                     }
                     const mimeType = response.headers.get("Content-Type");
+                    let result;
                     if (mimeType && mimeType.startsWith("text/")) {
                         content = await response.text();
                     } else if (mimeType && mimeType.startsWith("audio/")) {
                         content = `<audio controls src="${textUrl}"></audio>`
-                    } else if (!response.ok) {
-                        content = `${window.translate('**An error occured:**')} ${await response.text()}`;
+                    } else if (mimeType && mimeType.startsWith("application/json")) {
+                        result = await response.json();
+                        content = result.choices[0].message.content;
                     } else {
                         content = `<iframe src="${textUrl}"></iframe>`;
                     }
@@ -1336,17 +1352,23 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         window.conversation_id,
                         "assistant",
                         content,
-                        null,
+                        {name: providerSelect.options[providerSelect.selectedIndex]?.text, model: result?.model || model},
                         message_index,
+                        null,
+                        regenerate,
+                        null,
+                        null,
+                        result?.usage || null,
+                        result?.choices[0].message.reasoning_content ? {text: result.choices[0].message.reasoning_content, status: ""} : null
                     );
                     await load_conversation(await get_conversation(conversation_id));
-                    stop_generating.classList.add("stop_generating-hidden");
+                    safe_remove_cancel_button();
                     play_last_message(scroll, response);
                     load_conversations();
-                    hide_sidebar();                
+                    hide_sidebar();
                 })
                 .catch((error) => {
-                    stop_generating.classList.add("stop_generating-hidden");
+                    safe_remove_cancel_button();
                     console.error("Error on generate text:", error);
                 });
             return;
@@ -1361,29 +1383,28 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             await fetch(image)
                 .then(async (response) => {
                     if (!response.ok) {
+                        content_map.inner.innerHTML = renderMarkdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
+                        safe_remove_cancel_button();
                         return;
                     }
                     await add_message(
                         window.conversation_id,
                         "assistant",
-                        `[![${prompt.replaceAll('\n', ' ')}](${image})](${image})`,
+                        `[![${sanitize(message, ' ')}](${image})](${image})`,
                         null,
                         message_index,
                     );
                     await load_conversation(await get_conversation(conversation_id));
-                    stop_generating.classList.add("stop_generating-hidden");
+                    safe_remove_cancel_button();
                     load_conversations();
                     hide_sidebar();                
                 })
                 .catch((error) => {
                     console.error("Error on generate image:", error);
-                    stop_generating.classList.add("stop_generating-hidden");
+                    safe_remove_cancel_button();
                 });
         }
-        if (!message) {
-            message = messages[messages.length-1].content;
-        }
-        if (["flux", "turbo", "gptimage"].includes(model)) {
+        if (modelProvider.options[modelProvider.selectedIndex]?.dataset.image) {
             return generate_image(message, model);
         }
         return generate_text(message, model);
@@ -1421,6 +1442,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         } else if (provider && conversation.data && provider in conversation.data) {
             conversationData = conversation.data[provider];
         }
+        controller_storage[message_id] = new AbortController();
         await api("conversation", {
             id: message_id,
             conversation_id: window.conversation_id,
@@ -1559,7 +1581,7 @@ const delete_conversation = async (conversation_id) => {
         if (Array.isArray(message.content)) {
             for (const item of message.content) {
                 if ("bucket_id" in item) {
-                    const delete_url = `${window.backendUrl}/backend-api/v2/files/${encodeURIComponent(item.bucket_id)}`;
+                    const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(item.bucket_id)}`;
                     await fetch(delete_url, {
                         method: 'DELETE'
                     });
@@ -1568,7 +1590,7 @@ const delete_conversation = async (conversation_id) => {
         }
     }
     if (conversation.share) {
-        const url = `${window.backendUrl}/backend-api/v2/files/${encodeURIComponent(conversation.id)}`;
+        const url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(conversation.id)}`;
         await fetch(url, {
             method: 'DELETE'
         });
@@ -1586,11 +1608,7 @@ const set_conversation = async (conversation_id) => {
     if (title_ids_storage[conversation_id]) {
         conversation_id = title_ids_storage[conversation_id];
     }
-    try {
-        add_url_to_history(`#${conversation_id}`);
-    } catch (e) {
-        console.error(e);
-    }
+    add_url_to_history(`#${conversation_id}`);
     window.conversation_id = conversation_id;
 
     suggestions = null;
@@ -1603,11 +1621,11 @@ const set_conversation = async (conversation_id) => {
 
 const new_conversation = async (private = false) => {
     if (window.location.hash) {
-        history.pushState({}, null, `/chat/`);
+        add_url_to_history("#new");
     }
     window.conversation_id = private ? null : generateUUID();
     document.title = window.title || document.title;
-    document.querySelector(".chat-top-panel .convo-title").innerText = private ? window.translate("Private Conversation") : window.translate("New Conversation");
+    document.querySelector(".chat-top-panel .convo-title").innerText = private ? framework.translate("Private Conversation") : framework.translate("New Conversation");
     
     suggestions = null;
     await clear_conversation();
@@ -1682,7 +1700,7 @@ const load_conversation = async (conversation, scroll=true) => {
     }
     const chatHeader = document.querySelector(".chat-top-panel .convo-title");
     if (conversation.share) {
-        chatHeader.innerHTML = '<i class="fa-solid fa-qrcode"></i> ' + escapeHtml(conversation_title);
+        chatHeader.innerHTML = '<i class="fa-solid fa-qrcode"></i> ' + framework.escape(conversation_title);
     } else if (window.conversation_id) {
         chatHeader.innerText = conversation_title;
     }
@@ -1715,7 +1733,7 @@ const load_conversation = async (conversation, scroll=true) => {
         let provider = provider_link ? `
             <div class="provider" data-provider="${item.provider.name}">
                 ${provider_link}
-                ${item.provider.model ? ' ' + window.translate('with') + ' ' + item.provider.model : ''}
+                ${item.provider.model ? ' ' + framework.translate('with') + ' ' + item.provider.model : ''}
             </div>
         ` : "";
         let synthesize_params = {text: buffer}
@@ -1725,8 +1743,8 @@ const load_conversation = async (conversation, scroll=true) => {
             synthesize_provider = item.synthesize.provider;
         }
         synthesize_params = (new URLSearchParams(synthesize_params)).toString();
-        let synthesize_url = `${window.backendUrl}/backend-api/v2/synthesize/${synthesize_provider}?${synthesize_params}`;
-        if (!window.backendUrl) {
+        let synthesize_url = `${framework.backendUrl}/backend-api/v2/synthesize/${synthesize_provider}?${synthesize_params}`;
+        if (!framework.backendUrl) {
             synthesize_url = `https://www.openai.fm/api/generate?input=${encodeURIComponent(buffer)}&voice=alloy`;
         }
 
@@ -1771,14 +1789,14 @@ const load_conversation = async (conversation, scroll=true) => {
 
         if (actions.includes("variant")) {
             add_buttons.push(`<button class="regenerate_button">
-                <span>${window.translate('Regenerate')}</span>
+                <span>${framework.translate('Regenerate')}</span>
                 <i class="fa-solid fa-rotate"></i>
             </button>`);
         }
         if (actions.includes("continue")) {
             if (messages.length >= i - 1) {
                 add_buttons.push(`<button class="continue_button">
-                    <span>${window.translate('Continue')}</span>
+                    <span>${framework.translate('Continue')}</span>
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </button>`);
             }
@@ -1845,7 +1863,7 @@ const load_conversation = async (conversation, scroll=true) => {
         suggestions.forEach((suggestion)=> {
             const el = document.createElement("button");
             el.classList.add("suggestion");
-            el.innerHTML = `<span>${escapeHtml(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
+            el.innerHTML = `<span>${framework.escape(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
             el.onclick = async () => {
                 suggestions = null;
                 await handle_ask(true, suggestion);
@@ -1862,7 +1880,7 @@ const load_conversation = async (conversation, scroll=true) => {
             if (count_total > 0) {
                 const count_total_el = document.createElement("div");
                 count_total_el.classList.add("count_total");
-                count_total_el.innerText = window.translate("{0} total tokens").replace("{0}", count_total);
+                count_total_el.innerText = framework.translate("{0} total tokens").replace("{0}", count_total);
                 chatBody.appendChild(count_total_el);
             }
         }
@@ -1947,11 +1965,7 @@ async function add_conversation(conversation_id) {
             items: [],
         }));
     }
-    try {
-        add_url_to_history(`#${conversation_id}`);
-    } catch (e) {
-        console.error(e);
-    }
+    add_url_to_history(`#${conversation_id}`);
 }
 
 async function save_system_message() {
@@ -1983,7 +1997,7 @@ const remove_message = async (conversation_id, index) => {
     const data = get_conversation_data(conversation);
     await save_conversation(conversation_id, data);
     if (conversation.share) {
-        const url = `${window.backendUrl}/backend-api/v2/chat/${conversation.id}`;
+        const url = `${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`;
         await fetch(url, {
             method: 'POST',
             headers: {'content-type': 'application/json'},
@@ -1993,7 +2007,7 @@ const remove_message = async (conversation_id, index) => {
     if (Array.isArray(old_message.content)) {
         for (const item of old_message.content) {
             if ("bucket_id" in item) {
-                const delete_url = `${window.backendUrl}/backend-api/v2/files/${encodeURI(item.bucket_id)}`;
+                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURI(item.bucket_id)}`;
                 await fetch(delete_url, {
                     method: 'DELETE'
                 });
@@ -2070,7 +2084,7 @@ const add_message = async (
     data = get_conversation_data(conversation);
     await save_conversation(conversation_id, data);
     if (conversation.share) {
-        const url = `${window.backendUrl}/backend-api/v2/chat/${conversation.id}`;
+        const url = `${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`;
         fetch(url, {
             method: 'POST',
             headers: {'content-type': 'application/json'},
@@ -2113,7 +2127,7 @@ const load_conversations = async () => {
             <div class="left" onclick="set_conversation('${conversation.id}')">
                 <i class="fa-regular fa-comments"></i>
                 <span class="datetime">${conversation.updated ? toLocaleDateString(conversation.updated) : ""}</span>
-                <span class="convo-title">${shareIcon} ${escapeHtml(conversation.new_title ? conversation.new_title : conversation.title)}</span>
+                <span class="convo-title">${shareIcon} ${framework.escape(conversation.new_title ? conversation.new_title : conversation.title)}</span>
             </div>
             <i onclick="show_option('${conversation.id}')" class="fa-solid fa-ellipsis-vertical" id="conv-${conversation.id}"></i>
             <div id="cho-${conversation.id}" class="choise" style="display:none;">
@@ -2196,7 +2210,11 @@ sidebar_buttons.forEach((el) => el.addEventListener("click", async () => {
 
 function add_url_to_history(url) {
     if (!window?.pywebview) {
-        history.pushState({}, null, url);
+        try {
+            history.pushState({}, null, url);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
@@ -2307,7 +2325,7 @@ const load_settings_storage = async () => {
 }
 
 const say_hello = async () => {
-    tokens = window.translate(`Hello! How can I assist you today?`).split(" ").map((token) => token + " ");
+    tokens = framework.translate(`Hello! How can I assist you today?`).split(" ").map((token) => token + " ");
 
     chatBody.innerHTML += `
         <div class="message">
@@ -2367,7 +2385,7 @@ function count_words_and_tokens(text, model, completion_tokens, prompt_tokens) {
         return "";
     }
     text = filter_message(text);
-    return `(${count_words(text)} ${window.translate('words')}, ${count_chars(text)} ${window.translate('chars')}, ${completion_tokens ? completion_tokens : count_tokens(model, text, prompt_tokens)} ${window.translate('tokens')})`;
+    return `(${count_words(text)} ${framework.translate('words')}, ${count_chars(text)} ${framework.translate('chars')}, ${completion_tokens ? completion_tokens : count_tokens(model, text, prompt_tokens)} ${framework.translate('tokens')})`;
 }
 
 function update_message(content_map, message_id, content = null, scroll = true) {
@@ -2402,7 +2420,7 @@ function update_message(content_map, message_id, content = null, scroll = true) 
         }
         
         if (error_storage[message_id]) {
-            content += renderMarkdown(`${window.translate('**An error occured:**')} ${error_storage[message_id]}`);
+            content += renderMarkdown(`${framework.translate('**An error occured:**')} ${error_storage[message_id]}`);
         }
         
         // Use progressive rendering for large content
@@ -2507,7 +2525,7 @@ window.addEventListener("hashchange", (event) => {
         return;
     }
     hide_sidebar(true);
-    if (conversation_id) {
+    if (conversation_id && conversation_id != "new") {
         window.conversation_id = conversation_id;
         set_conversation(conversation_id);
     } else {
@@ -2523,7 +2541,7 @@ window.addEventListener('load', async function() {
     if (conversation && !conversation.share) {
         return await load_conversation(conversation);
     }
-    const response = await fetch(`${window.backendUrl}/backend-api/v2/chat/${window.conversation_id}`, {
+    const response = await fetch(`${framework.backendUrl}/backend-api/v2/chat/${window.conversation_id}`, {
         headers: {'accept': 'application/json'},
     });
     if (!response.ok) {
@@ -2563,7 +2581,7 @@ setInterval(async () => {
     if (!conversation || !conversation.share) {
         return
     }
-    const response = await fetch(`${window.backendUrl}/backend-api/v2/chat/${conversation.id}`, {
+    const response = await fetch(`${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`, {
         headers: {
             'accept': 'application/json',
             'if-none-match': conversation.updated,
@@ -2587,7 +2605,7 @@ window.addEventListener('pywebviewready', async function() {
 });
 
 async function on_load() {
-    translationSnipptes.forEach((snippet)=>this.window.translate(snippet));
+    translationSnipptes.forEach((snippet)=>this.framework.translate(snippet));
     count_input();
     if (window.location.hash == "#settings") {
         open_settings();
@@ -2595,7 +2613,7 @@ async function on_load() {
         return;
     }
     const conversation_id = window.location.hash.replace("#", "");
-    if (conversation_id) {
+    if (conversation_id && conversation_id != "new" && conversation_id != "menu") {
         window.conversation_id = conversation_id;
     } else {
         window.conversation_id = generateUUID();
@@ -2659,7 +2677,7 @@ function get_modelTags(model, add_vision = true) {
     const parts = []
     for (let [name, text] of Object.entries(modelTags)) {
         if (name != "vision" || add_vision) {
-            parts.push(model[name] ? ` (${window.translate(text)})` : "")
+            parts.push(model[name] ? ` (${framework.translate(text)})` : "")
         }
     }
     return parts.join("");
@@ -2700,7 +2718,7 @@ function load_providers(providers, provider_options, providersListContainer) {
     providersContainer.classList.add("field", "collapsible");
     providersContainer.innerHTML = `
         <div class="collapsible-header">
-            <span class="label">${window.translate('Providers (Enable/Disable)')}</span>
+            <span class="label">${framework.translate('Providers (Enable/Disable)')}</span>
             <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div class="collapsible-content hidden"></div>
@@ -2742,7 +2760,7 @@ function load_provider_login_urls(providersListContainer) {
         providerBox.innerHTML = `
             <label for="${name}-api_key" class="label" title="">${label}:</label>
             <input type="text" id="${name}-api_key" name="${name}[api_key]" class="${childs}" ${placeholder} autocomplete="off"/>
-        ` + (login_url ? `<a href="${login_url}" target="_blank" title="Login to ${label}">${window.translate('Get API key')}</a>` : "");
+        ` + (login_url ? `<a href="${login_url}" target="_blank" title="Login to ${label}">${framework.translate('Get API key')}</a>` : "");
         if (auth) {
             providerBox.querySelector("input").addEventListener("input", (event) => {
                 const input = document.getElementById(`Provider${name}`);
@@ -2800,7 +2818,7 @@ async function on_api() {
     providersListContainer.classList.add("field", "collapsible");
     providersListContainer.innerHTML = `
         <div class="collapsible-header">
-            <span class="label">${window.translate('Providers API key')}</span>
+            <span class="label">${framework.translate('Providers API key')}</span>
             <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div class="collapsible-content api-key hidden"></div>
@@ -2842,13 +2860,14 @@ async function on_api() {
             api("providers").then((providers) => load_providers(providers, provider_options, providersListContainer));
         }
         load_provider_models(appStorage.getItem("provider"));
-    }).catch((e)=>{
+    }).catch(async (e)=>{
         console.log(e)
         const providerValue = appStorage.getItem("provider") || "Live";
         providerSelect.innerHTML = `<option value="Live" ${providerValue == "Live" ? "selected" : ""}>Pollinations AI (live)</option>
             <option value="Puter" ${providerValue == "Puter" ? "selected" : ""}>Puter.js AI (live)</option>`;
-        load_provider_models(appStorage.getItem("provider") || "Live");
-        load_provider_login_urls(providersListContainer);
+        await load_provider_models(providerSelect.value);
+        await load_provider_login_urls(providersListContainer);
+        await load_settings(provider_options);
     });
 
     const update_systemPrompt_icon = (checked) => {
@@ -2888,15 +2907,15 @@ async function on_api() {
 async function load_version() {
     let new_version = document.querySelector(".new_version");
     if (new_version) return;
+    let text = "version ~ "
     api("version").then((versions)=>{
         window.title = 'G4F - ' + versions["version"];
         if (document.title == "G4F Chat") {
             document.title = window.title;
         }
-        let text = "version ~ "
         if (versions["latest_version"] && versions["version"] != versions["latest_version"]) {
             let release_url = 'https://github.com/xtekky/gpt4free/releases/latest';
-            let title = `${window.translate('New version:')} ${versions["latest_version"]}`;
+            let title = `${framework.translate('New version:')} ${versions["latest_version"]}`;
             text += `<a href="${release_url}" target="_blank" title="${title}">${versions["version"]}</a> 🆕`;
             new_version = document.createElement("div");
             new_version.classList.add("new_version");
@@ -2910,8 +2929,8 @@ async function load_version() {
         document.getElementById("version_text").innerHTML = text
     }).catch((e)=>{
         console.error("Error loading version:", e);
-        fetch("https://api.github.com/repos/xtekky/gpt4free/releases/latest").json().then((data)=>{
-            document.getElementById("version_text").innerText = data.tag_name;
+        fetch("https://api.github.com/repos/xtekky/gpt4free/releases/latest").then((response)=>response.json()).then((data)=>{
+            document.getElementById("version_text").innerText = text + data.tag_name;
         });
     });
     setTimeout(load_version, 1000 * 60 * 60); // 1 hour
@@ -3002,7 +3021,7 @@ audioButton.addEventListener('click', async (event) => {
         formData.append('files', event.data);
         const bucket_id = generateUUID();
         const language = document.getElementById("recognition-language")?.value;
-        const response = await fetch(window.backendUrl + "/backend-api/v2/files/" + bucket_id, {
+        const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
             method: 'POST',
             body: formData,
             headers: {
@@ -3014,7 +3033,7 @@ audioButton.addEventListener('click', async (event) => {
             const media = [];
             result.media.forEach((part)=> {
                 part = part.name ? part : {name: part};
-                const url = `${window.backendUrl}/files/${bucket_id}/media/${part.name}`;
+                const url = `${framework.backendUrl}/files/${bucket_id}/media/${part.name}`;
                 media.push({bucket_id: bucket_id, url: url, ...part});
             });
             await handle_ask(false, media);
@@ -3046,12 +3065,12 @@ async function upload_cookies() {
     const file = fileInput.files[0];
     const formData = new FormData();
     formData.append('file', file);
-    response = await fetch(window.backendUrl + "/backend-api/v2/upload_cookies", {
+    response = await fetch(framework.backendUrl + "/backend-api/v2/upload_cookies", {
         method: 'POST',
         body: formData,
     });
     if (response.status == 200) {
-        inputCount.innerText = window.translate("{0} File(s) uploaded successfully").replace('{0}', file.name);
+        inputCount.innerText = framework.translate("{0} File(s) uploaded successfully").replace('{0}', file.name);
     }
     fileInput.value = "";
 }
@@ -3071,30 +3090,30 @@ function connectToSSE(url, do_refine, bucket_id) {
     eventSource.onmessage = async (event) => {
         const data = JSON.parse(event.data);
         if (data.error) {
-            inputCount.innerText = `${window.translate('Error:')} ${data.error.message}`;
+            inputCount.innerText = `${framework.translate('Error:')} ${data.error.message}`;
             paperclip.classList.remove("blink");
             fileInput.value = "";
         } else if (data.action == "load") {
-            inputCount.innerText = `${window.translate('Read data:')} ${formatFileSize(data.size)}`;
+            inputCount.innerText = `${framework.translate('Read data:')} ${formatFileSize(data.size)}`;
         } else if (data.action == "refine") {
-            inputCount.innerText = `${window.translate('Refine data:')} ${formatFileSize(data.size)}`;
+            inputCount.innerText = `${framework.translate('Refine data:')} ${formatFileSize(data.size)}`;
         } else if (data.action == "download") {
-            inputCount.innerText = `${window.translate('Download:')} ${data.count} files`;
+            inputCount.innerText = `${framework.translate('Download:')} ${data.count} files`;
         } else if (data.action == "done") {
             if (do_refine) {
-                connectToSSE(`${window.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}?refine_chunks_with_spacy=true`, false, bucket_id);
+                connectToSSE(`${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}?refine_chunks_with_spacy=true`, false, bucket_id);
                 return;
             }
             fileInput.value = "";
             paperclip.classList.remove("blink");
             if (!data.size) {
-                inputCount.innerText = window.translate("No content found");
+                inputCount.innerText = framework.translate("No content found");
                 return
             }
             appStorage.setItem(`bucket:${bucket_id}`, data.size);
-            inputCount.innerText = window.translate("Files are loaded successfully");
+            inputCount.innerText = framework.translate("Files are loaded successfully");
 
-            const url = `${window.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}`;
+            const url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}`;
             const media = [{bucket_id: bucket_id, url: url}];
             await handle_ask(false, media);
         }
@@ -3113,16 +3132,16 @@ async function upload_files(fileInput) {
     Array.from(fileInput.files).forEach(file => {
         formData.append('files', file);
     });
-    const response = await fetch(window.backendUrl + "/backend-api/v2/files/" + bucket_id, {
+    const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
         method: 'POST',
         body: formData
     });
     const result = await response.json()
     const count = result.files.length + result.media.length;
-    inputCount.innerText = window.translate('{0} File(s) uploaded successfully').replace('{0}', count);
+    inputCount.innerText = framework.translate('{0} File(s) uploaded successfully').replace('{0}', count);
     if (result.files.length > 0) {
         let do_refine = document.getElementById("refine")?.checked;
-        connectToSSE(`${window.backendUrl}/backend-api/v2/files/${bucket_id}`, do_refine, bucket_id);
+        connectToSSE(`${framework.backendUrl}/backend-api/v2/files/${bucket_id}`, do_refine, bucket_id);
     } else {
         paperclip.classList.remove("blink");
         fileInput.value = "";
@@ -3131,7 +3150,7 @@ async function upload_files(fileInput) {
         const media = [];
         result.media.forEach((part)=> {
             part = part.name ? part : {name: part};
-            const url = `${window.backendUrl}/files/${bucket_id}/media/${part.name}`;
+            const url = `${framework.backendUrl}/files/${bucket_id}/media/${part.name}`;
             media.push({bucket_id: bucket_id, url: url, ...part});
         });
         await handle_ask(false, media);
@@ -3171,7 +3190,7 @@ fileInput.addEventListener('change', async (event) => {
                     await load_conversations();
                     await load_settings_storage();
                     fileInput.value = "";
-                    inputCount.innerText = window.translate('{0} Conversations/Settings were imported successfully').replace('{0}', count);
+                    inputCount.innerText = framework.translate('{0} Conversations/Settings were imported successfully').replace('{0}', count);
                 } else {
                     is_cookie_file = data.api_key;
                     if (Array.isArray(data)) {
@@ -3232,7 +3251,7 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
     if (user) {
         headers.x_user = user;
     }
-    let url = `${window.backendUrl}/backend-api/v2/${ressource}`;
+    let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
         api_key = get_api_key_by_provider(args);
@@ -3247,7 +3266,7 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
         if (ignored) {
             headers.x_ignored = ignored.join(" ");
         }
-        url = `${window.backendUrl}/backend-api/v2/${ressource}/${args}`;
+        url = `${framework.backendUrl}/backend-api/v2/${ressource}/${args}`;
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);
         headers.accept = 'text/event-stream';
@@ -3351,15 +3370,25 @@ function load_fallback_models() {
     modelSelect.classList.add("hidden");
     modelProvider.classList.remove("hidden");
     modelProvider.name = `model[Live]`;
+    modelProvider.innerHTML = '';
     fetch("https://text.pollinations.ai/models").then(async (response) => {
         models = await response.json();
-        modelProvider.innerHTML = models.map((model)=>`<option value="${model.name}">${model.name + get_modelTags(model, false)}</option>`).join("");
+        models.forEach((model) => {
+            let option = document.createElement("option");
+            option.value = model.name;
+            option.text = `${model.name} ${get_modelTags(model)}`;
+            if (model.audio) {
+                option.dataset.audio = "true";
+            }
+            modelProvider.appendChild(option);
+        });
         const imageResponse = await fetch("https://image.pollinations.ai/models");
         const imageModels = await imageResponse.json();
         imageModels.forEach((model) => {
             let option = document.createElement("option");
             option.value = model;
             option.text = `${model} (${modelTags.image})`;
+            option.dataset.image = "true";
             modelProvider.appendChild(option);
         });
     });
@@ -3385,6 +3414,8 @@ async function load_provider_models(provider=null) {
         provider = providerSelect.value;
     }
     if (provider == "Live") {
+        modelSelect.classList.add("hidden");
+        modelProvider.classList.remove("hidden");
         await load_fallback_models();
         return;
     }
@@ -3608,7 +3639,7 @@ function import_memory() {
         user_id = generateUUID();
         appStorage.setItem("mem0-user_id", user_id);
     }
-    inputCount.innerText = window.translate("Importing conversations...");
+    inputCount.innerText = framework.translate("Importing conversations...");
     let conversations = [];
     for (let i = 0; i < appStorage.length; i++) {
         if (appStorage.key(i).startsWith("conversation:")) {
@@ -3622,7 +3653,7 @@ function import_memory() {
             return;
         }
         let body = JSON.stringify(conversations[i]);
-        response = await fetch(`${window.backendUrl}/backend-api/v2/memory/${user_id}`, {
+        response = await fetch(`${framework.backendUrl}/backend-api/v2/memory/${user_id}`, {
             method: 'POST',
             body: body,
             headers: {
@@ -3632,7 +3663,7 @@ function import_memory() {
         });
         const result = await response.json();
         count += result.count;
-        inputCount.innerText = window.translate('{0} Messages were imported').replace("{0}", count);
+        inputCount.innerText = framework.translate('{0} Messages were imported').replace("{0}", count);
         add_conversation_to_memory(i + 1);
     }
     add_conversation_to_memory(0)

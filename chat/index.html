@@ -228,7 +228,7 @@
                     <i class="fa-solid fa-pencil"></i>
                     <a href="" onclick="return false;">Export Settings</a>
                 </button>
-                <button onclick="this.querySelector('.fa-spin').classList.remove('hidden'); translateAll().then(()=>{window.location.reload()}).catch(()=>{this.querySelector('.fa-spin').classList.add('hidden')})">
+                <button onclick="this.querySelector('.fa-spin').classList.remove('hidden'); framework.translateAll().then(()=>{window.location.reload()}).catch(()=>{this.querySelector('.fa-spin').classList.add('hidden')})">
                     <i class="fa-solid fa-language"></i>
                     <a href="" onclick="return false;">Translate UI</a>
                     <i class="fas fa-spinner fa-spin hidden"></i>

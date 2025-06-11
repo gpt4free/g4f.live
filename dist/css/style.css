@@ -795,7 +795,7 @@ form input:checked+label {
 }
 
 .settings .bottom_buttons {
-    padding-bottom: 50px;
+    padding: var(--inner-gap);
 }
 
 .settings .bottom_buttons button {

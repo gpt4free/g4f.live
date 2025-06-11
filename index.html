@@ -268,6 +268,11 @@
         }
     </style>
     <script src="dist/js/framework.js"></script>
+    <script>
+        framework.init({
+            translations: true
+        })
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js" async></script>
 </head>
 <body>
@@ -287,7 +292,7 @@
         <div class="hero-content">
             <h1>Unleash AI Power For Free</h1>
             <p class="subtitle">GPT4Free provides free access to powerful AI models without compromising on quality or performance.</p>
-            <a href="/home.html" class="cta-button">Get Started Now</a>
+            <a href="home.html" class="cta-button">Get Started Now</a>
         </div>
         </form>
     </section>
@@ -364,12 +369,12 @@
             }
             const userMessage = document.createElement("div");
             userMessage.classList.add("message", "user-message");
-            userMessage.innerHTML = framework.renderMarkdown(prompt);
+            userMessage.innerHTML = framework.markdown(prompt);
             demo.querySelector(".chat-messages").appendChild(userMessage);
             const response = await framework.query(prompt);
             const botMessage = document.createElement("div");
             botMessage.classList.add("message", "bot-message");
-            botMessage.innerHTML = framework.renderMarkdown(await response.text());
+            botMessage.innerHTML = framework.markdown(await response.text());
             demo.querySelector(".chat-messages").appendChild(botMessage);
         })
     </script>

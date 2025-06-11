@@ -45,6 +45,7 @@ const translationSnipptes = [
 let login_urls_storage = {
     "HuggingFace": ["HuggingFace", "https://huggingface.co/settings/tokens", ["HuggingFaceMedia", "AnyProvider"]],
     "HuggingSpace": ["HuggingSpace", "", []],
+    "PollinationsAI": ["Pollinations AI", "https://auth.pollinations.ai", ["Live"]],
 };
 
 let hasPuter = false;
@@ -1286,8 +1287,37 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             if (prompt == "hello") {
                 seed = "";
             }
-            const textUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${encodeURIComponent(model)}&seed=${seed}`;
-            await fetch(textUrl)
+            const apiKey = localStorage.getItem("PollinationsAI-api_key");
+            const headers = apiKey ? {"Authorization": apiKey} : {};
+            const toBase64 = file => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+            });
+            const textUrl = `https://text.pollinations.ai/`;
+            const files = Object.values(image_storage).filter(
+                (file)=>file instanceof File
+            ).map(async (file) => {
+                return {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": await toBase64(file),
+                    }
+                }
+            });
+            const body = {
+                model: model,
+                messages: [{
+                    "role": "user",
+                    "content": files ? [
+                        {"type": "text", "text": prompt},
+                        ...files
+                    ] : prompt
+                }],
+                seed: seed
+            }
+            await fetch(textUrl, {method: "POST", body: JSON.stringify(body), headers: headers})
                 .then(async (response) => {
                     if (!response.ok) {
                         return;
@@ -1563,6 +1593,7 @@ const set_conversation = async (conversation_id) => {
     }
     window.conversation_id = conversation_id;
 
+    suggestions = null;
     await clear_conversation();
     await load_conversation(await get_conversation(conversation_id));
     play_last_message();
@@ -1577,7 +1608,8 @@ const new_conversation = async (private = false) => {
     window.conversation_id = private ? null : generateUUID();
     document.title = window.title || document.title;
     document.querySelector(".chat-top-panel .convo-title").innerText = private ? window.translate("Private Conversation") : window.translate("New Conversation");
-
+    
+    suggestions = null;°
     await clear_conversation();
     if (chatPrompt) {
         chatPrompt.value = document.getElementById("systemPrompt")?.value;
@@ -1694,6 +1726,9 @@ const load_conversation = async (conversation, scroll=true) => {
         }
         synthesize_params = (new URLSearchParams(synthesize_params)).toString();
         let synthesize_url = `${window.backendUrl}/backend-api/v2/synthesize/${synthesize_provider}?${synthesize_params}`;
+        if (!window.backendUrl) {
+            synthesize_url = `https://www.openai.fm/api/generate?input=${encodeURIComponent(buffer)}&voice=alloy`;
+        }
 
         const file = new File([buffer], 'message.md', {type: 'text/plain'});
         const objectUrl = URL.createObjectURL(file);
@@ -1812,12 +1847,12 @@ const load_conversation = async (conversation, scroll=true) => {
             el.classList.add("suggestion");
             el.innerHTML = `<span>${escapeHtml(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
             el.onclick = async () => {
+                suggestions = null;
                 await handle_ask(true, suggestion);
             }
             suggestions_el.appendChild(el);
         });
         chatBody.appendChild(suggestions_el);
-        suggestions = null;
     } else if (countTokensEnabled && window.GPTTokenizer_cl100k_base) {
         let filtered = prepare_messages(messages, null, true, false);
         filtered = filtered.filter((item)=>!Array.isArray(item.content) && item.content);
@@ -2624,7 +2659,7 @@ function get_modelTags(model, add_vision = true) {
     const parts = []
     for (let [name, text] of Object.entries(modelTags)) {
         if (name != "vision" || add_vision) {
-            parts.push(model[name] ? ` (${text})` : "")
+            parts.push(model[name] ? ` (${window.translate(text)})` : "")
         }
     }
     return parts.join("");
@@ -2809,9 +2844,11 @@ async function on_api() {
         load_provider_models(appStorage.getItem("provider"));
     }).catch((e)=>{
         console.log(e)
-        providerSelect.innerHTML = `<option value="Live" checked>Pollinations AI (live)</option>
-            <option value="Puter">Puter.js AI (live)</option>`;
+        const providerValue = appStorage.getItem("provider") || "Live";
+        providerSelect.innerHTML = `<option value="Live" ${providerValue == "Live" ? "selected" : ""}>Pollinations AI (live)</option>
+            <option value="Puter" ${providerValue == "Puter" ? "selected" : ""}>Puter.js AI (live)</option>`;
         load_provider_models(appStorage.getItem("provider") || "Live");
+        load_provider_login_urls(providersListContainer);
     });
 
     const update_systemPrompt_icon = (checked) => {

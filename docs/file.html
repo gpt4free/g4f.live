@@ -72,7 +72,7 @@
 <p><strong>API Endpoints:</strong></p>
 <ul>
 <li>
-<p><strong>Upload:</strong> <code>/v1/files/{bucket_id}</code> (POST)</p>
+<p><strong>Upload:</strong> <code>/backend-api/v2/files/{bucket_id}</code> (POST)</p>
 <ul>
 <li>
 <strong>Method:</strong> POST</li>
@@ -85,7 +85,7 @@
 </ul>
 </li>
 <li>
-<p><strong>Retrieve:</strong> <code>/v1/files/{bucket_id}</code> (GET)</p>
+<p><strong>Retrieve:</strong> <code>/backend-api/v2/files/{bucket_id}</code> (GET)</p>
 <ul>
 <li>
 <strong>Method:</strong> GET</li>
@@ -122,7 +122,7 @@
     <span class="pl-k">else</span>:
         <span class="pl-k">raise</span> <span class="pl-en">ValueError</span>(<span class="pl-s">"files_or_urls must be a list of URLs or a dictionary of files"</span>)
 
-    <span class="pl-s1">upload_response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">post</span>(<span class="pl-s">f'http://localhost:1337/v1/files/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>'</span>, <span class="pl-s1">files</span><span class="pl-c1">=</span><span class="pl-s1">files</span>)
+    <span class="pl-s1">upload_response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">post</span>(<span class="pl-s">f'http://localhost:1337/backend-api/v2/files/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>'</span>, <span class="pl-s1">files</span><span class="pl-c1">=</span><span class="pl-s1">files</span>)
 
     <span class="pl-k">if</span> <span class="pl-s1">upload_response</span>.<span class="pl-c1">status_code</span> <span class="pl-c1">==</span> <span class="pl-c1">200</span>:
         <span class="pl-s1">upload_data</span> <span class="pl-c1">=</span> <span class="pl-s1">upload_response</span>.<span class="pl-c1">json</span>()
@@ -130,7 +130,7 @@
     <span class="pl-k">else</span>:
         <span class="pl-en">print</span>(<span class="pl-s">f"Upload failed: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">upload_response</span>.<span class="pl-c1">status_code</span><span class="pl-kos">}</span></span> - <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">upload_response</span>.<span class="pl-c1">text</span><span class="pl-kos">}</span></span>"</span>)
 
-    <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">get</span>(<span class="pl-s">f'http://localhost:1337/v1/files/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>'</span>, <span class="pl-s1">stream</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">headers</span><span class="pl-c1">=</span>{<span class="pl-s">'Accept'</span>: <span class="pl-s">'text/event-stream'</span>})
+    <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">get</span>(<span class="pl-s">f'http://localhost:1337/backend-api/v2/files/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>'</span>, <span class="pl-s1">stream</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">headers</span><span class="pl-c1">=</span>{<span class="pl-s">'Accept'</span>: <span class="pl-s">'text/event-stream'</span>})
     <span class="pl-k">for</span> <span class="pl-s1">line</span> <span class="pl-c1">in</span> <span class="pl-s1">response</span>.<span class="pl-c1">iter_lines</span>():
       <span class="pl-k">if</span> <span class="pl-s1">line</span>:
           <span class="pl-s1">line</span> <span class="pl-c1">=</span> <span class="pl-s1">line</span>.<span class="pl-c1">decode</span>(<span class="pl-s">'utf-8'</span>)
@@ -202,7 +202,7 @@
         <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
 
-    <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">"/v1/files/"</span> <span class="pl-c1">+</span> <span class="pl-s1">bucket_id</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+    <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">"/backend-api/v2/files/"</span> <span class="pl-c1">+</span> <span class="pl-s1">bucket_id</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
         <span class="pl-c1">method</span>: <span class="pl-s">'POST'</span><span class="pl-kos">,</span>
         <span class="pl-c1">body</span>: <span class="pl-s1">formData</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
@@ -228,7 +228,7 @@
         <span class="pl-kos">}</span><span class="pl-kos">;</span>
     <span class="pl-kos">}</span>
 
-    <span class="pl-en">connectToSSE</span><span class="pl-kos">(</span><span class="pl-s">`/v1/files/<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span> <span class="pl-c">//Retrieve and refine</span>
+    <span class="pl-en">connectToSSE</span><span class="pl-kos">(</span><span class="pl-s">`/backend-api/v2/files/<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">bucket_id</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span> <span class="pl-c">//Retrieve and refine</span>
 <span class="pl-kos">}</span>
 
 <span class="pl-c">// Example with URLs</span>

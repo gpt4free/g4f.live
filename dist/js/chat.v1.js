@@ -102,7 +102,7 @@ appStorage = window.localStorage || {
 
 function render_reasoning(reasoning, final = false) {
     const inner_text = reasoning.text ? `<div class="reasoning_text${final ? " final hidden" : ""}">
-        ${renderMarkdown(reasoning.text)}
+        ${framework.markdown(reasoning.text)}
     </div>` : "";
     return `<div class="reasoning_body">
         <div class="reasoning_title">
@@ -571,7 +571,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
         </div>
         <div class="content"> 
             <div class="content_inner">
-            ${renderMarkdown(message)}
+            ${framework.markdown(message)}
             </div>
             <div class="count">
                 ${countTokensEnabled ? count_words_and_tokens(message, get_selected_model()?.value) : ""}
@@ -901,7 +901,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
         await save_conversation(conversation_id, get_conversation_data(conversation));
     } else if (message.type == "auth") {
         error_storage[message_id] = message.message
-        content_map.inner.innerHTML += renderMarkdown(`${framework.translate('**An error occured:**')} ${message.message}`);
+        content_map.inner.innerHTML += framework.markdown(`${framework.translate('**An error occured:**')} ${message.message}`);
         let provider = provider_storage[message_id]?.name;
         let configEl = document.querySelector(`.settings .${provider}-api_key`);
         if (configEl) {
@@ -926,7 +926,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
         content_map.update_timeouts = [];
         error_storage[message_id] = message.message
         console.error(message.message);
-        content_map.inner.innerHTML += renderMarkdown(`${framework.translate('**An error occured:**')} ${message.message}`);
+        content_map.inner.innerHTML += framework.markdown(`${framework.translate('**An error occured:**')} ${message.message}`);
         if (finish_message) {
             await finish_message();
         }
@@ -943,14 +943,14 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
                 img.onerror = () => img.src = backup;
             }
         } else {
-            content_map.inner.innerHTML = renderMarkdown(message.preview);
+            content_map.inner.innerHTML = framework.markdown(message.preview);
             await register_message_images();
         }
     } else if (message.type == "content") {
         message_storage[message_id] += message.content;
         if (message.urls) {
             const div = document.createElement("div");
-            div.innerHTML = renderMarkdown(message.content);
+            div.innerHTML = framework.markdown(message.content);
             const media = div.querySelector("img, video")
             if (scroll) {
                 media.onload = lazy_scroll_to_bottom;
@@ -973,7 +973,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
     } else if (message.type == "title") {
         title_storage[message_id] = message.title;
     } else if (message.type == "login") {
-        update_message(content_map, message_id, renderMarkdown(message.login), scroll);
+        update_message(content_map, message_id, framework.markdown(message.login), scroll);
     } else if (message.type == "finish") {
         finish_storage[message_id] = message.finish;
     } else if (message.type == "usage") {
@@ -1124,7 +1124,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         content_map.update_timeouts.forEach((timeoutId)=>clearTimeout(timeoutId));
         content_map.update_timeouts = [];
         if (!error_storage[message_id] && message_storage[message_id]) {
-            html = renderMarkdown(message_storage[message_id]);
+            html = framework.markdown(message_storage[message_id]);
             content_map.inner.innerHTML = html;
             highlight(content_map.inner);
         }
@@ -1383,7 +1383,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             await fetch(image)
                 .then(async (response) => {
                     if (!response.ok) {
-                        content_map.inner.innerHTML = renderMarkdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
+                        content_map.inner.innerHTML = framework.markdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
                         safe_remove_cancel_button();
                         return;
                     }
@@ -1736,19 +1736,27 @@ const load_conversation = async (conversation, scroll=true) => {
                 ${item.provider.model ? ' ' + framework.translate('with') + ' ' + item.provider.model : ''}
             </div>
         ` : "";
-        let synthesize_params = {text: buffer}
-        let synthesize_provider = "Gemini";
-        if (item.synthesize) {
-            synthesize_params = item.synthesize.data
-            synthesize_provider = item.synthesize.provider;
+        let synthesize_url = "";
+        let synthesize_params;
+        let synthesize_provider;
+        const text = Array.isArray(buffer) && buffer.length ? buffer[0].text : buffer;
+        if (text) {
+            if (!framework.backendUrl) {
+                synthesize_params = (new URLSearchParams({input: text, voice: "alloy"})).toString();
+                synthesize_url = `https://www.openai.fm/api/generate?${synthesize_params}`;
+            } else {
+                if (item.synthesize) {
+                    synthesize_params = item.synthesize.data
+                    synthesize_provider = item.synthesize.provider;
+                } else {
+                    synthesize_params = {text: text}
+                    synthesize_provider = "Gemini";
+                }
+                synthesize_params = (new URLSearchParams(synthesize_params)).toString();
+                synthesize_url = `${framework.backendUrl}/backend-api/v2/synthesize/${synthesize_provider}?${synthesize_params}`;
+            }
         }
-        synthesize_params = (new URLSearchParams(synthesize_params)).toString();
-        let synthesize_url = `${framework.backendUrl}/backend-api/v2/synthesize/${synthesize_provider}?${synthesize_params}`;
-        if (!framework.backendUrl) {
-            synthesize_url = `https://www.openai.fm/api/generate?input=${encodeURIComponent(buffer)}&voice=alloy`;
-        }
-
-        const file = new File([buffer], 'message.md', {type: 'text/plain'});
+        const file = new File([text], 'message.md', {type: 'text/plain'});
         const objectUrl = URL.createObjectURL(file);
 
         let add_buttons = [];
@@ -1828,11 +1836,11 @@ const load_conversation = async (conversation, scroll=true) => {
                     ${provider}
                     <div class="content_inner">
                         ${item.reasoning ? render_reasoning(item.reasoning, true): ""}
-                        ${renderMarkdown(buffer)}
+                        ${framework.markdown(buffer)}
                     </div>
                     <div class="count">
                         ${countTokensEnabled ? count_words_and_tokens(
-                            item.reasoning ? item.reasoning.text + buffer : buffer,
+                            item.reasoning ? item.reasoning.text + text : text,
                             next_provider?.model, completion_tokens, prompt_tokens
                         ) : ""}
                         ${add_buttons.join("")}
@@ -1845,10 +1853,10 @@ const load_conversation = async (conversation, scroll=true) => {
 
     chatBody.querySelectorAll("video").forEach((el) => {
         el.onloadedmetadata = () => {
-            console.log(el.videoWidth);
             if (el.videoWidth > 0) {
                 el.muted = true;
                 el.loop = true;
+                el.autoplay = true;
                 el.play()
             } else {
                 el.style.width = "300px";
@@ -2398,11 +2406,11 @@ function update_message(content_map, message_id, content = null, scroll = true) 
         // Existing function body
         if (!content) {
             if (reasoning_storage[message_id] && message_storage[message_id]) {
-                content = render_reasoning(reasoning_storage[message_id], true) + renderMarkdown(message_storage[message_id]);
+                content = render_reasoning(reasoning_storage[message_id], true) + framework.markdown(message_storage[message_id]);
             } else if (reasoning_storage[message_id]) {
                 content = render_reasoning(reasoning_storage[message_id]);
             } else {
-                content = renderMarkdown(message_storage[message_id]);
+                content = framework.markdown(message_storage[message_id]);
             }
             
             // Find last element for cursor placement
@@ -2420,7 +2428,7 @@ function update_message(content_map, message_id, content = null, scroll = true) 
         }
         
         if (error_storage[message_id]) {
-            content += renderMarkdown(`${framework.translate('**An error occured:**')} ${error_storage[message_id]}`);
+            content += framework.markdown(`${framework.translate('**An error occured:**')} ${error_storage[message_id]}`);
         }
         
         // Use progressive rendering for large content
@@ -2429,17 +2437,6 @@ function update_message(content_map, message_id, content = null, scroll = true) 
         } else {
             content_map.inner.innerHTML = content;
         }
-        console.log(document.querySelectorAll("video"))
-        document.querySelectorAll("video").forEach((el) => {
-            el.onloadedmetadata = () => {
-                console.log("Video can play");
-                if (el.videoWidth < 0) {
-                    el.stop();
-                    el.removeAttribute("muted");
-                    el.removeAttribute("loop");
-                    el.removeAttribute("autoplay");}
-            }
-        });
 
         if (countTokensEnabled) {
             content_map.count.innerText = count_words_and_tokens(

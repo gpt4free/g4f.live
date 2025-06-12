@@ -735,13 +735,7 @@ const prepare_messages = (messages, message_index = -1, do_continue = false, do_
                 new_message.content = filter_message(new_message.content);
             }
             // Remove internal fields
-            delete new_message.provider;
-            delete new_message.synthesize;
-            delete new_message.finish;
-            delete new_message.usage;
-            delete new_message.reasoning;
-            delete new_message.conversation;
-            delete new_message.continue;
+            new_message = {role: new_message.role, content: new_message.content};
             // Append message to new messages
             if (do_filter && !new_message.regenerate) {
                 final_messages.push(new_message)
@@ -986,7 +980,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
                 reasoning_storage[message_id].text = message_storage[message_id];
                 message_storage[message_id] = "";
             }
-        } else if (message.status) {
+        } else if (typeof message.status !== 'undefined') {
             reasoning_storage[message_id].status = message.status;
         } if (message.label) {
             reasoning_storage[message_id].label = message.label;

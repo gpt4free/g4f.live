@@ -27,7 +27,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: $GH_TOKEN
+          token: $O_TOKEN
           commit-message: Update for openapi
           title: Save openapi
           body: |

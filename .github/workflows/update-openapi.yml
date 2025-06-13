@@ -15,15 +15,13 @@ jobs:
         with:
           python-version: "3.13"
           cache: 'pip'
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
       - name: Generate openapi.json
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh repo clone xtekky/gpt4free
           cd gpt4free
+          pip install -r requirements.txt
           python -m etc.tool.openapi
           mv openapi.json ../api-docs
           cd ..

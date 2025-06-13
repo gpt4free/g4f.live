@@ -114,23 +114,35 @@
             margin-bottom: 2rem;
             opacity: 0.9;
         }
-        
+
         .cta-button {
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 0.8rem 2rem;
+            padding: 0.8rem 2.4rem;
             font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(110, 72, 170, 0.4);
+            box-shadow: 0 5px 15px rgba(110, 72, 170, 0.5);
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.4rem 0.6rem;
+            user-select: none;
         }
         
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(110, 72, 170, 0.6);
+        .cta-button:hover,
+        .cta-button:focus {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(110, 72, 170, 0.8);
+            background: linear-gradient(to right, var(--secondary), var(--accent));
+            outline: none;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(110, 72, 170, 0.4);
         }
         
         .features {
@@ -252,7 +264,7 @@
             background: rgba(26, 26, 46, 0.8);
             margin-top: 2rem;
         }
-        
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -264,6 +276,16 @@
             
             .hero {
                 padding: 6rem 1rem 3rem;
+            }
+
+            .hero-content {
+                max-width: 95%;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+                margin: 0.6rem auto;
             }
         }
     </style>
@@ -292,7 +314,12 @@
         <div class="hero-content">
             <h1>Unleash AI Power For Free</h1>
             <p class="subtitle">GPT4Free provides free access to powerful AI models without compromising on quality or performance.</p>
-            <a href="home.html" class="cta-button">Get Started Now</a>
+           <div class="button-group" role="navigation" aria-label="Primary call to action links">
+                <a href="home.html" class="cta-button" role="button">🔑 Login Page</a>
+                <a href="demo.html" class="cta-button" role="button">🎬 Demo Home</a>
+                <a href="/chat/" class="cta-button" role="button">💬 Open Chat</a>
+                <a href="/docs/" class="cta-button" role="button">📄 Documentation</a>
+            </div>
         </div>
         </form>
     </section>

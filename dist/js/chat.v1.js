@@ -43,9 +43,10 @@ const translationSnipptes = [
 ];
 
 let login_urls_storage = {
-    "HuggingFace": ["HuggingFace", "https://huggingface.co/settings/tokens", ["HuggingFaceMedia", "AnyProvider"]],
+    "HuggingFace": ["HuggingFace", "https://huggingface.co/settings/tokens", ["HuggingFaceMedia"]],
     "HuggingSpace": ["HuggingSpace", "", []],
     "PollinationsAI": ["Pollinations AI", "https://auth.pollinations.ai", ["Live"]],
+    "Puter": ["Puter.js", "", []],
 };
 
 let hasPuter = false;
@@ -2689,18 +2690,19 @@ function load_providers(providers, provider_options, providersListContainer) {
             option.dataset.parent = provider.parent;
         providerSelect.appendChild(option);
 
-        if (provider.parent) {
+        if (provider.parent && provider.name != "PuterJS") {
             if (!login_urls_storage[provider.parent]) {
                 login_urls_storage[provider.parent] = [provider.label, provider.login_url, [provider.name], provider.auth];
             } else {
                 login_urls_storage[provider.parent][2].push(provider.name);
             }
         } else if (provider.login_url) {
-            if (!login_urls_storage[provider.name]) {
-                login_urls_storage[provider.name] = [provider.label, provider.login_url, [provider.name], provider.auth];
+            const name = provider.parent || provider.name;
+            if (!login_urls_storage[name]) {
+                login_urls_storage[name] = [provider.label, provider.login_url, [name, provider.name], provider.auth];
             } else {
-                login_urls_storage[provider.name][0] = provider.label;
-                login_urls_storage[provider.name][1] = provider.login_url;
+                login_urls_storage[name][0] = provider.label;
+                login_urls_storage[name][1] = provider.login_url;
             }
         }
     });
@@ -2717,18 +2719,19 @@ function load_providers(providers, provider_options, providersListContainer) {
     settings.querySelector(".paper").appendChild(providersContainer);
 
     providers.forEach((provider) => {
-        if (!provider.parent) {
+        if (!provider.parent || provider.name == "PuterJS") {
+            const name = provider.parent || provider.name;
             let option = document.createElement("div");
             option.classList.add("provider-item");
-            let api_key = appStorage.getItem(`${provider.name}-api_key`);
+            let api_key = appStorage.getItem(`${name}-api_key`);
             option.innerHTML = `
                 <span class="label">Enable ${provider.label}</span>
-                <input id="Provider${provider.name}" type="checkbox" name="Provider${provider.name}" value="${provider.name}" class="provider" ${!provider.auth || api_key ? 'checked="checked"' : ''}/>
-                <label for="Provider${provider.name}" class="toogle" title="Remove provider from dropdown"></label>
+                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${!provider.auth || api_key ? 'checked="checked"' : ''}/>
+                <label for="Provider${name}" class="toogle" title="Remove provider from dropdown"></label>
             `;
-            option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, provider.name));
+            option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, name));
             providersContainer.querySelector(".collapsible-content").appendChild(option);
-            provider_options[provider.name] = option;
+            provider_options[name] = option;
         }
     });
 
@@ -2748,9 +2751,10 @@ function load_provider_login_urls(providersListContainer) {
         providerBox.classList.add("field", "box");
         childs = childs.map((child) => `${child}-api_key`).join(" ");
         const placeholder = `placeholder="${name == "HuggingSpace" ? "zerogpu_token" : "api_key"}"`;
+        const input_id = name == "Puter" ? "puter.auth.token" : `${name}-api_key`;
         providerBox.innerHTML = `
-            <label for="${name}-api_key" class="label" title="">${label}:</label>
-            <input type="text" id="${name}-api_key" name="${name}[api_key]" class="${childs}" ${placeholder} autocomplete="off"/>
+            <label for="${input_id}" class="label" title="">${label}:</label>
+            <input type="text" id="${input_id}" name="${name}[api_key]" class="${childs}" ${placeholder} autocomplete="off"/>
         ` + (login_url ? `<a href="${login_url}" target="_blank" title="Login to ${label}">${framework.translate('Get API key')}</a>` : "");
         if (auth) {
             providerBox.querySelector("input").addEventListener("input", (event) => {
@@ -3343,8 +3347,21 @@ async function read_response(response, message_id, provider, scroll, finish_mess
 function get_api_key_by_provider(provider) {
     let api_key = null;
     if (provider) {
+        if (provider == "AnyProvider") {
+            return {
+                "PollinationsAI": appStorage.getItem("PollinationsAI-api_key"),
+                "HuggingFace": appStorage.getItem("HuggingFace-api_key"),
+                "Together": appStorage.getItem("Together-api_key"),
+                "GeminiPro": appStorage.getItem("GeminiPro-api_key"),
+                "OpenRouter": appStorage.getItem("OpenRouter-api_key"),
+                "Groq": appStorage.getItem("Groq-api_key"),
+                "DeepInfra": appStorage.getItem("DeepInfra-api_key"),
+                "Replicate": appStorage.getItem("Replicate-api_key"),
+                "Puter": appStorage.getItem("puter.auth.token"),
+            }
+        }
         if (provider.startsWith("Puter") && localStorage.getItem('puter.auth.token')) {
-            return localStorage.getItem('puter.auth.token');
+            return localStorage.getItem("puter.auth.token");
         }
         api_key = document.querySelector(`.${provider}-api_key`)?.id || null;
         if (api_key == null) {
@@ -3419,7 +3436,6 @@ async function load_provider_models(provider=null) {
         custom_model.classList.remove("hidden");
         return;
     }
-    modelProvider.innerHTML = '';
     modelProvider.name = `model[${provider}]`;
     if (!provider) {
         modelProvider.classList.add("hidden");
@@ -3445,6 +3461,7 @@ async function load_provider_models(provider=null) {
     }
     const models = await api('models', provider);
     if (models) {
+        modelProvider.innerHTML = '';
         modelSelect.classList.add("hidden");
         if (!custom_model.value) {
             custom_model.classList.add("hidden");

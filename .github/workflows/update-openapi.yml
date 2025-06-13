@@ -16,8 +16,6 @@ jobs:
           python-version: "3.13"
           cache: 'pip'
       - name: Generate openapi.json
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           gh repo clone xtekky/gpt4free
           cd gpt4free
@@ -29,7 +27,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ github.token }}
+          token: $GH_TOKEN
           commit-message: Update for openapi
           title: Save openapi
           body: |

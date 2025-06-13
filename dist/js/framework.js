@@ -29,7 +29,10 @@ async function checkUrl(url, connectStatus) {
     }
     return false;
 }
-framework.backendUrl = ""; //localStorage.getItem('backendUrl') || "";
+framework.backendUrl = "";
+if (localStorage.getItem('backendUrl') == "https://host.g4f.dev") {
+    framework.backendUrl = localStorage.getItem('backendUrl');
+}
 framework.connectToBackend = async (connectStatus) => {
     for (const url of checkUrls) {
         if(await checkUrl(url, connectStatus)) {

@@ -62,9 +62,9 @@ python3 -m venv venv
 **You have two options for installing dependencies:**
 
 #### Option A: Install Minimum Requirements
-**For a lightweight installation, use:**
+**For a small installation, use:**
 ```bash
-pip install -r requirements-min.txt
+pip install -r requirements-slim.txt
 ```
 
 #### Option B: Install All Packages

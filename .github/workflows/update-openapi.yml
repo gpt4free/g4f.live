@@ -16,6 +16,8 @@ jobs:
           python-version: "3.13"
           cache: 'pip'
       - name: Generate openapi.json
+        env:
+            GH_TOKEN: $O_TOKEN
         run: |
           gh repo clone xtekky/gpt4free
           cd gpt4free

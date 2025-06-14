@@ -2726,7 +2726,7 @@ function load_providers(providers, provider_options, providersListContainer) {
             let api_key = appStorage.getItem(`${name}-api_key`);
             option.innerHTML = `
                 <span class="label">Enable ${provider.label}</span>
-                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${!provider.auth || api_key ? 'checked="checked"' : ''}/>
+                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${provider.active_by_default || api_key ? 'checked="checked"' : ''}/>
                 <label for="Provider${name}" class="toogle" title="Remove provider from dropdown"></label>
             `;
             option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, name));

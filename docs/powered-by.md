@@ -18,13 +18,13 @@ A privacy-centric internet search engine delivering unbiased, ad-free results wi
 
 **🤖 GitHub**
 
-<img src="https://image.pollinations.ai/prompt/Create+a+logo+for+GitHub+featuring+an+octocat+icon+integrated+with+code+brackets%2C+modern+technical+font+text+GitHub%2C+colors+deep+black%2C+white%2C+subtle+purple?width=512&height=256&nologo=true" height="128">
+<img src="https://image.pollinations.ai/prompt/Create+a+logo+for+GitHub+featuring+an+octocat+icon+integrated+with+code+brackets%2C+modern+technical+font+text+GitHub%2C+colors+deep+black%2C+white%2C+subtle+purple?width=512&height=256&nologo=true" width="256">
 
 The world’s leading platform for version control and collaborative software development. GitHub enables seamless code management, issue tracking, pull requests, and collaborative branching across teams of any size.
 
 **🤗 HuggingFace**
 
-<img src="https://image.pollinations.ai/prompt/Create+a+logo+for+HuggingFace+featuring+a+friendly+smiling+face+hugging?width=512&height=256&nologo=true" height="128">
+<img src="https://image.pollinations.ai/prompt/Create+a+logo+for+HuggingFace+featuring+a+friendly+smiling+face+hugging?width=512&height=256&nologo=true" width="256">
 
 A hub for open-source machine learning models and natural language processing tools. HuggingFace hosts state-of-the-art AI models, enabling easy integration of functions like language understanding, text generation, and more.
 
@@ -485,6 +485,8 @@ A hub for open-source machine learning models and natural language processing to
     </tr>
   </tbody>
 </table>
+
+<img src="https://github.com/user-attachments/assets/4caab977-eb05-48ed-b750-3ad082bcfcae" width="256">
 
 ---
 

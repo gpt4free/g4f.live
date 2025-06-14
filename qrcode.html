@@ -187,10 +187,33 @@
             }
         });
         let share_id = null;
+        if (conversation_id) {
+            share_id = localStorage.getItem(`conversation:${conversation_id}`);
+            if (share_id) {
+                share_id = JSON.parse(share_id).share;
+            }
+        }
+        if (share_id) {
+            const share = `${window.location.origin}/chat/#${encodeURIComponent(share_id)}`;
+            const qrcodeStatus = document.getElementById('qrcode-status');
+            qrcodeStatus.innerText = share;
+            qrcodeStatus.href = share;
+            document.getElementById("qrcode").style.display = 'inline-block';
+            const qrcode = new QRCode(
+                document.getElementById("qrcode"),
+                share,
+            {
+                width: 400,
+                height: 400,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
         document.getElementById('generateQRCode').addEventListener('click', async () => {
             if (share_id) {
                 localStorage.removeItem(`conversation:${share_id}`);
-                const delete_url = `${window.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
+                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
                 await fetch(delete_url, {
                     method: 'DELETE'
                 });
@@ -203,7 +226,7 @@
                 conversation.updated = Date.now();
                 localStorage.setItem(`conversation:${share_id}`, JSON.stringify(conversation));
             }
-            const url = `${window.backendUrl}/backend-api/v2/chat/${encodeURIComponent(conversation.id)}`;
+            const url = `${framework.backendUrl}/backend-api/v2/chat/${encodeURIComponent(conversation.id)}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {'content-type': 'application/json'},

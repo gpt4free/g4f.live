@@ -3477,8 +3477,7 @@ async function load_provider_models(provider=null) {
         await load_puter_models();
         return;
     }
-    const models = await api('models', provider);
-    if (models) {
+    function set_provider_models(models) {
         modelProvider.innerHTML = '';
         modelSelect.classList.add("hidden");
         if (!custom_model.value) {
@@ -3531,6 +3530,16 @@ async function load_provider_models(provider=null) {
         appStorage.setItem("favorites", JSON.stringify(favorites));
         optgroup.lastChild?.setAttribute("selected", "selected");
         modelProvider.appendChild(optgroup);
+    }
+    let models = appStorage.getItem(`${provider}:models`);
+    if (models) {
+        models = JSON.parse(models);
+        set_provider_models(models);
+    }
+    models = await api('models', provider);
+    if (models) {
+        set_provider_models(models);
+        appStorage.setItem(`${provider}:models`, JSON.stringify(models));
     } else {
         modelProvider.classList.add("hidden");
         custom_model.classList.remove("hidden")

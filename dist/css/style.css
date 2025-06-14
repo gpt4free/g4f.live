@@ -486,8 +486,12 @@ body:not(.white) a:visited{
     margin: 2px;
 }
 
-.media-select .capture-audio {
+.media-select .capture-audio, .media-select .add-link {
      width: 42px;   
+}
+
+.media-select .add-link {
+    padding: 20px 10px;
 }
 
 .media-select label, .media-select button {

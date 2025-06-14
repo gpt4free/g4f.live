@@ -12,7 +12,8 @@ const imageInput        = document.querySelector(".image-label");
 const mediaSelect       = document.querySelector(".media-select");
 const imageSelect       = document.getElementById("image");
 const cameraInput       = document.getElementById("camera");
-const audioButton        = document.querySelector(".capture-audio");
+const audioButton       = document.querySelector(".capture-audio");
+const linkButton        = document.querySelector(".add-link");
 const fileInput         = document.getElementById("file");
 const microLabel        = document.querySelector(".micro-label");
 const inputCount        = document.getElementById("input-count").querySelector(".text");
@@ -1215,14 +1216,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             reader.onerror = reject;
         });
         for (const file of Object.values(image_storage)) {
-            if (file instanceof File) {
-                images.push({
-                    "type": "image_url",
-                    "image_url": {
-                        "url": await toBase64(file),
-                    }
-                });
-            }
+            images.push({
+                "type": "image_url",
+                "image_url": {
+                    "url": file instanceof File ? await toBase64(file) : file,
+                }
+            });
         }
         messages = messages.map((message) => {
             return {
@@ -2838,7 +2837,6 @@ async function on_api() {
                 <option value="PerplexityLabs">Perplexity Labs</option>LMArenaBeta
                 <option value="LMArenaBeta">LMArena Beta</option>
                 <option value="Together">Together</option>
-                <option value="GeminiPro">Gemini Pro</option>
                 <option value="HuggingFace">HuggingFace</option>
                 <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
                 <option value="HuggingSpace">HuggingSpace</option>
@@ -2899,7 +2897,7 @@ async function on_api() {
 
     const method = switchInput.checked ? "add" : "remove";
     searchButton.classList[method]("active");
-    document.getElementById('recognition-language').placeholder = get_navigator_language();
+    document.getElementById('recognition-language').placeholder = await get_navigator_language();
 }
 
 async function load_version() {
@@ -2952,6 +2950,10 @@ function renderMediaSelect() {
         img.onload = () => {
             link.title += `\n${img.naturalWidth}x${img.naturalHeight}`;
         };
+        img.onerror = () => {
+            img.remove();
+            delete image_storage[object_url];
+        }
         link.appendChild(img);
         mediaSelect.appendChild(link);
     });
@@ -3039,7 +3041,18 @@ audioButton.addEventListener('click', async (event) => {
     });
 
     mediaRecorder.start()
-})
+});
+
+linkButton.addEventListener('click', async (event) => {
+    const i = audioButton.querySelector("i");
+    const link = prompt("Please enter a link");
+    if (!link || link.startsWith("http") === false) {
+        inputCount.innerText = framework.translate("Invalid link");
+        return;
+    }
+    image_storage[link] = link;
+    renderMediaSelect();
+});
 
 fileInput.addEventListener('click', async (event) => {
     fileInput.value = '';
@@ -3273,6 +3286,8 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
             for (const file of files) {
                 if (file instanceof File) {
                     formData.append('files', file)
+                } else {
+                    formData.append('media_url', file)
                 }
             }
             formData.append('json', body);
@@ -3413,7 +3428,7 @@ async function load_puter_models() {
     let models = await response.json();
     models = models.models;
     models.push("dall-e-3");
-    models = models.filter((model) => !model.includes("FLUX"));
+    models = models.filter((model) => !model.includes("/") && !["abuse", "costly", "fake", "model-fallback-test-1"].includes(model));
     modelProvider.innerHTML = models.map((model)=>`<option value="${model}">${model + get_modelTags({
         image: model.includes('FLUX') || model.includes('dall-e-3'),
         vision: ['gpt', 'o1', 'o3', 'o4'].includes(model.split('-')[0]) || model.includes('vision'),
@@ -3680,8 +3695,21 @@ function import_memory() {
     add_conversation_to_memory(0)
 }
 
-function get_navigator_language() {
-    return navigator.languages.filter((v)=>v.includes("-"))[0] || navigator.language;
+async function get_navigator_language() {
+    let locale = navigator.language;
+    if (!locale.includes("-")) {
+        locale = appStorage.getItem(navigator.language);
+        if (locale) {
+            return locale;
+        }
+        const prompt = 'Response the full locale in JSON. Example: {"locale": "en-US"} Language: ' + navigator.language
+        response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?json=true`);
+        locale = (await response.json()).locale || navigator.language;
+        if (locale.includes("-")) {
+            appStorage.setItem(navigator.language, locale);
+        }
+    }
+    return locale;
 }
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3747,11 +3775,11 @@ if (SpeechRecognition) {
         return false;
     }
 
-    microLabel.addEventListener("click", (e) => {
+    microLabel.addEventListener("click", async (e) => {
         if (!stopRecognition()) {
             microLabel.classList.add("recognition");
             const lang = document.getElementById("recognition-language")?.value;
-            recognition.lang = lang || get_navigator_language();
+            recognition.lang = lang || await get_navigator_language();
             recognition.start();
         }
     });

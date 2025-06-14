@@ -47,7 +47,7 @@ framework.translateElements = function (elements = null) {
     if (!framework.translations) {
         return;
     }
-    elements = elements || document.querySelectorAll("p:not(:has(span, a)), h1, h2, h3, h4, h5, h6, button:not(:has(span, a, i)), title, span:not(:has(a, i)), strong, a, [data-translate], input, textarea, label:not(:has(span, a, i)), i, option[value='']");
+    elements = elements || document.querySelectorAll("p:not(:has(span, a)), a:not(:has(*)), h1, h2, h3, h4, h5, h6, button:not(:has(span, a, i)), title, span:not(:has(a, i)), strong, a, [data-translate], input, textarea, label:not(:has(span, a, i)), i, option[value='']");
     elements.forEach(function (element) {
         if (element.textContent.trim()) {
             element.textContent = framework.translate(element.textContent);

@@ -91,6 +91,7 @@ let suggestions = null;
 let lastUpdated = null;
 let mediaRecorder = null;
 let stopRecognition = ()=>{};
+let providerModelSignal = null;
 
 // Hotfix for mobile
 document.querySelector(".container").style.maxHeight = window.innerHeight + "px"
@@ -3265,6 +3266,10 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
+        if (providerModelSignal) {
+            providerModelSignal.abort();
+        }
+        providerModelSignal = new AbortController();
         api_key = get_api_key_by_provider(args);
         if (api_key) {
             headers.x_api_key = api_key;
@@ -3278,6 +3283,12 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
             headers.x_ignored = ignored.join(" ");
         }
         url = `${framework.backendUrl}/backend-api/v2/${ressource}/${args}`;
+        headers['content-type'] = 'application/json';
+        response = await fetch(url, {
+            method: 'GET',
+            headers: headers,
+            signal: providerModelSignal.signal,
+        });
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);
         headers.accept = 'text/event-stream';

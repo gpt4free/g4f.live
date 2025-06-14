@@ -191,6 +191,9 @@
             share_id = localStorage.getItem(`conversation:${conversation_id}`);
             if (share_id) {
                 share_id = JSON.parse(share_id).share;
+                if (share_id) {
+                    share_id = conversation_id;
+                }
             }
         }
         if (share_id) {

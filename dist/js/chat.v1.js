@@ -2838,6 +2838,7 @@ async function on_api() {
                 <option value="Cloudflare">Cloudflare</option>
                 <option value="PerplexityLabs">Perplexity Labs</option>
                 <option value="Together">Together</option>
+                <option value="GeminiPro">Gemini Pro</option>
                 <option value="HuggingFace">HuggingFace</option>
                 <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
                 <option value="HuggingSpace">HuggingSpace</option>

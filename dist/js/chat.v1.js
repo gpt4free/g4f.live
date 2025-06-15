@@ -2752,7 +2752,7 @@ function load_provider_login_urls(providersListContainer) {
         providerBox.classList.add("field", "box");
         childs = childs.map((child) => `${child}-api_key`).join(" ");
         const placeholder = `placeholder="${name == "HuggingSpace" ? "zerogpu_token" : "api_key"}"`;
-        const input_id = name == "Puter" ? "puter.auth.token" : `${name}-api_key`;
+        const input_id = name == "PuterJS" ? "puter.auth.token" : `${name}-api_key`;
         providerBox.innerHTML = `
             <label for="${input_id}" class="label" title="">${label}:</label>
             <input type="text" id="${input_id}" name="${name}[api_key]" class="${childs}" ${placeholder} autocomplete="off"/>
@@ -3387,11 +3387,8 @@ function get_api_key_by_provider(provider) {
                 "Groq": appStorage.getItem("Groq-api_key"),
                 "DeepInfra": appStorage.getItem("DeepInfra-api_key"),
                 "Replicate": appStorage.getItem("Replicate-api_key"),
-                "Puter": appStorage.getItem("puter.auth.token"),
+                "PuterJS": appStorage.getItem("puter.auth.token"),
             }
-        }
-        if (provider.startsWith("Puter") && localStorage.getItem('puter.auth.token')) {
-            return localStorage.getItem("puter.auth.token");
         }
         api_key = document.querySelector(`.${provider}-api_key`)?.id || null;
         if (api_key == null) {
@@ -3399,6 +3396,9 @@ function get_api_key_by_provider(provider) {
         }
         if (api_key) {
             api_key = appStorage.getItem(api_key);
+        }
+        if (!api_key && provider.startsWith("Puter") && localStorage.getItem('puter.auth.token')) {
+            return localStorage.getItem("puter.auth.token");
         }
     }
     return api_key;
@@ -3447,6 +3447,20 @@ async function load_puter_models() {
     })}</option>`).join("");
 }
 
+async function injectPuter() {
+    return new Promise((resolve, reject) => {
+        if (hasPuter) {
+            resolve(puter)
+        }
+        var tag = document.createElement('script');
+        tag.src = "https://js.puter.com/v2/";
+        tag.onload = () => {hasPuter = true; resolve(puter);}
+        tag.onerror = reject;
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    });
+}
+
 async function load_provider_models(provider=null) {
     if (!provider) {
         provider = providerSelect.value;
@@ -3478,16 +3492,17 @@ async function load_provider_models(provider=null) {
         }
         return;
     }
-    if (provider == "Puter") {
-        if (!hasPuter) {
-            var tag = document.createElement('script');
-            tag.src = "https://js.puter.com/v2/";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            hasPuter = true;
+    if (provider.startsWith("Puter") || provider == "AnyProvider") {
+        await injectPuter();
+        if (!localStorage.getItem("puter.auth.token")) {
+            puter.auth.signIn().then((res) => {
+                debug.log('Signed in<br>' + JSON.stringify(res));
+            });
         }
-        await load_puter_models();
-        return;
+        if (provider == "Puter") {
+            await load_puter_models();
+            return;
+        }
     }
     function set_provider_models(models) {
         modelProvider.innerHTML = '';

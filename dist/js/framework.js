@@ -191,7 +191,8 @@ const renderMarkdown = (content) => {
         .replaceAll('<iframe src="', '<iframe frameborder="0" height="400" width="400" src="')
         .replaceAll('<iframe type="text/html" src="', '<iframe type="text/html" frameborder="0" allow="fullscreen" height="224" width="400" src="')
         .replaceAll('"></iframe>', `?enablejsapi=1"></iframe>`)
-        .replaceAll('src="/', `src="${framework.backendUrl}/`)
+        .replaceAll('src="/media/', `src="${framework.backendUrl}/media/`)
+        .replaceAll('href="/media/', `src="${framework.backendUrl}/media/`)
     if (window.sanitizeHtml) {
         content = window.sanitizeHtml(content, {
             allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'audio', 'video']),

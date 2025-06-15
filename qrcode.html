@@ -143,6 +143,7 @@
     <div id="qrcode"></div>
     <p><a id="qrcode-status" target="_parent"></a></p>
     <button id="generateQRCode">Generate QR Code</button>
+    <button id="deleteQRCode" disabled>Delete QR Code</button>
 
     <script type="module">
         const conversation_id = window.location.hash.replace("#", "");
@@ -213,6 +214,17 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
+        document.getElementById('deleteQRCode').addEventListener('click', async () => {
+            if (share_id) {
+                localStorage.removeItem(`conversation:${share_id}`);
+                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
+                await fetch(delete_url, {
+                    method: 'DELETE'
+                });
+                document.getElementById("qrcode").innerHTML = '';
+                share_id = null;
+            }
+        });
         document.getElementById('generateQRCode').addEventListener('click', async () => {
             if (share_id) {
                 localStorage.removeItem(`conversation:${share_id}`);

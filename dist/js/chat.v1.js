@@ -1049,6 +1049,19 @@ async function play_last_message(scroll = true, response = null) {
     }
 }
 
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
+const toUrl = async (file)=>{
+    if (file instanceof File) {
+        return await toBase64(file);
+    }
+    return file.url ? file.url : file;
+}
+
 const ask_gpt = async (message_id, message_index = -1, regenerate = false, provider = null, model = null, action = null, message = null) => {
     if (!model && !provider) {
         model = get_selected_model()?.value || null;
@@ -1210,17 +1223,11 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     }
     const images = [];
     if (provider == "Puter" || provider == "Live") {
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-        });
         for (const file of Object.values(image_storage)) {
             images.push({
                 "type": "image_url",
                 "image_url": {
-                    "url": file instanceof File ? await toBase64(file) : file,
+                    "url": await toUrl(file)
                 }
             });
         }
@@ -2937,17 +2944,19 @@ async function load_version() {
 function renderMediaSelect() {
     const oldImages = mediaSelect.querySelectorAll("a:has(img)");
     oldImages.forEach((el)=>el.remove());
-    Object.entries(image_storage).forEach(([object_url, file]) => {
+    Object.entries(image_storage).forEach(async ([object_url, file]) => {
+        const bucket_id = generateUUID();
         const link = document.createElement("a");
         link.title = file.name;
         const img = document.createElement("img");
         img.src = object_url;
-        img.onclick = () => {
+        img.onclick = async () => {
             img.remove();
             delete image_storage[object_url];
-            if (file instanceof File) {
-                URL.revokeObjectURL(object_url)
-            }
+            const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(item.bucket_id)}`;
+            await fetch(delete_url, {
+                method: 'DELETE'
+            });
         }
         img.onload = () => {
             link.title += `\n${img.naturalWidth}x${img.naturalHeight}`;
@@ -2958,6 +2967,24 @@ function renderMediaSelect() {
         }
         link.appendChild(img);
         mediaSelect.appendChild(link);
+        if (file instanceof File && window.location.protocol == "https:") {
+            const formData = new FormData();
+            formData.append('files', file);
+            const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json()
+            if (result.media) {
+                const media = [];
+                result.media.forEach((part)=> {
+                    part = part.name ? part : {name: part};
+                    const url = `${framework.backendUrl ? framework.backendUrl : window.location.origin}/files/${bucket_id}/media/${part.name}`;
+                    image_storage[url.replaceAll("/media/", "/thumbnail/")] = {bucket_id: bucket_id, url: url, ...part};
+                });
+            }
+            delete image_storage[object_url];
+        }
     });
 }
 
@@ -2967,9 +2994,14 @@ imageInput.onclick = () => {
 
 mediaSelect.querySelector(".close").onclick = () => {
     if (Object.values(image_storage).length) {
-        Object.entries(image_storage).forEach(([object_url, file]) => {
+        Object.entries(image_storage).forEach(async ([object_url, file]) => {
             if (file instanceof File) {
                 URL.revokeObjectURL(object_url)
+            } else if (file.bucket_id) {
+                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(file.bucket_id)}`;
+                await fetch(delete_url, {
+                    method: 'DELETE'
+                });
             }
         });
         image_storage = {};
@@ -3299,7 +3331,7 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
                 if (file instanceof File) {
                     formData.append('files', file)
                 } else {
-                    formData.append('media_url', file)
+                    formData.append('media_url', file.url ? file.url : file)
                 }
             }
             formData.append('json', body);

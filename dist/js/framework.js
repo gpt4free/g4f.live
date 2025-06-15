@@ -192,6 +192,7 @@ const renderMarkdown = (content) => {
         .replaceAll('<iframe type="text/html" src="', '<iframe type="text/html" frameborder="0" allow="fullscreen" height="224" width="400" src="')
         .replaceAll('"></iframe>', `?enablejsapi=1"></iframe>`)
         .replaceAll('src="/media/', `src="${framework.backendUrl}/media/`)
+        .replaceAll('src="/thumbnail/', `src="${framework.backendUrl}/thumbnail/`)
         .replaceAll('href="/media/', `src="${framework.backendUrl}/media/`)
     if (window.sanitizeHtml) {
         content = window.sanitizeHtml(content, {

@@ -215,6 +215,8 @@
             });
         }
         document.getElementById('deleteQRCode').addEventListener('click', async () => {
+            document.getElementById('deleteQRCode').setAttribute('disabled', 'disabled');
+            document.getElementById('qrcode-status').innerText = '';
             if (share_id) {
                 localStorage.removeItem(`conversation:${share_id}`);
                 const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
@@ -222,6 +224,7 @@
                     method: 'DELETE'
                 });
                 document.getElementById("qrcode").innerHTML = '';
+                document.getElementById("qrcode").style.display = 'none';
                 share_id = null;
             }
         });
@@ -267,6 +270,7 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+            document.getElementById('deleteQRCode').removeAttribute('disabled');
         });
 
         const switchButton = document.getElementById('switchCamera');

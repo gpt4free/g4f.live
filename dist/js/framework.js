@@ -178,7 +178,7 @@ const renderMarkdown = (content) => {
             if (item.name.endsWith(".mp4") || item.name.endsWith(".webm")) {
                 return `<video controls src="${item.url}"></video>` + (item.text ? `\n${item.text}` : "");
             }
-            return `[![${item.name}](${item.url.replaceAll("/media/", "/thumbnail/") || item.image_url?.url})](${item.url || item.image_url?.url}))`;
+            return `[![${item.name}](${item.url.replaceAll("/media/", "/thumbnail/") || item.image_url?.url})](${item.url || item.image_url?.url})`;
         }).join("\n");
     }
     const markdown = window.markdownit({

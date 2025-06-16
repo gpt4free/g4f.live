@@ -40,7 +40,7 @@ const translationSnipptes = [
     "{0} Messages were imported", "{0} File(s) uploaded successfully",
     "{0} Conversations/Settings were imported successfully",
     "No content found", "Files are loaded successfully",
-    "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)", "Get API key"
+    "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)", "Get API key", "Uploading files..."
 ];
 
 let login_urls_storage = {
@@ -90,6 +90,7 @@ let privateConversation = null;
 let suggestions = null;
 let lastUpdated = null;
 let mediaRecorder = null;
+let mediaChunks = [];
 let stopRecognition = ()=>{};
 let providerModelSignal = null;
 
@@ -949,9 +950,6 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
             const div = document.createElement("div");
             div.innerHTML = framework.markdown(message.content);
             const media = div.querySelector("img, video")
-            if (scroll) {
-                media.onload = lazy_scroll_to_bottom;
-            }
             content_map.inner.appendChild(div);
             let cursorDiv = message_el.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
@@ -1021,16 +1019,13 @@ const requestWakeLock = async () => {
     }
 };
 
-async function play_last_message(scroll = true, response = null) {
+async function play_last_message(response = null) {
     const last_message = Array.from(document.querySelectorAll(".message")).at(-1);
-    const last_media = last_message.querySelector("audio, iframe");
+    const last_media = last_message ? last_message.querySelector("audio, iframe") : null;
     if (last_media) {
         if (last_media.tagName == "IFRAME") {
             if (YT) {
                 async function onPlayerReady(event) {
-                    if (scroll) {
-                        await lazy_scroll_to_bottom();
-                    }
                     event.target.setVolume(100);
                     event.target.playVideo();
                 }
@@ -1042,7 +1037,7 @@ async function play_last_message(scroll = true, response = null) {
             }
         } else {
             if (response) {
-                last_media.src = URL.createObjectURL(await response.blob());
+                last_media.src = `data:audio/mp3;base64,${response.choices[0].message.audio.data}`;
             }
             last_media.play();
         }
@@ -1075,14 +1070,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     let messages = prepare_messages(conversation.items, message_index, action=="continue");
     message_storage[message_id] = "";
     stop_generating.classList.remove("stop_generating-hidden");
-    let scroll = true;
-    if (message_index >= 0 && parseInt(message_index) + 1 < conversation.items.length) {
-        scroll = false;
-    }
-
-    if (scroll) {
-        await lazy_scroll_to_bottom();
-    }
 
     let suggestions_el = chatBody.querySelector('.suggestions');
     suggestions_el ? suggestions_el.remove() : null;
@@ -1126,9 +1113,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         count: content_el.querySelector('.count'),
         update_timeouts: [],
         message_index: message_index,
-    }
-    if (scroll) {
-        await lazy_scroll_to_bottom();
     }
     async function finish_message() {
         content_map.update_timeouts.forEach((timeoutId)=>clearTimeout(timeoutId));
@@ -1204,27 +1188,33 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         }
         // Reload conversation if no error
         if (!error_storage[message_id] && reloadConversation) {
-            if(await safe_load_conversation(window.conversation_id, scroll) && scroll) {
-                play_last_message(scroll); // Play last message async
+            if(await safe_load_conversation(window.conversation_id)) {
+                play_last_message(); // Play last message async
             }
         }
         let cursorDiv = message_el.querySelector(".cursor");
         if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-        if (scroll) {
-            setTimeout(async () => {
-                await lazy_scroll_to_bottom();
-            }, 2000);
-        }
         await safe_remove_cancel_button();
         await register_message_images();
         await register_message_buttons();
         await load_conversations();
         regenerate_button.classList.remove("regenerate-hidden");
     }
-    const images = [];
+    const media = [];
     if (provider == "Puter" || provider == "Live") {
+        if (mediaChunks.length > 0) {
+            const data = await toBase64(new Blob(mediaChunks, { type: 'audio/wav' }));
+            mediaChunks = []
+            media.push({
+                "type": "input_audio",
+                "input_audio": {
+                    "data": data.split(",")[1],
+                    "format": "wav"
+                }
+            });
+        }
         for (const file of Object.values(image_storage)) {
-            images.push({
+            media.push({
                 "type": "image_url",
                 "image_url": {
                     "url": await toUrl(file)
@@ -1246,10 +1236,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     let last_message;
     if (messages.length > 0) {
         last_message = messages[messages.length-1];
-        last_message.content = images.length > 0 ? [
+        last_message.content = media.length > 0 ? [
             {"type": "text", "text": last_message.content},
-            ...images
+            ...media
         ] : last_message.content;
+    } else {
+        messages = media;
     }
     if (!message) {
         message = last_message?.content;
@@ -1321,17 +1313,21 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             }
             let textUrl = `https://text.pollinations.ai/openai`;
             let method = "POST";
-            let body = JSON.stringify({
+            let body = {
                 messages: messages,
                 model: model,
                 seed: seed
-            });
+            };
+            if (model == "openai-audio") {
+                body.audio = {voice: "alloy", format: "mp3"};
+                body.modalities = ["text", "audio"];
+            }
             if (modelProvider.options[modelProvider.selectedIndex]?.dataset.audio) {
                 textUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${encodeURIComponent(model)}&seed=${seed}`;
                 method = "GET";
                 body = null
             }
-            await fetch(textUrl, {method: method, body: body, headers: headers})
+            await fetch(textUrl, {method: method, body: JSON.stringify(body), headers: headers})
                 .then(async (response) => {
                     if (!response.ok) {
                         content_map.inner.innerHTML = framework.markdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
@@ -1346,7 +1342,11 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         content = `<audio controls src="${textUrl}"></audio>`
                     } else if (mimeType && mimeType.startsWith("application/json")) {
                         result = await response.json();
-                        content = result.choices[0].message.content;
+                        if (result.choices[0].message.audio) {
+                            content = `<audio controls src=""></audio>`;
+                        } else {
+                            content = result.choices[0].message.content;
+                        }
                     } else {
                         content = `<iframe src="${textUrl}"></iframe>`;
                     }
@@ -1365,7 +1365,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     );
                     await load_conversation(await get_conversation(conversation_id));
                     safe_remove_cancel_button();
-                    play_last_message(scroll, response);
+                    play_last_message(result);
                     load_conversations();
                     hide_sidebar();
                 })
@@ -1460,7 +1460,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             ignored: ignored,
             aspect_ratio: aspectRatio,
             ...extraBody
-        }, Object.values(image_storage), message_id, scroll, finish_message);
+        }, Object.values(image_storage), message_id, finish_message);
     } catch (e) {
         console.error(e);
     }
@@ -1471,11 +1471,19 @@ async function scroll_to_bottom() {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-async function lazy_scroll_to_bottom() {
-    if (document.querySelector("#input-count input").checked) {
-        await scroll_to_bottom();
+let autoScrollEnabled = true;
+
+setInterval(() => {
+    // Auto-scroll if enabled
+    if (autoScrollEnabled) {
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
-}
+}, 2000);
+
+chatBody.addEventListener('scroll', () => {
+    const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10;
+    autoScrollEnabled = atBottom; // Re-enable if user scrolls to bottom
+});
 
 const clear_conversations = async () => {
     const elements = box_conversations.childNodes;
@@ -1688,7 +1696,7 @@ function merge_messages(message1, message2) {
 // console.log(merge_messages("1 != 2", "```python\n1 != 2;"));
 // console.log(merge_messages("1 != 2;\n1 != 3;\n", "1 != 2;\n1 != 3;\n"));
 
-const load_conversation = async (conversation, scroll=true) => {
+const load_conversation = async (conversation) => {
     if (!conversation) {
         return;
     }
@@ -1900,18 +1908,10 @@ const load_conversation = async (conversation, scroll=true) => {
     await register_message_buttons();
     highlight(chatBody);
     regenerate_button.classList.remove("regenerate-hidden");
-
-    if (scroll && document.querySelector("#input-count input").checked) {
-        chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-
-        setTimeout(() => {
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }, 500);
-        return true;
-    }
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 };
 
-async function safe_load_conversation(conversation_id, scroll=true) {
+async function safe_load_conversation(conversation_id) {
     let is_running = false
     for (const key in controller_storage) {
         if (!controller_storage[key].signal.aborted) {
@@ -1921,7 +1921,7 @@ async function safe_load_conversation(conversation_id, scroll=true) {
     }
     if (!is_running) {
         let conversation = await get_conversation(conversation_id);
-        return await load_conversation(conversation, scroll);
+        return await load_conversation(conversation);
     }
 }
 
@@ -2399,7 +2399,7 @@ function count_words_and_tokens(text, model, completion_tokens, prompt_tokens) {
     return `(${count_words(text)} ${framework.translate('words')}, ${count_chars(text)} ${framework.translate('chars')}, ${completion_tokens ? completion_tokens : count_tokens(model, text, prompt_tokens)} ${framework.translate('tokens')})`;
 }
 
-function update_message(content_map, message_id, content = null, scroll = true) {
+function update_message(content_map, message_id, content=null) {
     // Clear previous timeouts
     content_map.update_timeouts.forEach(timeoutId => clearTimeout(timeoutId));
     content_map.update_timeouts = [];
@@ -2449,9 +2449,6 @@ function update_message(content_map, message_id, content = null, scroll = true) 
         }
         
         highlight(content_map.inner);
-        if (scroll) {
-            lazy_scroll_to_bottom();
-        }
     }, 100));
 };
 
@@ -3029,8 +3026,14 @@ audioButton.addEventListener('click', async (event) => {
         i.classList.remove("fa-stop");
         i.classList.add("fa-microphone");
         mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        if(mediaRecorder.stream) {
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
         mediaRecorder = null;
+        if (providerSelect.value == "Live") {
+            await add_conversation(window.conversation_id);
+            await ask_gpt(get_message_id(), -1, false, "Live", "openai-audio", "next");
+        }
         return;
     }
 
@@ -3042,15 +3045,27 @@ audioButton.addEventListener('click', async (event) => {
         audio: true,
     })
 
+    if (providerSelect.value == "Live") {
+        mediaRecorder = new Recorder();
+        mediaRecorder.start();
+        return;
+    }
+
     if (!MediaRecorder.isTypeSupported('audio/webm')) {
         console.warn('audio/webm is not supported');
     }
-
     mediaRecorder = new MediaRecorder(stream, {
         mimeType: 'audio/webm',
     });
-
+    
     mediaRecorder.addEventListener('dataavailable', async event => {
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'file-upload-loading';
+        loadingIndicator.innerHTML = `
+            <div class="upload-spinner"></div>
+            <p>${framework.translate("Uploading audio...")}</p>
+        `;
+        document.body.appendChild(loadingIndicator);
         const formData = new FormData();
         formData.append('files', event.data);
         const bucket_id = generateUUID();
@@ -3062,6 +3077,11 @@ audioButton.addEventListener('click', async (event) => {
                 "x-recognition-language": language,
             }
         });
+        document.body.removeChild(loadingIndicator);
+        if (!response.ok) {
+            inputCount.innerText = framework.translate("Error uploading audio");
+            return;
+        }
         const result = await response.json()
         if (result.media) {
             const media = [];
@@ -3278,11 +3298,11 @@ function get_selected_model() {
     }
 }
 
-async function api(ressource, args=null, files=null, message_id=null, scroll=true, finish_message=null) {
+async function api(ressource, args=null, files=null, message_id=null, finish_message=null) {
     if (window?.pywebview) {
         if (args !== null) {
             if (ressource == "conversation") {
-                return pywebview.api[`get_${ressource}`](args, message_id, scroll);
+                return pywebview.api[`get_${ressource}`](args, message_id);
             }
             if (ressource == "models") {
                 ressource = "provider_models";
@@ -3355,7 +3375,7 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
             return;
         } else {
             try {
-                await read_response(response, message_id, args.provider || null, scroll, finish_message);
+                await read_response(response, message_id, args.provider || null, finish_message);
             } catch (e) {
                 console.error(e);
             }
@@ -3384,7 +3404,7 @@ async function api(ressource, args=null, files=null, message_id=null, scroll=tru
     return await response.json();
 }
 
-async function read_response(response, message_id, provider, scroll, finish_message) {
+async function read_response(response, message_id, provider, finish_message) {
     const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = ""
     while (true) {
@@ -3397,7 +3417,7 @@ async function read_response(response, message_id, provider, scroll, finish_mess
                 continue;
             }
             try {
-                add_message_chunk(JSON.parse(buffer + line), message_id, provider, scroll, finish_message);
+                add_message_chunk(JSON.parse(buffer + line), message_id, provider, finish_message);
                 buffer = "";
             } catch {
                 buffer += line
@@ -4365,7 +4385,7 @@ function enhanceFileUpload() {
         loadingIndicator.className = 'file-upload-loading';
         loadingIndicator.innerHTML = `
             <div class="upload-spinner"></div>
-            <p>Uploading files...</p>
+            <p>${framework.translate("Uploading files...")}</p>
         `;
         document.body.appendChild(loadingIndicator);
         

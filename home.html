@@ -208,7 +208,8 @@
             import * as hub from "@huggingface/hub";
             import { oauthLoginUrl, oauthHandleRedirectIfPresent } from "@huggingface/hub";
 
-            localStorge.removeItem("backendUrl ");framework.connectToBackend(document.getElementById("connect_status"));
+            localStorage.removeItem("backendUrl ");
+            framework.connectToBackend(document.getElementById("connect_status"));
 
             const isIframe = window.self !== window.top;
             const button = document.querySelector('form a.button');

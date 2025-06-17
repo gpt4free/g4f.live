@@ -14,6 +14,7 @@ if (["https:", "http:"].includes(window.location.protocol)) {
 }
 checkUrls.push("https://phone.g4f.dev");
 checkUrls.push("https://host.g4f.dev");
+checkUrls.push("https://home.g4f.dev");
 async function checkUrl(url, connectStatus) {
     let response;
     try {
@@ -31,7 +32,7 @@ async function checkUrl(url, connectStatus) {
     return false;
 }
 framework.backendUrl = "";
-if (localStorage.getItem('backendUrl') == "https://host.g4f.dev") {
+if (localStorage.getItem('backendUrl').endsWith(".g4f.dev")) {
     framework.backendUrl = localStorage.getItem('backendUrl');
 }
 framework.connectToBackend = async (connectStatus) => {

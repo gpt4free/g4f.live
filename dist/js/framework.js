@@ -31,9 +31,9 @@ async function checkUrl(url, connectStatus) {
     }
     return false;
 }
-framework.backendUrl = "";
-if (localStorage.getItem('backendUrl').endsWith(".g4f.dev")) {
-    framework.backendUrl = localStorage.getItem('backendUrl');
+framework.backendUrl = localStorage.getItem('backendUrl')
+if (framework.backendUrl && !framework.backendUrl.endsWith(".g4f.dev")) {
+    framework.backendUrl = "";
 }
 framework.connectToBackend = async (connectStatus) => {
     for (const url of checkUrls) {

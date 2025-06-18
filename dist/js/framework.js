@@ -120,6 +120,12 @@ framework.translateAll = async () =>{
     localStorage.setItem(framework.translationKey, JSON.stringify(translations || allTranslations));
     return allTranslations;
 }
+framework.delete = async (bucket_id) => {
+    const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}`;
+    await fetch(delete_url, {
+        method: 'DELETE'
+    });
+}
 async function query(prompt, options={ json: false, cache: true }) {
     if (options === true || options === false) {
         options = { json: options, cache: true };

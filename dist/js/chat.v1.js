@@ -887,7 +887,7 @@ async function load_provider_parameters(provider) {
     }
 }
 
-async function add_message_chunk(message, message_id, provider, scroll, finish_message=null) {
+async function add_message_chunk(message, message_id, provider, finish_message=null) {
     content_map = content_storage[message_id];
     if (message.type == "conversation") {
         const conversation = await get_conversation(window.conversation_id);
@@ -1481,11 +1481,11 @@ setInterval(() => {
     if (autoScrollEnabled) {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
-}, 2000);
+}, 1000);
 
 chatBody.addEventListener('scroll', () => {
     const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10;
-    autoScrollEnabled = atBottom; // Re-enable if user scrolls to bottom
+    autoScrollEnabled = atBottom && chatBody.clientHeight > 0;
 });
 
 const clear_conversations = async () => {
@@ -1594,20 +1594,14 @@ const delete_conversation = async (conversation_id) => {
     for (const message of conversation.items)  {
         if (Array.isArray(message.content)) {
             for (const item of message.content) {
-                if ("bucket_id" in item) {
-                    const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(item.bucket_id)}`;
-                    await fetch(delete_url, {
-                        method: 'DELETE'
-                    });
+                if (item.bucket_id) {
+                    await framework.delete(item.bucket_id);
                 }
             }
         }
     }
     if (conversation.share) {
-        const url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(conversation.id)}`;
-        await fetch(url, {
-            method: 'DELETE'
-        });
+        await framework.delete(conversation.id);
     }
     appStorage.removeItem(`conversation:${conversation_id}`);
 
@@ -2020,11 +2014,8 @@ const remove_message = async (conversation_id, index) => {
     }
     if (Array.isArray(old_message.content)) {
         for (const item of old_message.content) {
-            if ("bucket_id" in item) {
-                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURI(item.bucket_id)}`;
-                await fetch(delete_url, {
-                    method: 'DELETE'
-                });
+            if (item.bucket_id) {
+                await framework.delete(item.bucket_id);
             }
         }
     }
@@ -2953,10 +2944,7 @@ function renderMediaSelect() {
         img.onclick = async () => {
             img.remove();
             delete image_storage[object_url];
-            const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(item.bucket_id)}`;
-            await fetch(delete_url, {
-                method: 'DELETE'
-            });
+            await framework.delete(item.bucket_id);
         }
         img.onload = () => {
             link.title += `\n${img.naturalWidth}x${img.naturalHeight}`;
@@ -2998,10 +2986,7 @@ mediaSelect.querySelector(".close").onclick = () => {
             if (file instanceof File) {
                 URL.revokeObjectURL(object_url)
             } else if (file.bucket_id) {
-                const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(file.bucket_id)}`;
-                await fetch(delete_url, {
-                    method: 'DELETE'
-                });
+                await framework.delete(file.bucket_id);
             }
         });
         image_storage = {};
@@ -3962,19 +3947,19 @@ function initMobileEnhancements() {
   }
   
   // Double tap to scroll to bottom
-  let lastTap = 0;
-  chatBody.addEventListener('touchend', e => {
-    const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTap;
+//   let lastTap = 0;
+//   chatBody.addEventListener('touchend', e => {
+//     const currentTime = new Date().getTime();
+//     const tapLength = currentTime - lastTap;
     
-    if (tapLength < 300 && tapLength > 0) {
-      // Double tap detected
-      scroll_to_bottom();
-      e.preventDefault();
-    }
+//     if (tapLength < 300 && tapLength > 0) {
+//       // Double tap detected
+//       scroll_to_bottom();
+//       e.preventDefault();
+//     }
     
-    lastTap = currentTime;
-  });
+//     lastTap = currentTime;
+//   });
   
   // Improve file input experience on mobile
   const fileLabels = document.querySelectorAll('.file-label');

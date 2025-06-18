@@ -12,8 +12,8 @@ if (window.location.protocol === "file:") {
 if (["https:", "http:"].includes(window.location.protocol)) {
     checkUrls.push(window.location.origin);
 }
-checkUrls.push("https://phone.g4f.dev");
 checkUrls.push("https://host.g4f.dev");
+checkUrls.push("https://phone.g4f.dev");
 checkUrls.push("https://home.g4f.dev");
 async function checkUrl(url, connectStatus) {
     let response;

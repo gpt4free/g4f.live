@@ -79,6 +79,7 @@ let title_storage = {};
 let parameters_storage = {};
 let finish_storage = {};
 let usage_storage = {};
+let continue_storage = {};
 let reasoning_storage = {};
 let title_ids_storage = {};
 let image_storage = {};
@@ -951,7 +952,7 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
             div.innerHTML = framework.markdown(message.content);
             const media = div.querySelector("img, video")
             content_map.inner.appendChild(div);
-            let cursorDiv = message_el.querySelector(".cursor");
+            let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
             const i = document.createElement("i");
             i.classList.add("fas", "fa-spinner", "fa-spin");
@@ -971,6 +972,8 @@ async function add_message_chunk(message, message_id, provider, scroll, finish_m
         update_message(content_map, message_id, framework.markdown(message.login), scroll);
     } else if (message.type == "finish") {
         finish_storage[message_id] = message.finish;
+    } else if (message.type == "continue") {
+        continue_storage[message_id] = message.finish;
     } else if (message.type == "usage") {
         usage_storage[message_id] = message.usage;
     } else if (message.type == "reasoning") {
@@ -3379,6 +3382,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
             } catch (e) {
                 console.error(e);
             }
+            while (continue_storage[message_id]) {
+                delete continue_storage[message_id];
+                await api("conversation", args, files, message_id, finish_message)
+            }
             await finish_message();
             return;
         }
@@ -3506,7 +3513,15 @@ async function injectPuter() {
         }
         var tag = document.createElement('script');
         tag.src = "https://js.puter.com/v2/";
-        tag.onload = () => {hasPuter = true; resolve(puter);}
+        tag.onload = () => {
+            hasPuter = true;
+            resolve(puter);
+            if (!localStorage.getItem("puter.auth.token")) {
+                puter.auth.signIn().then((res) => {
+                    debug.log('Signed in:',  res);
+                });
+            }
+        }
         tag.onerror = reject;
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -3546,11 +3561,6 @@ async function load_provider_models(provider=null) {
     }
     if (provider.startsWith("Puter") || provider == "AnyProvider") {
         await injectPuter();
-        if (!localStorage.getItem("puter.auth.token")) {
-            puter.auth.signIn().then((res) => {
-                debug.log('Signed in<br>' + JSON.stringify(res));
-            });
-        }
         if (provider == "Puter") {
             await load_puter_models();
             return;

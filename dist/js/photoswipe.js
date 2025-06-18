@@ -5,8 +5,7 @@ import PhotoSwipeSlideshow from "https://cdn.jsdelivr.net/gh/dpet23/photoswipe-s
 
 const lightbox = new PhotoSwipeLightbox({
     gallery: '#chatBody',
-    children: 'a:has(img)',
-    initialZoomLevel: 'fill',
+    children: 'a:has(img), video',
     secondaryZoomLevel: 1,
     maxZoomLevel: 2,
     allowPanToNext: true,
@@ -14,6 +13,13 @@ const lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe'),
 });
 lightbox.addFilter('itemData', (itemData, index) => {
+    if (itemData.element.videoWith) {
+        itemData.type = 'video';
+        itemData.src = itemData.element.src;
+        itemData.width = itemData.element.videoWidth;
+        itemData.height = itemData.element.videoHeight;
+        return itemData;
+    }
     const img = itemData.element.querySelector('img');
     itemData.width = img.naturalWidth || 1024;
     itemData.height = img.naturalHeight || 1024;

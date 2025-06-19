@@ -3367,7 +3367,12 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
                 if (continue_storage[message_id]) {
                     delete continue_storage[message_id];
                     await api("conversation", args, files, message_id, finish_message)
+                    await read_response(response, message_id, args.provider || null, finish_message);
                 }
+            }
+            if (response.status == 524) {
+                await api("conversation", args, files, message_id, finish_message)
+                await read_response(response, message_id, args.provider || null, finish_message);
             }
             await finish_message();
             return;

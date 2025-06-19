@@ -40,7 +40,8 @@ const translationSnipptes = [
     "{0} Messages were imported", "{0} File(s) uploaded successfully",
     "{0} Conversations/Settings were imported successfully",
     "No content found", "Files are loaded successfully",
-    "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)", "Get API key", "Uploading files..."
+    "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
+    "Get API key", "Uploading files...", "Invalid link"
 ];
 
 let login_urls_storage = {
@@ -49,8 +50,6 @@ let login_urls_storage = {
     "PollinationsAI": ["Pollinations AI", "https://auth.pollinations.ai", ["Live"]],
     "Puter": ["Puter.js", "", []],
 };
-
-let hasPuter = false;
 
 const modelTags = {
     image: "📸 Image Generation",
@@ -69,6 +68,7 @@ framework.init({
     translations: true
 });
 
+let hasPuter = false;
 let provider_storage = {};
 let message_storage = {};
 let controller_storage = {};
@@ -1040,7 +1040,7 @@ async function play_last_message(response = null) {
             }
         } else {
             if (response) {
-                last_media.src = `data:audio/mp3;base64,${response.choices[0].message.audio.data}`;
+                last_media.src = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
             }
             last_media.play();
         }
@@ -1325,11 +1325,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 body.audio = {voice: "alloy", format: "mp3"};
                 body.modalities = ["text", "audio"];
             }
-            if (modelProvider.options[modelProvider.selectedIndex]?.dataset.audio) {
-                textUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${encodeURIComponent(model)}&seed=${seed}`;
-                method = "GET";
-                body = null
-            }
             await fetch(textUrl, {method: method, body: JSON.stringify(body), headers: headers})
                 .then(async (response) => {
                     if (!response.ok) {
@@ -1346,7 +1341,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     } else if (mimeType && mimeType.startsWith("application/json")) {
                         result = await response.json();
                         if (result.choices[0].message.audio) {
-                            content = `<audio controls src=""></audio>`;
+                            content = `<audio controls></audio>`;
+                            content = `${content}\n\n${result.choices[0].message.audio.transcript}`
                         } else {
                             content = result.choices[0].message.content;
                         }

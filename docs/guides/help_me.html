@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h3 class="heading-element">Guide: How can AI help me with writing code?</h3><a id="user-content-guide-how-can-ai-help-me-with-writing-code" class="anchor" aria-label="Permalink: Guide: How can AI help me with writing code?" href="#guide-how-can-ai-help-me-with-writing-code"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h3>Guide: How can AI help me with writing code?</h3>
 <p>🤖 Ever dreamt of writing code at lightning speed, effortlessly crafting clean, bug-free functionalities? Welcome to the age of AI-powered coding, where your imagination merges seamlessly with the machine's precision. This guide unveils 4 powerful ways AI can become your secret weapon in the coding world, saving you time, resources, and frustration. 😎</p>
 <ul>
 <li>Language Agnostic? No Problem! Rewrite Code with Ease</li>
@@ -64,36 +64,36 @@
 <li>Custom Functions: Your AI-Powered Genie in a Bottle</li>
 </ul>
 <p>So you can streamline your coding process, improve code quality, and enhance productivity.</p>
-<div class="markdown-heading"><h4 class="heading-element">1. Rewriting Code from One Language to Another</h4><a id="user-content-1-rewriting-code-from-one-language-to-another" class="anchor" aria-label="Permalink: 1. Rewriting Code from One Language to Another" href="#1-rewriting-code-from-one-language-to-another"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>1. Rewriting Code from One Language to Another</h4>
 <p>You can leverage AI to translate code from one programming language to another. For instance, you can easily convert JavaScript code to Python using the following approach:</p>
 <p><strong>Prompt:</strong></p>
-<pre><code>Rewrite this JavaScript code to Python code. Use the aiohttp package:
+<pre class="notranslate"><code class="notranslate">Rewrite this JavaScript code to Python code. Use the aiohttp package:
 </code></pre>
-<div class="highlight highlight-source-js"><pre><span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">fetch_data</span><span class="pl-kos">(</span><span class="pl-s1">url</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">fetch_data</span><span class="pl-kos">(</span><span class="pl-s1">url</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s1">url</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">const</span> <span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     <span class="pl-k">return</span> <span class="pl-s1">data</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span></pre></div>
 <p><strong>AI Response:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">aiohttp</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">aiohttp</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">fetch_data</span>(<span class="pl-s1">url</span>):
     <span class="pl-k">async</span> <span class="pl-k">with</span> <span class="pl-s1">aiohttp</span>.<span class="pl-c1">ClientSession</span>() <span class="pl-k">as</span> <span class="pl-s1">session</span>:
         <span class="pl-k">async</span> <span class="pl-k">with</span> <span class="pl-s1">session</span>.<span class="pl-c1">get</span>(<span class="pl-s1">url</span>) <span class="pl-k">as</span> <span class="pl-s1">response</span>:
             <span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">response</span>.<span class="pl-c1">json</span>()
             <span class="pl-k">return</span> <span class="pl-s1">data</span></pre></div>
-<div class="markdown-heading"><h4 class="heading-element">2. Improving Written Code</h4><a id="user-content-2-improving-written-code" class="anchor" aria-label="Permalink: 2. Improving Written Code" href="#2-improving-written-code"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>2. Improving Written Code</h4>
 <p>You can ask the AI to enhance your code by adding comments, docstrings, and type hints for better readability and maintainability.</p>
 <p><strong>Example Usage:</strong></p>
-<pre><code>Improve this Python code, add Google docstrings and type hints. 
+<pre class="notranslate"><code class="notranslate">Improve this Python code, add Google docstrings and type hints. 
 Responses with the complete code and don't use placeholders.
 Keep the comments:
 </code></pre>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">def</span> <span class="pl-en">calculate_area</span>(<span class="pl-s1">radius</span>):
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">calculate_area</span>(<span class="pl-s1">radius</span>):
     <span class="pl-c"># Calculate the area of a circle</span>
     <span class="pl-k">return</span> <span class="pl-c1">3.14</span> <span class="pl-c1">*</span> <span class="pl-s1">radius</span> <span class="pl-c1">**</span> <span class="pl-c1">2</span></pre></div>
 <p><strong>AI Response:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">def</span> <span class="pl-en">calculate_area</span>(<span class="pl-s1">radius</span>: <span class="pl-smi">float</span>) <span class="pl-c1">-&gt;</span> <span class="pl-smi">float</span>:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">calculate_area</span>(<span class="pl-s1">radius</span>: <span class="pl-smi">float</span>) <span class="pl-c1">-&gt;</span> <span class="pl-smi">float</span>:
     <span class="pl-s">"""Calculate the area of a circle.</span>
 <span class="pl-s"></span>
 <span class="pl-s">    Args:</span>
@@ -103,33 +103,32 @@ Keep the comments:
 <span class="pl-s">        float: The area of the circle.</span>
 <span class="pl-s">    """</span>
     <span class="pl-k">return</span> <span class="pl-c1">3.14</span> <span class="pl-c1">*</span> <span class="pl-s1">radius</span> <span class="pl-c1">**</span> <span class="pl-c1">2</span></pre></div>
-<div class="markdown-heading"><h4 class="heading-element">3. Deobfuscating Unreadable Code</h4><a id="user-content-3-deobfuscating-unreadable-code" class="anchor" aria-label="Permalink: 3. Deobfuscating Unreadable Code" href="#3-deobfuscating-unreadable-code"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>3. Deobfuscating Unreadable Code</h4>
 <p>AI can help in making obfuscated or unreadable code more understandable and maintainable.</p>
 <p><strong>Example Usage:</strong></p>
-<pre><code>Deobfuscate this JavaScript code. Improve the readability:
+<pre class="notranslate"><code class="notranslate">Deobfuscate this JavaScript code. Improve the readability:
 </code></pre>
-<div class="highlight highlight-source-js"><pre><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
     <span class="pl-k">var</span> <span class="pl-s1">a</span> <span class="pl-c1">=</span> <span class="pl-s">'Hello'</span><span class="pl-kos">,</span> <span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s">'World'</span><span class="pl-kos">;</span>
     <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s">' '</span> <span class="pl-c1">+</span> <span class="pl-s1">b</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
 <p><strong>AI Response:</strong></p>
-<div class="highlight highlight-source-js"><pre><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
     <span class="pl-k">var</span> <span class="pl-s1">greeting</span> <span class="pl-c1">=</span> <span class="pl-s">'Hello'</span><span class="pl-kos">;</span>
     <span class="pl-k">var</span> <span class="pl-s1">subject</span> <span class="pl-c1">=</span> <span class="pl-s">'World'</span><span class="pl-kos">;</span>
     <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">greeting</span> <span class="pl-c1">+</span> <span class="pl-s">' '</span> <span class="pl-c1">+</span> <span class="pl-s1">subject</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
-<div class="markdown-heading"><h4 class="heading-element">4. Writing Custom Functions</h4><a id="user-content-4-writing-custom-functions" class="anchor" aria-label="Permalink: 4. Writing Custom Functions" href="#4-writing-custom-functions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>4. Writing Custom Functions</h4>
 <p>You can also ask the AI to generate custom functions or help you with specific coding issues.</p>
 <p><strong>Example Usage:</strong></p>
-<pre><code>Write a function that returns the sum of two numbers.
+<pre class="notranslate"><code class="notranslate">Write a function that returns the sum of two numbers.
 </code></pre>
 <p><strong>AI Response:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">def</span> <span class="pl-en">add_numbers</span>(<span class="pl-s1">a</span>, <span class="pl-s1">b</span>):
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">add_numbers</span>(<span class="pl-s1">a</span>, <span class="pl-s1">b</span>):
     <span class="pl-s">"""Add two numbers together."""</span>
     <span class="pl-k">return</span> <span class="pl-s1">a</span> <span class="pl-c1">+</span> <span class="pl-s1">b</span></pre></div>
 <p>These are just a few ways AI can revolutionize your coding experience. As AI technology continues to evolve, the possibilities are endless. So, embrace the future, unlock the power of AI, and watch your coding potential soar! 👷‍♂️</p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

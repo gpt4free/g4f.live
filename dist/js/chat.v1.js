@@ -1197,7 +1197,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         }
         message_index = message_index < 0 ? conversation.items.length-1 : message_index;
         const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
-        new_message ? new_message.scrollIntoView() : null;
+        new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
         let cursorDiv = message_el.querySelector(".cursor");
         if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         await safe_remove_cancel_button();

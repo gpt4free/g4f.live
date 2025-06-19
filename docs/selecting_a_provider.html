@@ -55,13 +55,13 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Selecting a Provider</h2><a id="user-content-g4f---selecting-a-provider" class="anchor" aria-label="Permalink: G4F - Selecting a Provider" href="#g4f---selecting-a-provider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>The Interference API also allows you to specify which provider(s) to use for processing requests. This is done using the <code>provider</code> parameter, which can be included alongside the <code>model</code> parameter in your API requests. Providers can be specified as a space-separated string of provider IDs.</strong></p>
-<div class="markdown-heading"><h4 class="heading-element">How to Specify a Provider</h4><a id="user-content-how-to-specify-a-provider" class="anchor" aria-label="Permalink: How to Specify a Provider" href="#how-to-specify-a-provider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>To select one or more providers, include the <code>provider</code> parameter in your request body. This parameter accepts a string of space-separated provider IDs. Each ID represents a specific provider available in the system.</p>
-<div class="markdown-heading"><h4 class="heading-element">Example: Getting a List of Available Providers</h4><a id="user-content-example-getting-a-list-of-available-providers" class="anchor" aria-label="Permalink: Example: Getting a List of Available Providers" href="#example-getting-a-list-of-available-providers"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Selecting a Provider</h2>
+<p><strong>The Interference API also allows you to specify which provider(s) to use for processing requests. This is done using the <code class="notranslate">provider</code> parameter, which can be included alongside the <code class="notranslate">model</code> parameter in your API requests. Providers can be specified as a space-separated string of provider IDs.</strong></p>
+<h4>How to Specify a Provider</h4>
+<p>To select one or more providers, include the <code class="notranslate">provider</code> parameter in your request body. This parameter accepts a string of space-separated provider IDs. Each ID represents a specific provider available in the system.</p>
+<h4>Example: Getting a List of Available Providers</h4>
 <p>Use the following Python code to fetch the list of available providers:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:1337/v1/providers"</span>
 
@@ -70,9 +70,9 @@
 
 <span class="pl-k">for</span> <span class="pl-s1">provider</span> <span class="pl-c1">in</span> <span class="pl-s1">providers</span>:
     <span class="pl-en">print</span>(<span class="pl-s">f"ID: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider</span>[<span class="pl-s">'id'</span>]<span class="pl-kos">}</span></span>, URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider</span>[<span class="pl-s">'url'</span>]<span class="pl-kos">}</span></span>"</span>)</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Example: Getting Detailed Information About a Specific Provider</h4><a id="user-content-example-getting-detailed-information-about-a-specific-provider" class="anchor" aria-label="Permalink: Example: Getting Detailed Information About a Specific Provider" href="#example-getting-detailed-information-about-a-specific-provider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Example: Getting Detailed Information About a Specific Provider</h4>
 <p>Retrieve details about a specific provider, including supported models and parameters:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">provider_id</span> <span class="pl-c1">=</span> <span class="pl-s">"HuggingChat"</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">provider_id</span> <span class="pl-c1">=</span> <span class="pl-s">"HuggingChat"</span>
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">f"http://localhost:1337/v1/providers/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider_id</span><span class="pl-kos">}</span></span>"</span>
 
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">get</span>(<span class="pl-s1">url</span>, <span class="pl-s1">headers</span><span class="pl-c1">=</span>{<span class="pl-s">"accept"</span>: <span class="pl-s">"application/json"</span>})
@@ -81,9 +81,9 @@
 <span class="pl-en">print</span>(<span class="pl-s">f"Provider ID: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider_details</span>[<span class="pl-s">'id'</span>]<span class="pl-kos">}</span></span>"</span>)
 <span class="pl-en">print</span>(<span class="pl-s">f"Supported Models: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider_details</span>[<span class="pl-s">'models'</span>]<span class="pl-kos">}</span></span>"</span>)
 <span class="pl-en">print</span>(<span class="pl-s">f"Parameters: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider_details</span>[<span class="pl-s">'params'</span>]<span class="pl-kos">}</span></span>"</span>)</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Example: Using a Single Provider in Text Generation</h4><a id="user-content-example-using-a-single-provider-in-text-generation" class="anchor" aria-label="Permalink: Example: Using a Single Provider in Text Generation" href="#example-using-a-single-provider-in-text-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Specify a single provider (<code>HuggingChat</code>) in the request body:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<h4>Example: Using a Single Provider in Text Generation</h4>
+<p>Specify a single provider (<code class="notranslate">HuggingChat</code>) in the request body:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:1337/v1/chat/completions"</span>
 
@@ -103,9 +103,9 @@
         <span class="pl-en">print</span>(<span class="pl-s1">choice</span>[<span class="pl-s">"message"</span>][<span class="pl-s">"content"</span>])
 <span class="pl-k">else</span>:
     <span class="pl-en">print</span>(<span class="pl-s">"No response received"</span>)</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Example: Using Multiple Providers in Text Generation</h4><a id="user-content-example-using-multiple-providers-in-text-generation" class="anchor" aria-label="Permalink: Example: Using Multiple Providers in Text Generation" href="#example-using-multiple-providers-in-text-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Example: Using Multiple Providers in Text Generation</h4>
 <p>Specify multiple providers by separating their IDs with a space:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:1337/v1/chat/completions"</span>
 
@@ -125,9 +125,9 @@
         <span class="pl-en">print</span>(<span class="pl-s1">choice</span>[<span class="pl-s">"message"</span>][<span class="pl-s">"content"</span>])
 <span class="pl-k">else</span>:
     <span class="pl-en">print</span>(<span class="pl-s">"No response received"</span>)</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Example: Using a Provider for Image Generation</h4><a id="user-content-example-using-a-provider-for-image-generation" class="anchor" aria-label="Permalink: Example: Using a Provider for Image Generation" href="#example-using-a-provider-for-image-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>You can also use the <code>provider</code> parameter for image generation:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<h4>Example: Using a Provider for Image Generation</h4>
+<p>You can also use the <code class="notranslate">provider</code> parameter for image generation:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:1337/v1/images/generate"</span>
 
@@ -146,20 +146,16 @@
         <span class="pl-en">print</span>(<span class="pl-s">f"Image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">item</span>[<span class="pl-s">'url'</span>]<span class="pl-kos">}</span></span>"</span>)
 <span class="pl-k">else</span>:
     <span class="pl-en">print</span>(<span class="pl-s">"No response received"</span>)</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">Key Points About Providers</h3><a id="user-content-key-points-about-providers" class="anchor" aria-label="Permalink: Key Points About Providers" href="#key-points-about-providers"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Key Points About Providers</h3>
 <ul>
-<li>
-<strong>Flexibility:</strong> Use the <code>provider</code> parameter to select one or more providers for your requests.</li>
-<li>
-<strong>Discoverability:</strong> Fetch available providers using the <code>/providers</code> endpoint.</li>
-<li>
-<strong>Compatibility:</strong> Check provider details to ensure support for the desired models and parameters.</li>
+<li><strong>Flexibility:</strong> Use the <code class="notranslate">provider</code> parameter to select one or more providers for your requests.</li>
+<li><strong>Discoverability:</strong> Fetch available providers using the <code class="notranslate">/providers</code> endpoint.</li>
+<li><strong>Compatibility:</strong> Check provider details to ensure support for the desired models and parameters.</li>
 </ul>
 <p>By specifying providers in a space-separated string, you can efficiently target specific providers or combine multiple providers in a single request. This approach gives you fine-grained control over how your requests are processed.</p>
 <hr>
 <p><a href="interference-api.html">Go to Interference API Docs</a></p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

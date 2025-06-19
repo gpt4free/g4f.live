@@ -55,21 +55,21 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h3 class="heading-element">Create Provider with AI Tool</h3><a id="user-content-create-provider-with-ai-tool" class="anchor" aria-label="Permalink: Create Provider with AI Tool" href="#create-provider-with-ai-tool"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Call in your terminal the <code>create_provider</code> script:</p>
-<div class="highlight highlight-source-shell"><pre>python -m etc.tool.create_provider</pre></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h3>Create Provider with AI Tool</h3>
+<p>Call in your terminal the <code class="notranslate">create_provider</code> script:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python -m etc.tool.create_provider</pre></div>
 <ol>
 <li>Enter your name for the new provider.</li>
-<li>Copy and paste the <code>cURL</code> command from your browser developer tools.</li>
+<li>Copy and paste the <code class="notranslate">cURL</code> command from your browser developer tools.</li>
 <li>Let the AI ​​create the provider for you.</li>
 <li>Customize the provider according to your needs.</li>
 </ol>
-<div class="markdown-heading"><h4 class="heading-element">Create Provider</h4><a id="user-content-create-provider" class="anchor" aria-label="Permalink: Create Provider" href="#create-provider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Create Provider</h4>
 <ol>
 <li>Create a new file in <a href="/g4f/Provider">g4f/Provider</a> with the name of the Provider.</li>
 <li>Implement a class that extends <a href="/g4f/providers/base_provider.py">BaseProvider</a>.</li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> __future__ <span class="pl-k">import</span> <span class="pl-s1">annotations</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> __future__ <span class="pl-k">import</span> <span class="pl-s1">annotations</span>
 
 <span class="pl-k">from</span> ..<span class="pl-s1">typing</span> <span class="pl-k">import</span> <span class="pl-v">AsyncResult</span>, <span class="pl-v">Messages</span>
 <span class="pl-k">from</span> .<span class="pl-s1">base_provider</span> <span class="pl-k">import</span> <span class="pl-v">AsyncGeneratorProvider</span>
@@ -88,12 +88,11 @@
     ) <span class="pl-c1">-&gt;</span> <span class="pl-smi">AsyncResult</span>:
         <span class="pl-k">yield</span> <span class="pl-s">""</span></pre></div>
 <ol start="4">
-<li>Here, you can adjust the settings, for example, if the website does support streaming, set <code>supports_stream</code> to <code>True</code>...</li>
-<li>Write code to request the provider in <code>create_async_generator</code> and <code>yield</code> the response, <em>even if</em> it's a one-time response, do not hesitate to look at other providers for inspiration.</li>
-<li>Add the Provider Import in <a href="./g4f/Provider/__init__.py"><code>g4f/Provider/__init__.py</code></a>
-</li>
+<li>Here, you can adjust the settings, for example, if the website does support streaming, set <code class="notranslate">supports_stream</code> to <code class="notranslate">True</code>...</li>
+<li>Write code to request the provider in <code class="notranslate">create_async_generator</code> and <code class="notranslate">yield</code> the response, <em>even if</em> it's a one-time response, do not hesitate to look at other providers for inspiration.</li>
+<li>Add the Provider Import in <a href="./g4f/Provider/__init__.py"><code class="notranslate">g4f/Provider/__init__.py</code></a></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> .<span class="pl-v">HogeService</span> <span class="pl-k">import</span> <span class="pl-v">HogeService</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> .<span class="pl-v">HogeService</span> <span class="pl-k">import</span> <span class="pl-v">HogeService</span>
 
 <span class="pl-s1">__all__</span> <span class="pl-c1">=</span> [
   <span class="pl-v">HogeService</span>,
@@ -101,7 +100,7 @@
 <ol start="7">
 <li>You are done !, test the provider by calling it:</li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">g4f</span>.<span class="pl-c1">ChatCompletion</span>.<span class="pl-c1">create</span>(
     <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">'gpt-4o'</span>,
@@ -113,7 +112,6 @@
 <span class="pl-k">for</span> <span class="pl-s1">message</span> <span class="pl-c1">in</span> <span class="pl-s1">response</span>:
     <span class="pl-en">print</span>(<span class="pl-s1">message</span>, <span class="pl-s1">flush</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">end</span><span class="pl-c1">=</span><span class="pl-s">''</span>)</pre></div>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

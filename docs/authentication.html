@@ -55,13 +55,12 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Authentication Guide</h2><a id="user-content-g4f---authentication-guide" class="anchor" aria-label="Permalink: G4F - Authentication Guide" href="#g4f---authentication-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Authentication Guide</h2>
 <p>This documentation explains how to authenticate with G4F providers and configure GUI security. It covers API key management, cookie-based authentication, rate limiting, and GUI access controls.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element"><strong>Table of Contents</strong></h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2><strong>Table of Contents</strong></h2>
 <ol>
-<li>
-<strong><a href="#provider-authentication">Provider Authentication</a></strong>
+<li><strong><a href="#provider-authentication">Provider Authentication</a></strong>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
 <li><a href="#api-key-setup">API Key Setup</a></li>
@@ -74,8 +73,7 @@
 <li><a href="#supported-providers">Supported Providers</a></li>
 </ul>
 </li>
-<li>
-<strong><a href="#gui-authentication">GUI Authentication</a></strong>
+<li><strong><a href="#gui-authentication">GUI Authentication</a></strong>
 <ul>
 <li><a href="#server-setup">Server Setup</a></li>
 <li><a href="#browser-access">Browser Access</a></li>
@@ -86,38 +84,38 @@
 <li><strong><a href="#troubleshooting">Troubleshooting</a></strong></li>
 </ol>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element"><strong>Provider Authentication</strong></h2><a id="user-content-provider-authentication" class="anchor" aria-label="Permalink: Provider Authentication" href="#provider-authentication"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Prerequisites</strong></h3><a id="user-content-prerequisites" class="anchor" aria-label="Permalink: Prerequisites" href="#prerequisites"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2><strong>Provider Authentication</strong></h2>
+<h3><strong>Prerequisites</strong></h3>
 <ul>
 <li>Python 3.7+</li>
-<li>Installed <code>g4f</code> package:
-<div class="highlight highlight-source-shell"><pre>pip install g4f</pre></div>
+<li>Installed <code class="notranslate">g4f</code> package:
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install g4f</pre></div>
 </li>
 <li>API keys or cookies from providers (if required).</li>
 </ul>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>API Key Setup</strong></h3><a id="user-content-api-key-setup" class="anchor" aria-label="Permalink: API Key Setup" href="#api-key-setup"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Step 1: Set Environment Variables</strong></h4><a id="user-content-step-1-set-environment-variables" class="anchor" aria-label="Permalink: Step 1: Set Environment Variables" href="#step-1-set-environment-variables"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3><strong>API Key Setup</strong></h3>
+<h4><strong>Step 1: Set Environment Variables</strong></h4>
 <p><strong>For Linux/macOS (Terminal)</strong>:</p>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> Example for Anthropic</span>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Example for Anthropic</span>
 <span class="pl-k">export</span> ANTHROPIC_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>your_key_here<span class="pl-pds">"</span></span>
 
 <span class="pl-c"><span class="pl-c">#</span> Example for HuggingFace</span>
 <span class="pl-k">export</span> HUGGINGFACE_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>another_key_here<span class="pl-pds">"</span></span></pre></div>
 <p><strong>For Windows (Command Prompt)</strong>:</p>
-<div class="highlight highlight-source-batchfile"><pre><span class="pl-c"><span class="pl-c">::</span> Example for Anthropic</span>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-c"><span class="pl-c">::</span> Example for Anthropic</span>
 <span class="pl-k">set</span> <span class="pl-smi">ANTHROPIC_API_KEY</span><span class="pl-k">=</span>your_key_here
 
 <span class="pl-c"><span class="pl-c">::</span> Example for HuggingFace</span>
 <span class="pl-k">set</span> <span class="pl-smi">HUGGINGFACE_API_KEY</span><span class="pl-k">=</span>another_key_here</pre></div>
 <p><strong>For Windows (PowerShell)</strong>:</p>
-<div class="highlight highlight-source-powershell"><pre><span class="pl-c"><span class="pl-c">#</span> Example for Anthropic</span>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Example for Anthropic</span>
 <span class="pl-smi">$<span class="pl-c1">env:</span>ANTHROPIC_API_KEY</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>your_key_here<span class="pl-pds">"</span></span>
 
 <span class="pl-c"><span class="pl-c">#</span> Example for HuggingFace</span>
 <span class="pl-smi">$<span class="pl-c1">env:</span>HUGGINGFACE_API_KEY</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>another_key_here<span class="pl-pds">"</span></span></pre></div>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Step 2: Initialize Client</strong></h4><a id="user-content-step-2-initialize-client" class="anchor" aria-label="Permalink: Step 2: Initialize Client" href="#step-2-initialize-client"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h4><strong>Step 2: Initialize Client</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-c"># Example for Anthropic</span>
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(
@@ -125,8 +123,8 @@
     <span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"your_key_here"</span>  <span class="pl-c"># Or use os.getenv("ANTHROPIC_API_KEY")</span>
 )</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Synchronous Usage</strong></h3><a id="user-content-synchronous-usage" class="anchor" aria-label="Permalink: Synchronous Usage" href="#synchronous-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h3><strong>Synchronous Usage</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-c"># Initialize with Anthropic</span>
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(<span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-s">"g4f.Provider.Anthropic"</span>, <span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"your_key_here"</span>)
@@ -138,8 +136,8 @@
 )
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Asynchronous Usage</strong></h3><a id="user-content-asynchronous-usage" class="anchor" aria-label="Permalink: Asynchronous Usage" href="#asynchronous-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h3><strong>Asynchronous Usage</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -154,8 +152,8 @@
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Multiple Providers with API Keys</strong></h3><a id="user-content-multiple-providers-with-api-keys" class="anchor" aria-label="Permalink: Multiple Providers with API Keys" href="#multiple-providers-with-api-keys"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">os</span>
+<h3><strong>Multiple Providers with API Keys</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">os</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
@@ -173,20 +171,18 @@
     )
     <span class="pl-en">print</span>(<span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">provider_name</span><span class="pl-kos">}</span></span>: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Cookie-Based Authentication</strong></h3><a id="user-content-cookie-based-authentication" class="anchor" aria-label="Permalink: Cookie-Based Authentication" href="#cookie-based-authentication"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3><strong>Cookie-Based Authentication</strong></h3>
 <p><strong>For Providers Like Gemini/Bing</strong>:</p>
 <ol>
 <li>Open your browser and log in to the provider's website.</li>
 <li>Use developer tools (F12) to copy cookies:
 <ul>
-<li>Chrome/Edge: <strong>Application</strong> → <strong>Cookies</strong>
-</li>
-<li>Firefox: <strong>Storage</strong> → <strong>Cookies</strong>
-</li>
+<li>Chrome/Edge: <strong>Application</strong> → <strong>Cookies</strong></li>
+<li>Firefox: <strong>Storage</strong> → <strong>Cookies</strong></li>
 </ul>
 </li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">Gemini</span>
 
 <span class="pl-c"># Using with cookies</span>
@@ -203,8 +199,8 @@
 )
 <span class="pl-en">print</span>(<span class="pl-s">f"Gemini: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Rate Limiting</strong></h3><a id="user-content-rate-limiting" class="anchor" aria-label="Permalink: Rate Limiting" href="#rate-limiting"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">aiolimiter</span> <span class="pl-k">import</span> <span class="pl-v">AsyncLimiter</span>
+<h3><strong>Rate Limiting</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">aiolimiter</span> <span class="pl-k">import</span> <span class="pl-v">AsyncLimiter</span>
 
 <span class="pl-c"># Limit to 5 requests per second</span>
 <span class="pl-s1">rate_limiter</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncLimiter</span>(<span class="pl-s1">max_rate</span><span class="pl-c1">=</span><span class="pl-c1">5</span>, <span class="pl-s1">time_period</span><span class="pl-c1">=</span><span class="pl-c1">1</span>)
@@ -213,8 +209,8 @@
     <span class="pl-k">async</span> <span class="pl-k">with</span> <span class="pl-s1">rate_limiter</span>:
         <span class="pl-k">return</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(...)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Error Handling</strong></h3><a id="user-content-error-handling" class="anchor" aria-label="Permalink: Error Handling" href="#error-handling"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">tenacity</span> <span class="pl-k">import</span> <span class="pl-s1">retry</span>, <span class="pl-s1">stop_after_attempt</span>, <span class="pl-s1">wait_exponential</span>
+<h3><strong>Error Handling</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">tenacity</span> <span class="pl-k">import</span> <span class="pl-s1">retry</span>, <span class="pl-s1">stop_after_attempt</span>, <span class="pl-s1">wait_exponential</span>
 
 <span class="pl-en">@<span class="pl-en">retry</span>(<span class="pl-s1">stop</span><span class="pl-c1">=</span><span class="pl-en">stop_after_attempt</span>(<span class="pl-c1">3</span>), <span class="pl-s1">wait</span><span class="pl-c1">=</span><span class="pl-en">wait_exponential</span>(<span class="pl-s1">multiplier</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">min</span><span class="pl-c1">=</span><span class="pl-c1">4</span>, <span class="pl-s1">max</span><span class="pl-c1">=</span><span class="pl-c1">10</span>))</span>
 <span class="pl-k">def</span> <span class="pl-en">safe_request</span>():
@@ -224,8 +220,8 @@
         <span class="pl-en">print</span>(<span class="pl-s">f"Attempt failed: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">str</span>(<span class="pl-s1">e</span>)<span class="pl-kos">}</span></span>"</span>)
         <span class="pl-k">raise</span></pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Supported Providers</strong></h3><a id="user-content-supported-providers" class="anchor" aria-label="Permalink: Supported Providers" href="#supported-providers"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<table>
+<h3><strong>Supported Providers</strong></h3>
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>Provider</th>
@@ -237,32 +233,32 @@
 <tr>
 <td>Anthropic</td>
 <td>API Key</td>
-<td><code>claude-3.5-sonnet</code></td>
+<td><code class="notranslate">claude-3.5-sonnet</code></td>
 </tr>
 <tr>
 <td>Gemini</td>
 <td>Cookies</td>
-<td><code>gemini-1.5-pro</code></td>
+<td><code class="notranslate">gemini-1.5-pro</code></td>
 </tr>
 <tr>
 <td>Groq</td>
 <td>API Key</td>
-<td><code>mixtral-8x7b</code></td>
+<td><code class="notranslate">mixtral-8x7b</code></td>
 </tr>
 <tr>
 <td>HuggingFace</td>
 <td>API Key</td>
-<td><code>llama-3.1-70b</code></td>
+<td><code class="notranslate">llama-3.1-70b</code></td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <p><em>Full list: <a href="providers-and-models.html">Providers and Models</a></em></p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element"><strong>GUI Authentication</strong></h2><a id="user-content-gui-authentication" class="anchor" aria-label="Permalink: GUI Authentication" href="#gui-authentication"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Server Setup</strong></h3><a id="user-content-server-setup" class="anchor" aria-label="Permalink: Server Setup" href="#server-setup"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2><strong>GUI Authentication</strong></h2>
+<h3><strong>Server Setup</strong></h3>
 <ol>
 <li>Create a password:
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> Linux/macOS</span>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Linux/macOS</span>
 <span class="pl-k">export</span> G4F_API_KEY=<span class="pl-s"><span class="pl-pds">"</span>your_password_here<span class="pl-pds">"</span></span>
 
 <span class="pl-c"><span class="pl-c">#</span> Windows (Command Prompt)</span>
@@ -272,25 +268,23 @@
 <span class="pl-smi">$env</span>:G4F_API_KEY = <span class="pl-s"><span class="pl-pds">"</span>your_password_here<span class="pl-pds">"</span></span></pre></div>
 </li>
 <li>Start the server:
-<div class="highlight highlight-source-shell"><pre>python -m g4f --debug --port 8080 --g4f-api-key <span class="pl-smi">$G4F_API_KEY</span></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python -m g4f --debug --port 8080 --g4f-api-key <span class="pl-smi">$G4F_API_KEY</span></pre></div>
 </li>
 </ol>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Browser Access</strong></h3><a id="user-content-browser-access" class="anchor" aria-label="Permalink: Browser Access" href="#browser-access"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3><strong>Browser Access</strong></h3>
 <ol>
-<li>Navigate to <code>http://localhost:8080/chat/</code>.</li>
+<li>Navigate to <code class="notranslate">http://localhost:8080/chat/</code>.</li>
 <li>Use credentials:
 <ul>
-<li>
-<strong>Username</strong>: Any value (e.g., <code>admin</code>).</li>
-<li>
-<strong>Password</strong>: Your <code>G4F_API_KEY</code>.</li>
+<li><strong>Username</strong>: Any value (e.g., <code class="notranslate">admin</code>).</li>
+<li><strong>Password</strong>: Your <code class="notranslate">G4F_API_KEY</code>.</li>
 </ul>
 </li>
 </ol>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element"><strong>Programmatic Access</strong></h3><a id="user-content-programmatic-access" class="anchor" aria-label="Permalink: Programmatic Access" href="#programmatic-access"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<h3><strong>Programmatic Access</strong></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">get</span>(
     <span class="pl-s">"http://localhost:8080/chat/"</span>,
@@ -298,11 +292,11 @@
 )
 <span class="pl-en">print</span>(<span class="pl-s">"Success!"</span> <span class="pl-k">if</span> <span class="pl-s1">response</span>.<span class="pl-c1">status_code</span> <span class="pl-c1">==</span> <span class="pl-c1">200</span> <span class="pl-k">else</span> <span class="pl-s">f"Failed: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">response</span>.<span class="pl-c1">status_code</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element"><strong>Best Practices</strong></h2><a id="user-content-best-practices" class="anchor" aria-label="Permalink: Best Practices" href="#best-practices"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2><strong>Best Practices</strong></h2>
 <ol>
 <li>🔒 <strong>Never hardcode keys</strong>
 <ul>
-<li>Use <code>.env</code> files or secret managers like AWS Secrets Manager.</li>
+<li>Use <code class="notranslate">.env</code> files or secret managers like AWS Secrets Manager.</li>
 </ul>
 </li>
 <li>🔄 <strong>Rotate keys every 90 days</strong>
@@ -317,13 +311,13 @@
 </li>
 <li>♻️ <strong>Retry transient errors</strong>
 <ul>
-<li>Use the <code>tenacity</code> library for robust retry logic.</li>
+<li>Use the <code class="notranslate">tenacity</code> library for robust retry logic.</li>
 </ul>
 </li>
 </ol>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element"><strong>Troubleshooting</strong></h2><a id="user-content-troubleshooting" class="anchor" aria-label="Permalink: Troubleshooting" href="#troubleshooting"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<table>
+<h2><strong>Troubleshooting</strong></h2>
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>Issue</th>
@@ -348,11 +342,10 @@
 <td>1. Check provider name spelling<br>2. Verify provider compatibility</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <hr>
 <p><strong><a href="providers-and-models.html">Providers and Models →</a></strong></p>
 <p><strong><a href="/docs/">← Return to Documentation</a></strong></p>
-<p><strong><a href="#table-of-contents">⬆ Back to Top</a></strong></p>
-</article>
+<p><strong><a href="#table-of-contents">⬆ Back to Top</a></strong></p></article>
 </body>
 </html>

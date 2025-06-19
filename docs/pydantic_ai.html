@@ -55,58 +55,55 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">PydanticAI Integration with G4F Client</h2><a id="user-content-pydanticai-integration-with-g4f-client" class="anchor" aria-label="Permalink: PydanticAI Integration with G4F Client" href="#pydanticai-integration-with-g4f-client"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>PydanticAI Integration with G4F Client</h2>
 <p>This README provides an overview of how to integrate PydanticAI with the G4F client to create an agent that interacts with a language model. With this setup, you'll be able to apply patches to use PydanticAI with G4F, enable debugging, and run simple agent-based interactions synchronously. However, please note that tool calls within AI requests are currently <strong>not fully supported</strong> in this environment.</p>
-<div class="markdown-heading"><h2 class="heading-element">Requirements</h2><a id="user-content-requirements" class="anchor" aria-label="Permalink: Requirements" href="#requirements"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Requirements</h2>
 <p>Before starting, make sure you have the following Python dependencies installed:</p>
 <ul>
-<li>
-<code>g4f</code>: A client that interfaces with various LLMs.</li>
-<li>
-<code>pydantic_ai</code>: A module that provides integration with Pydantic-based models.</li>
+<li><code class="notranslate">g4f</code>: A client that interfaces with various LLMs.</li>
+<li><code class="notranslate">pydantic_ai</code>: A module that provides integration with Pydantic-based models.</li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Installation</h3><a id="user-content-installation" class="anchor" aria-label="Permalink: Installation" href="#installation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>To install these dependencies, you can use <code>pip</code>:</p>
-<div class="highlight highlight-source-shell"><pre>pip install g4f pydantic_ai</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Step-by-Step Setup</h2><a id="user-content-step-by-step-setup" class="anchor" aria-label="Permalink: Step-by-Step Setup" href="#step-by-step-setup"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">1. Patch PydanticAI to Use G4F Models</h3><a id="user-content-1-patch-pydanticai-to-use-g4f-models" class="anchor" aria-label="Permalink: 1. Patch PydanticAI to Use G4F Models" href="#1-patch-pydanticai-to-use-g4f-models"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>In order to use PydanticAI with G4F models, you need to apply the necessary patch to the client. This can be done by importing <code>patch_infer_model</code> from <code>g4f.integration.pydantic_ai</code>. The <code>api_key</code> parameter is optional, so if you have one, you can provide it. If not, the system will proceed without it.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-s1">patch_infer_model</span>
+<h3>Installation</h3>
+<p>To install these dependencies, you can use <code class="notranslate">pip</code>:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install g4f pydantic_ai</pre></div>
+<h2>Step-by-Step Setup</h2>
+<h3>1. Patch PydanticAI to Use G4F Models</h3>
+<p>In order to use PydanticAI with G4F models, you need to apply the necessary patch to the client. This can be done by importing <code class="notranslate">patch_infer_model</code> from <code class="notranslate">g4f.integration.pydantic_ai</code>. The <code class="notranslate">api_key</code> parameter is optional, so if you have one, you can provide it. If not, the system will proceed without it.</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-s1">patch_infer_model</span>
 
 <span class="pl-en">patch_infer_model</span>(<span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"your_api_key_here"</span>)  <span class="pl-c"># Optional</span></pre></div>
-<p>If you don't have an API key, simply omit the <code>api_key</code> argument.</p>
-<div class="markdown-heading"><h3 class="heading-element">2. Enable Debug Logging</h3><a id="user-content-2-enable-debug-logging" class="anchor" aria-label="Permalink: 2. Enable Debug Logging" href="#2-enable-debug-logging"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>For troubleshooting and monitoring purposes, you may want to enable debug logging. This can be achieved by setting <code>g4f.debug.logging</code> to <code>True</code>.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">debug</span>
+<p>If you don't have an API key, simply omit the <code class="notranslate">api_key</code> argument.</p>
+<h3>2. Enable Debug Logging</h3>
+<p>For troubleshooting and monitoring purposes, you may want to enable debug logging. This can be achieved by setting <code class="notranslate">g4f.debug.logging</code> to <code class="notranslate">True</code>.</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">debug</span>
 
 <span class="pl-s1">g4f</span>.<span class="pl-c1">debug</span>.<span class="pl-c1">logging</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span></pre></div>
 <p>This will log detailed information about the internal processes and interactions.</p>
-<div class="markdown-heading"><h3 class="heading-element">3. Create a Simple Agent</h3><a id="user-content-3-create-a-simple-agent" class="anchor" aria-label="Permalink: 3. Create a Simple Agent" href="#3-create-a-simple-agent"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Now you are ready to create a simple agent that can interact with the LLM. The agent is initialized with a model, and you can also define a system prompt. Here's an example where a basic agent is created with the model <code>g4f:Gemini:Gemini</code> and a simple system prompt:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
+<h3>3. Create a Simple Agent</h3>
+<p>Now you are ready to create a simple agent that can interact with the LLM. The agent is initialized with a model, and you can also define a system prompt. Here's an example where a basic agent is created with the model <code class="notranslate">g4f:Gemini:Gemini</code> and a simple system prompt:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
 
 <span class="pl-c"># Define the agent</span>
 <span class="pl-s1">agent</span> <span class="pl-c1">=</span> <span class="pl-en">Agent</span>(
     <span class="pl-s">'g4f:Gemini:Gemini'</span>, <span class="pl-c"># g4f:provider:model_name or g4f:model_name</span>
     <span class="pl-s1">system_prompt</span><span class="pl-c1">=</span><span class="pl-s">'Be concise, reply with one sentence.'</span>,
 )</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">4. Run the Agent Synchronously</h3><a id="user-content-4-run-the-agent-synchronously" class="anchor" aria-label="Permalink: 4. Run the Agent Synchronously" href="#4-run-the-agent-synchronously"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Once the agent is set up, you can run it synchronously to interact with the LLM. The <code>run_sync</code> method sends a query to the LLM and returns the result.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># Run the agent synchronously with a user query</span>
+<h3>4. Run the Agent Synchronously</h3>
+<p>Once the agent is set up, you can run it synchronously to interact with the LLM. The <code class="notranslate">run_sync</code> method sends a query to the LLM and returns the result.</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># Run the agent synchronously with a user query</span>
 <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">agent</span>.<span class="pl-c1">run_sync</span>(<span class="pl-s">'Where does "hello world" come from?'</span>)
 
 <span class="pl-c"># Output the response</span>
 <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">data</span>)</pre></div>
-<p>In this example, the agent will send the system prompt along with the user query (<code>"Where does 'hello world' come from?"</code>) to the LLM. The LLM will process the request and return a concise answer.</p>
-<div class="markdown-heading"><h3 class="heading-element">Example Output</h3><a id="user-content-example-output" class="anchor" aria-label="Permalink: Example Output" href="#example-output"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-shell"><pre>The phrase <span class="pl-s"><span class="pl-pds">"</span>hello world<span class="pl-pds">"</span></span> is commonly used <span class="pl-k">in</span> programming tutorials to demonstrate basic syntax and the concept of outputting text to the screen.</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Tool Calls and Limitations</h2><a id="user-content-tool-calls-and-limitations" class="anchor" aria-label="Permalink: Tool Calls and Limitations" href="#tool-calls-and-limitations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p>In this example, the agent will send the system prompt along with the user query (<code class="notranslate">"Where does 'hello world' come from?"</code>) to the LLM. The LLM will process the request and return a concise answer.</p>
+<h3>Example Output</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">The phrase <span class="pl-s"><span class="pl-pds">"</span>hello world<span class="pl-pds">"</span></span> is commonly used <span class="pl-k">in</span> programming tutorials to demonstrate basic syntax and the concept of outputting text to the screen.</pre></div>
+<h2>Tool Calls and Limitations</h2>
 <p><strong>Important</strong>: Tool calls (such as applying external functions or calling APIs within the AI request itself) are <strong>currently not fully supported</strong>. If your system relies on invoking specific external tools or functions during the conversation with the model, you will need to implement this functionality outside the agent's context or handle it before or after the agent's request.</p>
 <p>For example, you can process your query or interact with external systems before passing the data to the agent.</p>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Simple Example without <code>patch_infer_model</code>
-</h3><a id="user-content-simple-example-without-patch_infer_model" class="anchor" aria-label="Permalink: Simple Example without patch_infer_model" href="#simple-example-without-patch_infer_model"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
+<h3>Simple Example without <code class="notranslate">patch_infer_model</code></h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">AIModel</span>
 
 <span class="pl-s1">agent</span> <span class="pl-c1">=</span> <span class="pl-en">Agent</span>(
@@ -115,10 +112,10 @@
 
 <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">agent</span>.<span class="pl-c1">run_sync</span>(<span class="pl-s">'Are you gpt-4o?'</span>)
 <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">data</span>)</pre></div>
-<p>This example shows how to initialize an agent with a specific model (<code>gpt-4o</code>) and run it synchronously.</p>
+<p>This example shows how to initialize an agent with a specific model (<code class="notranslate">gpt-4o</code>) and run it synchronously.</p>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Full Example with Tool Calls:</h3><a id="user-content-full-example-with-tool-calls" class="anchor" aria-label="Permalink: Full Example with Tool Calls:" href="#full-example-with-tool-calls"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">pydantic</span> <span class="pl-k">import</span> <span class="pl-v">BaseModel</span>
+<h3>Full Example with Tool Calls:</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">pydantic</span> <span class="pl-k">import</span> <span class="pl-v">BaseModel</span>
 <span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
 <span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span>.<span class="pl-s1">models</span> <span class="pl-k">import</span> <span class="pl-v">ModelSettings</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">AIModel</span>
@@ -138,12 +135,12 @@
     <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">agent</span>.<span class="pl-c1">run_sync</span>(<span class="pl-s">'The windy city in the US of A.'</span>)
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">data</span>)
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">usage</span>())</pre></div>
-<p>This example demonstrates the use of a custom Pydantic model (<code>MyModel</code>) to capture structured data (city and country) from the response and running the agent with specific model settings.</p>
+<p>This example demonstrates the use of a custom Pydantic model (<code class="notranslate">MyModel</code>) to capture structured data (city and country) from the response and running the agent with specific model settings.</p>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Support for Models/Providers without Tool Call Support</h3><a id="user-content-support-for-modelsproviders-without-tool-call-support" class="anchor" aria-label="Permalink: Support for Models/Providers without Tool Call Support" href="#support-for-modelsproviders-without-tool-call-support"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>For models/providers that do not fully support tool calls or lack a direct API for structured output, the <code>ToolSupportProvider</code> can be used to bridge the gap. This provider ensures that the agent properly formats the response, even when the model itself doesn't have built-in support for structured outputs. It does so by leveraging a tool list and creating a response format when only one tool is used.</p>
-<div class="markdown-heading"><h3 class="heading-element">Example for Models/Providers without Tool Support (Single Tool Usage)</h3><a id="user-content-example-for-modelsproviders-without-tool-support-single-tool-usage" class="anchor" aria-label="Permalink: Example for Models/Providers without Tool Support (Single Tool Usage)" href="#example-for-modelsproviders-without-tool-support-single-tool-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">pydantic</span> <span class="pl-k">import</span> <span class="pl-v">BaseModel</span>
+<h3>Support for Models/Providers without Tool Call Support</h3>
+<p>For models/providers that do not fully support tool calls or lack a direct API for structured output, the <code class="notranslate">ToolSupportProvider</code> can be used to bridge the gap. This provider ensures that the agent properly formats the response, even when the model itself doesn't have built-in support for structured outputs. It does so by leveraging a tool list and creating a response format when only one tool is used.</p>
+<h3>Example for Models/Providers without Tool Support (Single Tool Usage)</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">pydantic</span> <span class="pl-k">import</span> <span class="pl-v">BaseModel</span>
 <span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">Agent</span>
 <span class="pl-k">from</span> <span class="pl-s1">pydantic_ai</span>.<span class="pl-s1">models</span> <span class="pl-k">import</span> <span class="pl-v">ModelSettings</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">pydantic_ai</span> <span class="pl-k">import</span> <span class="pl-v">AIModel</span>
@@ -168,46 +165,46 @@
     <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-s1">agent</span>.<span class="pl-c1">run_sync</span>(<span class="pl-s">'European city with the bear.'</span>)
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">data</span>)  <span class="pl-c"># Structured output of city and country</span>
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>.<span class="pl-c1">usage</span>()) <span class="pl-c"># Usage statistics</span></pre></div>
-<div class="markdown-heading"><h3 class="heading-element">Explanation:</h3><a id="user-content-explanation" class="anchor" aria-label="Permalink: Explanation:" href="#explanation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Explanation:</h3>
 <ul>
 <li>
-<p><strong><code>ToolSupportProvider</code> as a Bridge:</strong> The <code>ToolSupportProvider</code> acts as a bridge between the agent and the model, ensuring that the response is formatted into a structured output, even if the model doesn't have an API that directly supports such formatting.</p>
+<p><strong><code class="notranslate">ToolSupportProvider</code> as a Bridge:</strong> The <code class="notranslate">ToolSupportProvider</code> acts as a bridge between the agent and the model, ensuring that the response is formatted into a structured output, even if the model doesn't have an API that directly supports such formatting.</p>
 <ul>
-<li>For instance, if the model generates raw text or unstructured data, the <code>ToolSupportProvider</code> will convert this into the expected format (like <code>MyModel</code>), allowing the agent to process it as structured data.</li>
+<li>For instance, if the model generates raw text or unstructured data, the <code class="notranslate">ToolSupportProvider</code> will convert this into the expected format (like <code class="notranslate">MyModel</code>), allowing the agent to process it as structured data.</li>
 </ul>
 </li>
 <li>
-<p><strong>Model Initialization:</strong> We initialize the agent with the <code>PollinationsAI:openai</code> model, which may not have a built-in API for returning structured outputs. Instead, it relies on the <code>ToolSupportProvider</code> to format the output.</p>
+<p><strong>Model Initialization:</strong> We initialize the agent with the <code class="notranslate">PollinationsAI:openai</code> model, which may not have a built-in API for returning structured outputs. Instead, it relies on the <code class="notranslate">ToolSupportProvider</code> to format the output.</p>
 </li>
 <li>
-<p><strong>Custom Result Model:</strong> We define a custom Pydantic model (<code>MyModel</code>) to capture the expected output in a structured way (e.g., <code>city</code> and <code>country</code> fields). This helps ensure that even when the model doesn't support structured data, the agent can interpret and format it.</p>
+<p><strong>Custom Result Model:</strong> We define a custom Pydantic model (<code class="notranslate">MyModel</code>) to capture the expected output in a structured way (e.g., <code class="notranslate">city</code> and <code class="notranslate">country</code> fields). This helps ensure that even when the model doesn't support structured data, the agent can interpret and format it.</p>
 </li>
 <li>
-<p><strong>Debug Logging:</strong> The <code>g4f.debug.logging</code> is enabled to provide detailed logs for troubleshooting and monitoring the agent's execution.</p>
+<p><strong>Debug Logging:</strong> The <code class="notranslate">g4f.debug.logging</code> is enabled to provide detailed logs for troubleshooting and monitoring the agent's execution.</p>
 </li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Example Output:</h3><a id="user-content-example-output-1" class="anchor" aria-label="Permalink: Example Output:" href="#example-output-1"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-shell"><pre>city=<span class="pl-s"><span class="pl-pds">'</span>Berlin<span class="pl-pds">'</span></span>
+<h3>Example Output:</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">city=<span class="pl-s"><span class="pl-pds">'</span>Berlin<span class="pl-pds">'</span></span>
 country=<span class="pl-s"><span class="pl-pds">'</span>Germany<span class="pl-pds">'</span></span>
 usage={<span class="pl-s"><span class="pl-pds">'</span>prompt_tokens<span class="pl-pds">'</span></span>: 15, <span class="pl-s"><span class="pl-pds">'</span>completion_tokens<span class="pl-pds">'</span></span>: 50}</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">Key Points:</h3><a id="user-content-key-points" class="anchor" aria-label="Permalink: Key Points:" href="#key-points"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Key Points:</h3>
 <ul>
 <li>
-<p><strong><code>ToolSupportProvider</code> Role:</strong> The <code>ToolSupportProvider</code> ensures that the agent formats the raw or unstructured response from the model into a structured format, even if the model itself lacks built-in support for structured data.</p>
+<p><strong><code class="notranslate">ToolSupportProvider</code> Role:</strong> The <code class="notranslate">ToolSupportProvider</code> ensures that the agent formats the raw or unstructured response from the model into a structured format, even if the model itself lacks built-in support for structured data.</p>
 </li>
 <li>
-<p><strong>Single Tool Usage:</strong> The <code>ToolSupportProvider</code> is particularly useful when only one tool is used by the model, and it needs to format or transform the model's output into a structured response without additional tools.</p>
+<p><strong>Single Tool Usage:</strong> The <code class="notranslate">ToolSupportProvider</code> is particularly useful when only one tool is used by the model, and it needs to format or transform the model's output into a structured response without additional tools.</p>
 </li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Notes:</h3><a id="user-content-notes" class="anchor" aria-label="Permalink: Notes:" href="#notes"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Notes:</h3>
 <ul>
 <li>This approach is ideal for models that return unstructured text or data that needs to be transformed into a structured format (e.g., Pydantic models).</li>
-<li>The <code>ToolSupportProvider</code> bridges the gap between the model's output and the expected structured format, enabling seamless integration into workflows that require structured responses.</li>
+<li>The <code class="notranslate">ToolSupportProvider</code> bridges the gap between the model's output and the expected structured format, enabling seamless integration into workflows that require structured responses.</li>
 </ul>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">LangChain Integration Example</h2><a id="user-content-langchain-integration-example" class="anchor" aria-label="Permalink: LangChain Integration Example" href="#langchain-integration-example"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>LangChain Integration Example</h2>
 <p>For users working with LangChain, here is an example demonstrating how to integrate G4F models into a LangChain environment:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">langchain</span> <span class="pl-k">import</span> <span class="pl-v">ChatAI</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">integration</span>.<span class="pl-s1">langchain</span> <span class="pl-k">import</span> <span class="pl-v">ChatAI</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">debug</span>
 
 <span class="pl-c"># Enable debugging logs</span>
@@ -229,20 +226,18 @@ usage={<span class="pl-s"><span class="pl-pds">'</span>prompt_tokens<span class=
 
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">llm</span>.<span class="pl-c1">invoke</span>(<span class="pl-s1">messages</span>)
 <span class="pl-k">assert</span>(<span class="pl-s1">response</span>.<span class="pl-c1">content</span> <span class="pl-c1">==</span> <span class="pl-s">"7 🦜"</span>)</pre></div>
-<p>This example shows how to use LangChain's <code>ChatAI</code> integration to create a conversational agent with a G4F model. The interaction takes place with the given messages and the agent processes them step-by-step to return the expected output.</p>
+<p>This example shows how to use LangChain's <code class="notranslate">ChatAI</code> integration to create a conversational agent with a G4F model. The interaction takes place with the given messages and the agent processes them step-by-step to return the expected output.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Conclusion</h2><a id="user-content-conclusion" class="anchor" aria-label="Permalink: Conclusion" href="#conclusion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Conclusion</h2>
 <p>By following these steps, you have successfully integrated G4F models into PydanticAI, created an agent, and enabled debugging. This allows you to conduct conversations with the language model, pass system prompts, and retrieve responses synchronously.</p>
-<div class="markdown-heading"><h3 class="heading-element">Notes:</h3><a id="user-content-notes-1" class="anchor" aria-label="Permalink: Notes:" href="#notes-1"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Notes:</h3>
 <ul>
-<li>The <code>api_key</code> parameter when calling <code>patch_infer_model</code> is optional. If you don’t provide it, the system will still work without an API key.</li>
-<li>Modify the agent’s <code>system_prompt</code> to suit the nature of the conversation you wish to have.</li>
-<li>
-<strong>Tool calls within AI requests are not fully supported</strong> at the moment. Use the agent's basic functionality for generating responses and handle external calls separately.</li>
+<li>The <code class="notranslate">api_key</code> parameter when calling <code class="notranslate">patch_infer_model</code> is optional. If you don’t provide it, the system will still work without an API key.</li>
+<li>Modify the agent’s <code class="notranslate">system_prompt</code> to suit the nature of the conversation you wish to have.</li>
+<li><strong>Tool calls within AI requests are not fully supported</strong> at the moment. Use the agent's basic functionality for generating responses and handle external calls separately.</li>
 </ul>
 <p>For further customization and advanced use cases, refer to the G4F and PydanticAI documentation.</p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

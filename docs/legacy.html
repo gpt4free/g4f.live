@@ -55,9 +55,9 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Legacy API</h2><a id="user-content-g4f---legacy-api" class="anchor" aria-label="Permalink: G4F - Legacy API" href="#g4f---legacy-api"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h4 class="heading-element">ChatCompletion</h4><a id="user-content-chatcompletion" class="anchor" aria-label="Permalink: ChatCompletion" href="#chatcompletion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Legacy API</h2>
+<h4>ChatCompletion</h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-s1">g4f</span>.<span class="pl-c1">debug</span>.<span class="pl-c1">logging</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span>  <span class="pl-c"># Enable debug logging</span>
 <span class="pl-s1">g4f</span>.<span class="pl-c1">debug</span>.<span class="pl-c1">version_check</span> <span class="pl-c1">=</span> <span class="pl-c1">False</span>  <span class="pl-c"># Disable automatic version checking</span>
@@ -80,8 +80,8 @@
 )  <span class="pl-c"># Alternative model setting</span>
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>)</pre></div>
-<div class="markdown-heading"><h5 class="heading-element">Providers</h5><a id="user-content-providers" class="anchor" aria-label="Permalink: Providers" href="#providers"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<h5>Providers</h5>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-c"># Print all available providers</span>
 <span class="pl-en">print</span>([
@@ -99,17 +99,14 @@
 )
 <span class="pl-k">for</span> <span class="pl-s1">message</span> <span class="pl-c1">in</span> <span class="pl-s1">response</span>:
     <span class="pl-en">print</span>(<span class="pl-s1">message</span>)</pre></div>
-<div class="markdown-heading"><h5 class="heading-element">Image Upload &amp; Generation</h5><a id="user-content-image-upload--generation" class="anchor" aria-label="Permalink: Image Upload &amp; Generation" href="#image-upload--generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h5>Image Upload &amp; Generation</h5>
 <p>Image upload and generation are supported by three main providers:</p>
 <ul>
-<li>
-<strong>Microsoft Copilot &amp; Other GPT-4 Providers:</strong> Utilizes Microsoft's Image Creator.</li>
-<li>
-<strong>Google Gemini:</strong> Available for free accounts with IP addresses outside Europe.</li>
-<li>
-<strong>OpenaiChat with GPT-4:</strong> Accessible for users with a Plus subscription.</li>
+<li><strong>Microsoft Copilot &amp; Other GPT-4 Providers:</strong> Utilizes Microsoft's Image Creator.</li>
+<li><strong>Google Gemini:</strong> Available for free accounts with IP addresses outside Europe.</li>
+<li><strong>OpenaiChat with GPT-4:</strong> Accessible for users with a Plus subscription.</li>
 </ul>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-c"># Setting up the request for image creation</span>
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">g4f</span>.<span class="pl-c1">ChatCompletion</span>.<span class="pl-c1">create</span>(
@@ -136,9 +133,9 @@
     <span class="pl-k">if</span> <span class="pl-en">isinstance</span>(<span class="pl-s1">chunk</span>, <span class="pl-v">ImageResponse</span>):
         <span class="pl-en">print</span>(<span class="pl-s1">chunk</span>.<span class="pl-c1">urls</span>) <span class="pl-c"># Print generated image links</span>
         <span class="pl-en">print</span>(<span class="pl-s1">chunk</span>.<span class="pl-c1">alt</span>) <span class="pl-c"># Print used prompt for image generation</span></pre></div>
-<div class="markdown-heading"><h5 class="heading-element">Async Support</h5><a id="user-content-async-support" class="anchor" aria-label="Permalink: Async Support" href="#async-support"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h5>Async Support</h5>
 <p>To enhance speed and overall performance, execute providers asynchronously. The total execution time will be determined by the duration of the slowest provider's execution.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 
 <span class="pl-s1">_providers</span> <span class="pl-c1">=</span> [
@@ -165,9 +162,9 @@
     <span class="pl-k">await</span> <span class="pl-s1">asyncio</span>.<span class="pl-c1">gather</span>(<span class="pl-c1">*</span><span class="pl-s1">calls</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">run_all</span>())</pre></div>
-<div class="markdown-heading"><h5 class="heading-element">Proxy and Timeout Support</h5><a id="user-content-proxy-and-timeout-support" class="anchor" aria-label="Permalink: Proxy and Timeout Support" href="#proxy-and-timeout-support"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h5>Proxy and Timeout Support</h5>
 <p>All providers support specifying a proxy and increasing timeout in the create functions.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">g4f</span>.<span class="pl-c1">ChatCompletion</span>.<span class="pl-c1">create</span>(
     <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s1">g4f</span>.<span class="pl-c1">models</span>.<span class="pl-c1">default</span>,
@@ -179,7 +176,6 @@
 
 <span class="pl-en">print</span>(<span class="pl-s">f"Result:"</span>, <span class="pl-s1">response</span>)</pre></div>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

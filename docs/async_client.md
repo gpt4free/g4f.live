@@ -351,7 +351,6 @@ async def main():
     client = AsyncClient(image_provider=OpenaiChat)
     
     response = await client.images.create_variation(
-        prompt="a white siamese cat",
         image=open("docs/images/cat.jpg", "rb"),
         model="dall-e-3",
         # Add any other necessary parameters

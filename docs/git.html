@@ -55,13 +55,12 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Git Installation Guide</h2><a id="user-content-g4f---git-installation-guide" class="anchor" aria-label="Permalink: G4F - Git Installation Guide" href="#g4f---git-installation-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Git Installation Guide</h2>
 <p>This guide provides step-by-step instructions for installing G4F from the source code using Git.</p>
-<div class="markdown-heading"><h2 class="heading-element">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Table of Contents</h2>
 <ol>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li>
-<a href="#installation-steps">Installation Steps</a>
+<li><a href="#installation-steps">Installation Steps</a>
 <ol>
 <li><a href="#1-clone-the-repository">Clone the Repository</a></li>
 <li><a href="#2-navigate-to-the-project-directory">Navigate to the Project Directory</a></li>
@@ -76,51 +75,51 @@
 <li><a href="#additional-resources">Additional Resources</a></li>
 </ol>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Prerequisites</h2><a id="user-content-prerequisites" class="anchor" aria-label="Permalink: Prerequisites" href="#prerequisites"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Prerequisites</h2>
 <p>Before you begin, ensure you have the following installed on your system:</p>
 <ul>
 <li>Git</li>
 <li>Python 3.7 or higher</li>
 <li>pip (Python package installer)</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Installation Steps</h2><a id="user-content-installation-steps" class="anchor" aria-label="Permalink: Installation Steps" href="#installation-steps"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">1. Clone the Repository</h3><a id="user-content-1-clone-the-repository" class="anchor" aria-label="Permalink: 1. Clone the Repository" href="#1-clone-the-repository"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Installation Steps</h2>
+<h3>1. Clone the Repository</h3>
 <p><strong>Open your terminal and run the following command to clone the G4F repository:</strong></p>
-<div class="highlight highlight-source-shell"><pre>git clone https://github.com/xtekky/gpt4free.git</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">2. Navigate to the Project Directory</h3><a id="user-content-2-navigate-to-the-project-directory" class="anchor" aria-label="Permalink: 2. Navigate to the Project Directory" href="#2-navigate-to-the-project-directory"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">git clone https://github.com/xtekky/gpt4free.git</pre></div>
+<h3>2. Navigate to the Project Directory</h3>
 <p><strong>Change to the project directory:</strong></p>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> gpt4free</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">3. Set Up a Python Virtual Environment (Recommended)</h3><a id="user-content-3-set-up-a-python-virtual-environment-recommended" class="anchor" aria-label="Permalink: 3. Set Up a Python Virtual Environment (Recommended)" href="#3-set-up-a-python-virtual-environment-recommended"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> gpt4free</pre></div>
+<h3>3. Set Up a Python Virtual Environment (Recommended)</h3>
 <p><strong>It's best practice to use a virtual environment to manage project dependencies:</strong></p>
-<div class="highlight highlight-source-shell"><pre>python3 -m venv venv</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">4. Activate the Virtual Environment</h3><a id="user-content-4-activate-the-virtual-environment" class="anchor" aria-label="Permalink: 4. Activate the Virtual Environment" href="#4-activate-the-virtual-environment"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python3 -m venv venv</pre></div>
+<h3>4. Activate the Virtual Environment</h3>
 <p><strong>Activate the virtual environment based on your operating system:</strong></p>
 <ul>
 <li>
 <p><strong>Windows:</strong></p>
-<div class="highlight highlight-source-shell"><pre>.<span class="pl-cce">\v</span>env<span class="pl-cce">\S</span>cripts<span class="pl-cce">\a</span>ctivate</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">.<span class="pl-cce">\v</span>env<span class="pl-cce">\S</span>cripts<span class="pl-cce">\a</span>ctivate</pre></div>
 </li>
 <li>
 <p><strong>macOS and Linux:</strong></p>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c1">source</span> venv/bin/activate</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">source</span> venv/bin/activate</pre></div>
 </li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">5. Install Dependencies</h3><a id="user-content-5-install-dependencies" class="anchor" aria-label="Permalink: 5. Install Dependencies" href="#5-install-dependencies"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>5. Install Dependencies</h3>
 <p><strong>You have two options for installing dependencies:</strong></p>
-<div class="markdown-heading"><h4 class="heading-element">Option A: Install Minimum Requirements</h4><a id="user-content-option-a-install-minimum-requirements" class="anchor" aria-label="Permalink: Option A: Install Minimum Requirements" href="#option-a-install-minimum-requirements"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>For a lightweight installation, use:</strong></p>
-<div class="highlight highlight-source-shell"><pre>pip install -r requirements-min.txt</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Option B: Install All Packages</h4><a id="user-content-option-b-install-all-packages" class="anchor" aria-label="Permalink: Option B: Install All Packages" href="#option-b-install-all-packages"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Option A: Install Minimum Requirements</h4>
+<p><strong>For a small installation, use:</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install -r requirements-slim.txt</pre></div>
+<h4>Option B: Install All Packages</h4>
 <p><strong>For a full installation with all features, use:</strong></p>
-<div class="highlight highlight-source-shell"><pre>pip install -r requirements.txt</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">6. Verify Installation</h3><a id="user-content-6-verify-installation" class="anchor" aria-label="Permalink: 6. Verify Installation" href="#6-verify-installation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install -r requirements.txt</pre></div>
+<h3>6. Verify Installation</h3>
 <p>You can now create Python scripts and utilize the G4F functionalities. Here's a basic example:</p>
-<p><strong>Create a <code>g4f-test.py</code> file in the root folder and start using the repository:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<p><strong>Create a <code class="notranslate">g4f-test.py</code> file in the root folder and start using the repository:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-c"># Your code here</span></pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Usage</h2><a id="user-content-usage" class="anchor" aria-label="Permalink: Usage" href="#usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Usage</h2>
 <p><strong>After installation, you can start using G4F in your Python scripts. Here's a basic example:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 
 <span class="pl-c"># Your G4F code here</span>
 <span class="pl-c"># For example:</span>
@@ -140,7 +139,7 @@
 )
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Troubleshooting</h2><a id="user-content-troubleshooting" class="anchor" aria-label="Permalink: Troubleshooting" href="#troubleshooting"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Troubleshooting</h2>
 <p><strong>If you encounter any issues during installation or usage:</strong></p>
 <ol>
 <li>Ensure all prerequisites are correctly installed.</li>
@@ -148,7 +147,7 @@
 <li>Try reinstalling the dependencies.</li>
 <li>Consult the <a href="/docs/">G4F documentation</a> for more detailed information.</li>
 </ol>
-<div class="markdown-heading"><h2 class="heading-element">Additional Resources</h2><a id="user-content-additional-resources" class="anchor" aria-label="Permalink: Additional Resources" href="#additional-resources"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Additional Resources</h2>
 <ul>
 <li><a href="https://github.com/xtekky/gpt4free">G4F GitHub Repository</a></li>
 <li><a href="https://docs.python.org/3/tutorial/venv.html" rel="nofollow">Python Virtual Environments Guide</a></li>
@@ -157,7 +156,6 @@
 <hr>
 <p><strong><em>For more information or support, please visit the <a href="https://github.com/xtekky/gpt4free/issues">G4F GitHub Issues page</a>.</em></strong></p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

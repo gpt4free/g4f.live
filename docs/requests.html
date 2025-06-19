@@ -55,51 +55,47 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Requests API Guide</h2><a id="user-content-g4f---requests-api-guide" class="anchor" aria-label="Permalink: G4F - Requests API Guide" href="#g4f---requests-api-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h2 class="heading-element">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Requests API Guide</h2>
+<h2>Table of Contents</h2>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li>
-<a href="#getting-started">Getting Started</a>
+<li><a href="#getting-started">Getting Started</a>
 <ul>
 <li><a href="#installing-dependencies">Installing Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#making-api-requests">Making API Requests</a></li>
-<li>
-<a href="#text-generation">Text Generation</a>
+<li><a href="#text-generation">Text Generation</a>
 <ul>
 <li><a href="#using-the-chat-completions-endpoint">Using the Chat Completions Endpoint</a></li>
 <li><a href="#streaming-text-generation">Streaming Text Generation</a></li>
 </ul>
 </li>
-<li>
-<a href="#model-retrieval">Model Retrieval</a>
+<li><a href="#model-retrieval">Model Retrieval</a>
 <ul>
 <li><a href="#fetching-available-models">Fetching Available Models</a></li>
 </ul>
 </li>
-<li>
-<a href="#image-generation">Image Generation</a>
+<li><a href="#image-generation">Image Generation</a>
 <ul>
 <li><a href="#creating-images-with-ai">Creating Images with AI</a></li>
 </ul>
 </li>
 <li><a href="#advanced-usage">Advanced Usage</a></li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Introduction</h2><a id="user-content-introduction" class="anchor" aria-label="Permalink: Introduction" href="#introduction"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Introduction</h2>
 <p>Welcome to the G4F Requests API Guide, a powerful tool for leveraging AI capabilities directly from your Python applications using HTTP requests. This guide will take you through the steps of setting up requests to interact with AI models for a variety of tasks, from text generation to image creation.</p>
-<div class="markdown-heading"><h2 class="heading-element">Getting Started</h2><a id="user-content-getting-started" class="anchor" aria-label="Permalink: Getting Started" href="#getting-started"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Installing Dependencies</h3><a id="user-content-installing-dependencies" class="anchor" aria-label="Permalink: Installing Dependencies" href="#installing-dependencies"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Ensure you have the <code>requests</code> library installed in your environment. You can install it via <code>pip</code> if needed:</p>
-<div class="highlight highlight-source-shell"><pre>pip install requests</pre></div>
-<p>This guide provides examples on how to make API requests using Python's <code>requests</code> library, focusing on tasks such as text and image generation, as well as retrieving available models.</p>
-<div class="markdown-heading"><h2 class="heading-element">Making API Requests</h2><a id="user-content-making-api-requests" class="anchor" aria-label="Permalink: Making API Requests" href="#making-api-requests"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Before diving into specific functionalities, it's essential to understand how to structure your API requests. All endpoints assume that your server is running locally at <code>http://localhost</code>. If your server is running on a different port, adjust the URLs accordingly (e.g., <code>http://localhost:8000</code>).</p>
-<div class="markdown-heading"><h2 class="heading-element">Text Generation</h2><a id="user-content-text-generation" class="anchor" aria-label="Permalink: Text Generation" href="#text-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Using the Chat Completions Endpoint</h3><a id="user-content-using-the-chat-completions-endpoint" class="anchor" aria-label="Permalink: Using the Chat Completions Endpoint" href="#using-the-chat-completions-endpoint"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Getting Started</h2>
+<h3>Installing Dependencies</h3>
+<p>Ensure you have the <code class="notranslate">requests</code> library installed in your environment. You can install it via <code class="notranslate">pip</code> if needed:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install requests</pre></div>
+<p>This guide provides examples on how to make API requests using Python's <code class="notranslate">requests</code> library, focusing on tasks such as text and image generation, as well as retrieving available models.</p>
+<h2>Making API Requests</h2>
+<p>Before diving into specific functionalities, it's essential to understand how to structure your API requests. All endpoints assume that your server is running locally at <code class="notranslate">http://localhost</code>. If your server is running on a different port, adjust the URLs accordingly (e.g., <code class="notranslate">http://localhost:8000</code>).</p>
+<h2>Text Generation</h2>
+<h3>Using the Chat Completions Endpoint</h3>
 <p>To generate text responses using the chat completions endpoint, follow this example:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-c"># Define the payload</span>
 <span class="pl-s1">payload</span> <span class="pl-c1">=</span> {
@@ -121,11 +117,11 @@
 <p><strong>Explanation:</strong></p>
 <ul>
 <li>This request sends a conversation context to the model, which in turn generates and returns a response.</li>
-<li>The <code>temperature</code> parameter controls the randomness of the output.</li>
+<li>The <code class="notranslate">temperature</code> parameter controls the randomness of the output.</li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Streaming Text Generation</h3><a id="user-content-streaming-text-generation" class="anchor" aria-label="Permalink: Streaming Text Generation" href="#streaming-text-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>For scenarios where you want to receive partial responses or stream data as it's generated, you can utilize the streaming capabilities of the API. Here's how you can implement streaming text generation using Python's <code>requests</code> library:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<h3>Streaming Text Generation</h3>
+<p>For scenarios where you want to receive partial responses or stream data as it's generated, you can utilize the streaming capabilities of the API. Here's how you can implement streaming text generation using Python's <code class="notranslate">requests</code> library:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 <span class="pl-k">import</span> <span class="pl-s1">json</span>
 
 <span class="pl-k">def</span> <span class="pl-en">fetch_response</span>(<span class="pl-s1">url</span>, <span class="pl-s1">model</span>, <span class="pl-s1">messages</span>):
@@ -195,19 +191,19 @@
 <p><strong>Explanation:</strong></p>
 <ul>
 <li>
-<p><strong><code>fetch_response</code> Function:</strong></p>
+<p><strong><code class="notranslate">fetch_response</code> Function:</strong></p>
 <ul>
 <li>Sends a POST request to the streaming chat completions endpoint with the specified model and messages.</li>
-<li>Sets <code>stream</code> parameter to <code>true</code> to enable streaming.</li>
+<li>Sets <code class="notranslate">stream</code> parameter to <code class="notranslate">true</code> to enable streaming.</li>
 <li>Raises an exception if the request fails.</li>
 </ul>
 </li>
 <li>
-<p><strong><code>process_stream</code> Function:</strong></p>
+<p><strong><code class="notranslate">process_stream</code> Function:</strong></p>
 <ul>
 <li>Iterates over each line in the streamed response.</li>
-<li>Decodes the line and checks for the termination signal <code>"data: [DONE]"</code>.</li>
-<li>Parses lines that start with <code>"data: "</code> to extract the message content.</li>
+<li>Decodes the line and checks for the termination signal <code class="notranslate">"data: [DONE]"</code>.</li>
+<li>Parses lines that start with <code class="notranslate">"data: "</code> to extract the message content.</li>
 </ul>
 </li>
 <li>
@@ -222,13 +218,13 @@
 <p><strong>Usage Tips:</strong></p>
 <ul>
 <li>Ensure your local server supports streaming.</li>
-<li>Adjust the <code>chat_url</code> if your local server runs on a different port or path.</li>
+<li>Adjust the <code class="notranslate">chat_url</code> if your local server runs on a different port or path.</li>
 <li>Use threading or asynchronous programming for handling streams in real-time applications.</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Model Retrieval</h2><a id="user-content-model-retrieval" class="anchor" aria-label="Permalink: Model Retrieval" href="#model-retrieval"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Fetching Available Models</h3><a id="user-content-fetching-available-models" class="anchor" aria-label="Permalink: Fetching Available Models" href="#fetching-available-models"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Model Retrieval</h2>
+<h3>Fetching Available Models</h3>
 <p>To retrieve a list of available models, you can use the following function:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-k">def</span> <span class="pl-en">fetch_models</span>():
     <span class="pl-s">"""</span>
@@ -250,13 +246,13 @@
 <span class="pl-en">print</span>(<span class="pl-s1">models</span>)</pre></div>
 <p><strong>Explanation:</strong></p>
 <ul>
-<li>The <code>fetch_models</code> function makes a GET request to the models endpoint.</li>
+<li>The <code class="notranslate">fetch_models</code> function makes a GET request to the models endpoint.</li>
 <li>It handles HTTP errors and returns a parsed JSON response containing available models or an error message.</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Image Generation</h2><a id="user-content-image-generation" class="anchor" aria-label="Permalink: Image Generation" href="#image-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Creating Images with AI</h3><a id="user-content-creating-images-with-ai" class="anchor" aria-label="Permalink: Creating Images with AI" href="#creating-images-with-ai"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Image Generation</h2>
+<h3>Creating Images with AI</h3>
 <p>The following function demonstrates how to generate images using a specified model:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-k">def</span> <span class="pl-en">generate_image</span>(<span class="pl-s1">prompt</span>: <span class="pl-smi">str</span>, <span class="pl-s1">model</span>: <span class="pl-smi">str</span> <span class="pl-c1">=</span> <span class="pl-s">"flux-4o"</span>):
     <span class="pl-s">"""</span>
@@ -304,14 +300,14 @@
 <span class="pl-en">print</span>(<span class="pl-s">"Caption:"</span>, <span class="pl-s1">caption</span>)</pre></div>
 <p><strong>Explanation:</strong></p>
 <ul>
-<li>The <code>generate_image</code> function constructs a request to create an image based on a text prompt.</li>
+<li>The <code class="notranslate">generate_image</code> function constructs a request to create an image based on a text prompt.</li>
 <li>It handles responses and possible errors, ensuring a URL and caption are returned if successful.</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Advanced Usage</h2><a id="user-content-advanced-usage" class="anchor" aria-label="Permalink: Advanced Usage" href="#advanced-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Advanced Usage</h2>
 <p>This guide has demonstrated basic usage scenarios for the G4F Requests API. The API provides robust capabilities for integrating advanced AI into your applications. You can expand upon these examples to fit more complex workflows and tasks, ensuring your applications are built with cutting-edge AI features.</p>
-<div class="markdown-heading"><h3 class="heading-element">Handling Concurrency and Asynchronous Requests</h3><a id="user-content-handling-concurrency-and-asynchronous-requests" class="anchor" aria-label="Permalink: Handling Concurrency and Asynchronous Requests" href="#handling-concurrency-and-asynchronous-requests"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>For applications requiring high performance and non-blocking operations, consider using asynchronous programming libraries such as <code>aiohttp</code> or <code>httpx</code>. Here's an example using <code>aiohttp</code>:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">aiohttp</span>
+<h3>Handling Concurrency and Asynchronous Requests</h3>
+<p>For applications requiring high performance and non-blocking operations, consider using asynchronous programming libraries such as <code class="notranslate">aiohttp</code> or <code class="notranslate">httpx</code>. Here's an example using <code class="notranslate">aiohttp</code>:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">aiohttp</span>
 <span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">import</span> <span class="pl-s1">json</span>
 <span class="pl-k">from</span> <span class="pl-s1">queue</span> <span class="pl-k">import</span> <span class="pl-v">Queue</span>
@@ -371,45 +367,40 @@
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <p><strong>Explanation:</strong></p>
 <ul>
-<li>
-<strong><code>aiohttp</code> Library:</strong> Facilitates asynchronous HTTP requests, allowing your application to handle multiple requests concurrently without blocking.</li>
-<li>
-<strong><code>fetch_response_async</code> Function:</strong>
+<li><strong><code class="notranslate">aiohttp</code> Library:</strong> Facilitates asynchronous HTTP requests, allowing your application to handle multiple requests concurrently without blocking.</li>
+<li><strong><code class="notranslate">fetch_response_async</code> Function:</strong>
 <ul>
 <li>Sends an asynchronous POST request to the streaming chat completions endpoint.</li>
 <li>Processes the streamed response line by line.</li>
-<li>Extracts messages and enqueues them into <code>output_queue</code>.</li>
+<li>Extracts messages and enqueues them into <code class="notranslate">output_queue</code>.</li>
 </ul>
 </li>
-<li>
-<strong><code>main</code> Function:</strong>
+<li><strong><code class="notranslate">main</code> Function:</strong>
 <ul>
 <li>Defines the API endpoint, model, and messages.</li>
-<li>Initializes a <code>Queue</code> to store incoming messages.</li>
+<li>Initializes a <code class="notranslate">Queue</code> to store incoming messages.</li>
 <li>Invokes the asynchronous fetch function and processes the messages.</li>
 </ul>
 </li>
 </ul>
 <p><strong>Benefits:</strong></p>
 <ul>
-<li>
-<strong>Performance:</strong> Handles multiple requests efficiently, reducing latency in high-throughput applications.</li>
-<li>
-<strong>Scalability:</strong> Easily scales with increasing demand, making it suitable for production environments.</li>
+<li><strong>Performance:</strong> Handles multiple requests efficiently, reducing latency in high-throughput applications.</li>
+<li><strong>Scalability:</strong> Easily scales with increasing demand, making it suitable for production environments.</li>
 </ul>
-<p><strong>Note:</strong> Ensure you have <code>aiohttp</code> installed:</p>
-<div class="highlight highlight-source-shell"><pre>pip install aiohttp</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Conclusion</h2><a id="user-content-conclusion" class="anchor" aria-label="Permalink: Conclusion" href="#conclusion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p><strong>Note:</strong> Ensure you have <code class="notranslate">aiohttp</code> installed:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install aiohttp</pre></div>
+<h2>Conclusion</h2>
 <p>By following this guide, you can effectively integrate the G4F Requests API into your Python applications, enabling powerful AI-driven functionalities such as text and image generation, model retrieval, and handling streaming data. Whether you're building simple scripts or complex, high-performance applications, the examples provided offer a solid foundation to harness the full potential of AI in your projects.</p>
 <p>Feel free to customize and expand upon these examples to suit your specific needs. If you encounter any issues or have further questions, don't hesitate to seek assistance or refer to additional resources.</p>
 <hr>
-<div class="markdown-heading"><h1 class="heading-element">Additional Notes</h1><a id="user-content-additional-notes" class="anchor" aria-label="Permalink: Additional Notes" href="#additional-notes"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h1>Additional Notes</h1>
 <ol>
 <li>
 <p><strong>Adjusting the Base URL:</strong></p>
 <ul>
-<li>The guide assumes your API server is accessible at <code>http://localhost</code>. If your server runs on a different port (e.g., <code>8000</code>), update the URLs accordingly:
-<div class="highlight highlight-source-python"><pre><span class="pl-c"># Example for port 8000</span>
+<li>The guide assumes your API server is accessible at <code class="notranslate">http://localhost</code>. If your server runs on a different port (e.g., <code class="notranslate">8000</code>), update the URLs accordingly:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># Example for port 8000</span>
 <span class="pl-s1">chat_url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:8000/v1/chat/completions"</span></pre></div>
 </li>
 </ul>
@@ -418,7 +409,7 @@
 <p><strong>Environment Variables (Optional):</strong></p>
 <ul>
 <li>For better flexibility and security, consider using environment variables to store your base URL and other sensitive information.
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">os</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">os</span>
 
 <span class="pl-c1">BASE_URL</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">getenv</span>(<span class="pl-s">"API_BASE_URL"</span>, <span class="pl-s">"http://localhost"</span>)
 <span class="pl-s1">chat_url</span> <span class="pl-c1">=</span> <span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-c1">BASE_URL</span><span class="pl-kos">}</span></span>/v1/chat/completions"</span></pre></div>
@@ -451,7 +442,6 @@
 </li>
 </ol>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

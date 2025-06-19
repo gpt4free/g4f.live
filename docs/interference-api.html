@@ -55,8 +55,8 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Interference API Usage Guide</h2><a id="user-content-g4f---interference-api-usage-guide" class="anchor" aria-label="Permalink: G4F - Interference API Usage Guide" href="#g4f---interference-api-usage-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h2 class="heading-element">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Interference API Usage Guide</h2>
+<h2>Table of Contents</h2>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#running-the-interference-api">Running the Interference API</a></li>
@@ -70,33 +70,33 @@
 <li><a href="#key-points">Key Points</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Introduction</h2><a id="user-content-introduction" class="anchor" aria-label="Permalink: Introduction" href="#introduction"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Introduction</h2>
 <p>The G4F Interference API is a powerful tool that allows you to serve other OpenAI integrations using G4F (Gpt4free). It acts as a proxy, translating requests intended for the OpenAI API into requests compatible with G4F providers. This guide will walk you through the process of setting up, running, and using the Interference API effectively.</p>
-<div class="markdown-heading"><h2 class="heading-element">Running the Interference API</h2><a id="user-content-running-the-interference-api" class="anchor" aria-label="Permalink: Running the Interference API" href="#running-the-interference-api"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Running the Interference API</h2>
 <p><strong>You can run the Interference API in two ways:</strong> using the PyPI package or from the repository.</p>
-<div class="markdown-heading"><h3 class="heading-element">From PyPI Package</h3><a id="user-content-from-pypi-package" class="anchor" aria-label="Permalink: From PyPI Package" href="#from-pypi-package"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>From PyPI Package</h3>
 <p><strong>To run the Interference API directly from the G4F PyPI package, use the following Python code:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">api</span> <span class="pl-k">import</span> <span class="pl-s1">run_api</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">api</span> <span class="pl-k">import</span> <span class="pl-s1">run_api</span>
 
 <span class="pl-en">run_api</span>()</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">From Repository</h3><a id="user-content-from-repository" class="anchor" aria-label="Permalink: From Repository" href="#from-repository"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>From Repository</h3>
 <p><strong>If you prefer to run the Interference API from the cloned repository, you have two options:</strong></p>
 <ol>
 <li><strong>Using the command line:</strong></li>
 </ol>
-<div class="highlight highlight-source-shell"><pre>g4f api</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g4f api</pre></div>
 <ol start="2">
 <li><strong>Using Python:</strong></li>
 </ol>
-<div class="highlight highlight-source-shell"><pre>python -m g4f.api.run</pre></div>
-<p><strong>Once running, the API will be accessible at:</strong> <code>http://localhost:1337/v1</code></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python -m g4f.api.run</pre></div>
+<p><strong>Once running, the API will be accessible at:</strong> <code class="notranslate">http://localhost:1337/v1</code></p>
 <p><strong>(Advanced) Bind to custom port:</strong></p>
-<div class="highlight highlight-source-shell"><pre>python -m g4f.cli api --bind <span class="pl-s"><span class="pl-pds">"</span>0.0.0.0:2400<span class="pl-pds">"</span></span> </pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Using the Interference API</h2><a id="user-content-using-the-interference-api" class="anchor" aria-label="Permalink: Using the Interference API" href="#using-the-interference-api"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Basic Usage</h3><a id="user-content-basic-usage" class="anchor" aria-label="Permalink: Basic Usage" href="#basic-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python -m g4f.cli api --bind <span class="pl-s"><span class="pl-pds">"</span>0.0.0.0:2400<span class="pl-pds">"</span></span> </pre></div>
+<h2>Using the Interference API</h2>
+<h3>Basic Usage</h3>
 <p><strong>You can interact with the Interference API using curl commands for both text and image generation:</strong></p>
 <p><strong>For text generation:</strong></p>
-<div class="highlight highlight-source-shell"><pre>curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/chat/completions<span class="pl-pds">"</span></span> \
+<div class="highlight highlight-source-shell"><pre class="notranslate">curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/chat/completions<span class="pl-pds">"</span></span> \
      -H <span class="pl-s"><span class="pl-pds">"</span>Content-Type: application/json<span class="pl-pds">"</span></span> \
      -d <span class="pl-s"><span class="pl-pds">'</span>{</span>
 <span class="pl-s">           "messages": [</span>
@@ -111,7 +111,7 @@
 <ol>
 <li><strong>url:</strong></li>
 </ol>
-<div class="highlight highlight-source-shell"><pre>curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/images/generate<span class="pl-pds">"</span></span> \
+<div class="highlight highlight-source-shell"><pre class="notranslate">curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/images/generate<span class="pl-pds">"</span></span> \
      -H <span class="pl-s"><span class="pl-pds">"</span>Content-Type: application/json<span class="pl-pds">"</span></span> \
      -d <span class="pl-s"><span class="pl-pds">'</span>{</span>
 <span class="pl-s">           "prompt": "a white siamese cat",</span>
@@ -121,7 +121,7 @@
 <ol start="2">
 <li><strong>b64_json</strong></li>
 </ol>
-<div class="highlight highlight-source-shell"><pre>curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/images/generate<span class="pl-pds">"</span></span> \
+<div class="highlight highlight-source-shell"><pre class="notranslate">curl -X POST <span class="pl-s"><span class="pl-pds">"</span>http://localhost:1337/v1/images/generate<span class="pl-pds">"</span></span> \
      -H <span class="pl-s"><span class="pl-pds">"</span>Content-Type: application/json<span class="pl-pds">"</span></span> \
      -d <span class="pl-s"><span class="pl-pds">'</span>{</span>
 <span class="pl-s">           "prompt": "a white siamese cat",</span>
@@ -129,9 +129,9 @@
 <span class="pl-s">           "response_format": "b64_json"</span>
 <span class="pl-s">         }<span class="pl-pds">'</span></span></pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Using the OpenAI Library</h3><a id="user-content-using-the-openai-library" class="anchor" aria-label="Permalink: Using the OpenAI Library" href="#using-the-openai-library"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>To utilize the Inference API with the OpenAI Python library, you can specify the <code>base_url</code> to point to your endpoint:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span>
+<h3>Using the OpenAI Library</h3>
+<p><strong>To utilize the Inference API with the OpenAI Python library, you can specify the <code class="notranslate">base_url</code> to point to your endpoint:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span>
 
 <span class="pl-c"># Initialize the OpenAI client</span>
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">OpenAI</span>(
@@ -158,13 +158,13 @@
             <span class="pl-en">print</span>(<span class="pl-s1">content</span>, <span class="pl-s1">end</span><span class="pl-c1">=</span><span class="pl-s">""</span>, <span class="pl-s1">flush</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
 <p><strong>Notes:</strong></p>
 <ul>
-<li>The <code>api_key</code> is required by the OpenAI Python library. If your provider does not require an API key, you can set it to <code>"secret"</code>. This value will be ignored by providers in G4F.</li>
-<li>Replace <code>"http://localhost:1337/v1"</code> with the appropriate URL for your custom or local inference API.</li>
+<li>The <code class="notranslate">api_key</code> is required by the OpenAI Python library. If your provider does not require an API key, you can set it to <code class="notranslate">"secret"</code>. This value will be ignored by providers in G4F.</li>
+<li>Replace <code class="notranslate">"http://localhost:1337/v1"</code> with the appropriate URL for your custom or local inference API.</li>
 </ul>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">With Requests Library</h3><a id="user-content-with-requests-library" class="anchor" aria-label="Permalink: With Requests Library" href="#with-requests-library"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>You can also send requests directly to the Interference API using the <code>requests</code> library:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<h3>With Requests Library</h3>
+<p><strong>You can also send requests directly to the Interference API using the <code class="notranslate">requests</code> library:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">"http://localhost:1337/v1/chat/completions"</span>
 
@@ -180,21 +180,20 @@
 
 <span class="pl-k">for</span> <span class="pl-s1">choice</span> <span class="pl-c1">in</span> <span class="pl-s1">json_response</span>:
     <span class="pl-en">print</span>(<span class="pl-s1">choice</span>.<span class="pl-c1">get</span>(<span class="pl-s">'message'</span>, {}).<span class="pl-c1">get</span>(<span class="pl-s">'content'</span>, <span class="pl-s">''</span>))</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Selecting a Provider</h2><a id="user-content-selecting-a-provider" class="anchor" aria-label="Permalink: Selecting a Provider" href="#selecting-a-provider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Selecting a Provider</h2>
 <p><strong>Provider Selection</strong>: <a href="selecting_a_provider">How to Specify a Provider?</a></p>
 <p>Selecting the right provider is a key step in configuring the G4F Interference API to suit your needs. Refer to the guide linked above for detailed instructions on choosing and specifying a provider.</p>
-<div class="markdown-heading"><h2 class="heading-element">Key Points</h2><a id="user-content-key-points" class="anchor" aria-label="Permalink: Key Points" href="#key-points"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Key Points</h2>
 <ul>
 <li>The Interference API translates OpenAI API requests into G4F provider requests.</li>
 <li>It can be run from either the PyPI package or the cloned repository.</li>
-<li>The API supports usage with the OpenAI Python library by changing the <code>base_url</code>.</li>
-<li>Direct requests can be sent to the API endpoints using libraries like <code>requests</code>.</li>
+<li>The API supports usage with the OpenAI Python library by changing the <code class="notranslate">base_url</code>.</li>
+<li>Direct requests can be sent to the API endpoints using libraries like <code class="notranslate">requests</code>.</li>
 <li>Both text and image generation are supported.</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Conclusion</h2><a id="user-content-conclusion" class="anchor" aria-label="Permalink: Conclusion" href="#conclusion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Conclusion</h2>
 <p>The G4F Interference API provides a seamless way to integrate G4F with existing OpenAI-based applications and tools. By following this guide, you should now be able to set up, run, and use the Interference API effectively. Whether you're using it for text generation, image creation, or as a drop-in replacement for OpenAI in your projects, the Interference API offers flexibility and power for your AI-driven applications.</p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

@@ -55,14 +55,13 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Media Documentation</h2><a id="user-content-g4f---media-documentation" class="anchor" aria-label="Permalink: G4F - Media Documentation" href="#g4f---media-documentation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Media Documentation</h2>
 <p>This document outlines how to use the G4F (Generative Framework) library to generate and process various media types, including audio, images, and videos.</p>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">1. <strong>Audio Generation and Transcription</strong>
-</h3><a id="user-content-1-audio-generation-and-transcription" class="anchor" aria-label="Permalink: 1. Audio Generation and Transcription" href="#1-audio-generation-and-transcription"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>1. <strong>Audio Generation and Transcription</strong></h3>
 <p>G4F supports audio generation through providers like PollinationsAI, OpenAIFM, and others, as well as audio transcription using providers like Microsoft_Phi_4_Multimodal.</p>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Generate Audio with PollinationsAI:</strong></h4><a id="user-content-generate-audio-with-pollinationsai" class="anchor" aria-label="Permalink: Generate Audio with PollinationsAI:" href="#generate-audio-with-pollinationsai"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Generate Audio with PollinationsAI:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span>
 
@@ -80,7 +79,7 @@
 <details>
 <summary>Generate Audio with OpenAIFM:</summary>
 <p>OpenAIFM provides high-quality text-to-speech with various voice options and customizable voice styles.</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">as</span> <span class="pl-v">Provider</span>
 
 <span class="pl-c"># Initialize client with OpenAIFM provider</span>
@@ -116,7 +115,7 @@
 <details>
 <summary>Using Predefined Voice Styles in OpenAIFM:</summary>
 <p>OpenAIFM provides several predefined voice styles that can be accessed as class attributes. These styles define the personality, tone, and delivery characteristics of the generated speech:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">as</span> <span class="pl-v">Provider</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(<span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-v">Provider</span>.<span class="pl-c1">OpenAIFM</span>)
@@ -142,24 +141,18 @@
 <span class="pl-s1">response</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">save</span>(<span class="pl-s">"detective_style.mp3"</span>)</pre></div>
 <p>Here's a description of each predefined style:</p>
 <ol>
-<li>
-<strong>friendly</strong> (default): Cheerful, clear, and reassuring tone that creates a calm atmosphere.</li>
-<li>
-<strong>patient_teacher</strong>: Warm, refined, and gently instructive tone like a friendly art instructor.</li>
-<li>
-<strong>noir_detective</strong>: Cool, detached, mysterious tone with dramatic pauses to build suspense.</li>
-<li>
-<strong>cowboy</strong>: Warm, relaxed, and friendly tone with a steady cowboy drawl.</li>
-<li>
-<strong>calm</strong>: Composed, reassuring tone with quiet authority and confidence.</li>
-<li>
-<strong>scientific_style</strong>: Authoritative and precise academic tone for technical content.</li>
+<li><strong>friendly</strong> (default): Cheerful, clear, and reassuring tone that creates a calm atmosphere.</li>
+<li><strong>patient_teacher</strong>: Warm, refined, and gently instructive tone like a friendly art instructor.</li>
+<li><strong>noir_detective</strong>: Cool, detached, mysterious tone with dramatic pauses to build suspense.</li>
+<li><strong>cowboy</strong>: Warm, relaxed, and friendly tone with a steady cowboy drawl.</li>
+<li><strong>calm</strong>: Composed, reassuring tone with quiet authority and confidence.</li>
+<li><strong>scientific_style</strong>: Authoritative and precise academic tone for technical content.</li>
 </ol>
 </details>
 <details>
 <summary>Creating Custom Voice Instructions in OpenAIFM:</summary>
 <p>You can create your own voice style by defining custom instructions as a multi-line string. The instructions should describe the voice characteristics, tone, pacing, emotion, pronunciation, and pauses:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">as</span> <span class="pl-v">Provider</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(<span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-v">Provider</span>.<span class="pl-c1">OpenAIFM</span>)
@@ -189,27 +182,21 @@
 )
 
 <span class="pl-s1">response</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">save</span>(<span class="pl-s">"custom_enthusiastic_style.mp3"</span>)</pre></div>
-<div class="markdown-heading"><h5 class="heading-element"><strong>Structure for Custom Voice Instructions:</strong></h5><a id="user-content-structure-for-custom-voice-instructions" class="anchor" aria-label="Permalink: Structure for Custom Voice Instructions:" href="#structure-for-custom-voice-instructions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h5><strong>Structure for Custom Voice Instructions:</strong></h5>
 <p>When creating custom instructions, consider including these elements:</p>
 <ol>
-<li>
-<strong>Voice/Affect</strong>: The overall personality or character of the voice.</li>
-<li>
-<strong>Tone</strong>: The emotional quality and attitude of the speech.</li>
-<li>
-<strong>Pacing</strong>: The speed and rhythm of speech delivery.</li>
-<li>
-<strong>Emotion</strong>: The specific feelings to convey in the speech.</li>
-<li>
-<strong>Pronunciation</strong>: How words should be articulated.</li>
-<li>
-<strong>Pauses</strong>: Where and how long to pause between phrases.</li>
+<li><strong>Voice/Affect</strong>: The overall personality or character of the voice.</li>
+<li><strong>Tone</strong>: The emotional quality and attitude of the speech.</li>
+<li><strong>Pacing</strong>: The speed and rhythm of speech delivery.</li>
+<li><strong>Emotion</strong>: The specific feelings to convey in the speech.</li>
+<li><strong>Pronunciation</strong>: How words should be articulated.</li>
+<li><strong>Pauses</strong>: Where and how long to pause between phrases.</li>
 </ol>
 <p>This structure helps the model understand exactly how to style the generated speech.</p>
 </details>
 <details>
 <summary>Full example for JavaScript</summary>
-<div class="highlight highlight-source-js"><pre><span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">generateSpeech</span><span class="pl-kos">(</span><span class="pl-s1">text</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">generateSpeech</span><span class="pl-kos">(</span><span class="pl-s1">text</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">'/v1/audio/speech'</span><span class="pl-kos">;</span> <span class="pl-c">// Replace with actual API URL</span>
     <span class="pl-k">const</span> <span class="pl-s1">requestData</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
         <span class="pl-c1">input</span>: <span class="pl-s1">text</span><span class="pl-kos">,</span>
@@ -244,7 +231,7 @@
 </details>
 <details>
 <summary>Examples for all providers</summary>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-s1">gTTS</span>, <span class="pl-v">EdgeTTS</span>, <span class="pl-v">Gemini</span>, <span class="pl-v">PollinationsAI</span>, <span class="pl-v">OpenAIFM</span>
 
@@ -282,9 +269,9 @@
 
 <span class="pl-c"># The gTTS provider also support the audio parameters `tld` and `slow`</span></pre></div>
 </details>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Transcribe an Audio File:</strong></h4><a id="user-content-transcribe-an-audio-file" class="anchor" aria-label="Permalink: Transcribe an Audio File:" href="#transcribe-an-audio-file"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>Some providers in G4F support audio inputs in chat completions, allowing you to transcribe audio files by instructing the model accordingly. This example demonstrates how to use the <code>AsyncClient</code> to transcribe an audio file asynchronously:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Transcribe an Audio File:</strong></h4>
+<p>Some providers in G4F support audio inputs in chat completions, allowing you to transcribe audio files by instructing the model accordingly. This example demonstrates how to use the <code class="notranslate">AsyncClient</code> to transcribe an audio file asynchronously:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span>
 
@@ -302,40 +289,30 @@
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Explanation</h4><a id="user-content-explanation" class="anchor" aria-label="Permalink: Explanation" href="#explanation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Explanation</h4>
 <ul>
-<li>
-<strong>Client Initialization</strong>: An <code>AsyncClient</code> instance is created with a provider that supports audio inputs, such as <code>PollinationsAI</code> or <code>Microsoft_Phi_4_Multimodal</code>.</li>
-<li>
-<strong>File Handling</strong>: The audio file (<code>audio.wav</code>) is opened in binary read mode (<code>"rb"</code>) using a context manager (<code>with</code> statement) to ensure proper file closure after use.</li>
-<li>
-<strong>API Call</strong>: The <code>chat.completions.create</code> method is called with:
+<li><strong>Client Initialization</strong>: An <code class="notranslate">AsyncClient</code> instance is created with a provider that supports audio inputs, such as <code class="notranslate">PollinationsAI</code> or <code class="notranslate">Microsoft_Phi_4_Multimodal</code>.</li>
+<li><strong>File Handling</strong>: The audio file (<code class="notranslate">audio.wav</code>) is opened in binary read mode (<code class="notranslate">"rb"</code>) using a context manager (<code class="notranslate">with</code> statement) to ensure proper file closure after use.</li>
+<li><strong>API Call</strong>: The <code class="notranslate">chat.completions.create</code> method is called with:
 <ul>
-<li>
-<code>messages</code>: Containing a user message instructing the model to transcribe the audio.</li>
-<li>
-<code>media</code>: A list of lists, where each inner list contains the file object and its name (<code>[[audio_file, "audio.wav"]]</code>).</li>
-<li>
-<code>modalities=["text"]</code>: Specifies that the output should be text (the transcription).</li>
+<li><code class="notranslate">messages</code>: Containing a user message instructing the model to transcribe the audio.</li>
+<li><code class="notranslate">media</code>: A list of lists, where each inner list contains the file object and its name (<code class="notranslate">[[audio_file, "audio.wav"]]</code>).</li>
+<li><code class="notranslate">modalities=["text"]</code>: Specifies that the output should be text (the transcription).</li>
 </ul>
 </li>
-<li>
-<strong>Response</strong>: The transcription is extracted from <code>response.choices[0].message.content</code> and printed.</li>
+<li><strong>Response</strong>: The transcription is extracted from <code class="notranslate">response.choices[0].message.content</code> and printed.</li>
 </ul>
-<div class="markdown-heading"><h4 class="heading-element">Notes</h4><a id="user-content-notes" class="anchor" aria-label="Permalink: Notes" href="#notes"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Notes</h4>
 <ul>
-<li>
-<strong>Provider Support</strong>: Ensure the chosen provider (e.g., <code>PollinationsAI</code> or <code>Microsoft_Phi_4_Multimodal</code>) supports audio inputs in chat completions. Not all providers may offer this functionality.</li>
-<li>
-<strong>File Path</strong>: Replace <code>"audio.wav"</code> with the path to your own audio file. The file format (e.g., WAV) should be compatible with the provider.</li>
-<li>
-<strong>Model Selection</strong>: If <code>g4f.models.default</code> does not support audio transcription, you may need to specify a model that does (consult the provider's documentation for supported models).</li>
+<li><strong>Provider Support</strong>: Ensure the chosen provider (e.g., <code class="notranslate">PollinationsAI</code> or <code class="notranslate">Microsoft_Phi_4_Multimodal</code>) supports audio inputs in chat completions. Not all providers may offer this functionality.</li>
+<li><strong>File Path</strong>: Replace <code class="notranslate">"audio.wav"</code> with the path to your own audio file. The file format (e.g., WAV) should be compatible with the provider.</li>
+<li><strong>Model Selection</strong>: If <code class="notranslate">g4f.models.default</code> does not support audio transcription, you may need to specify a model that does (consult the provider's documentation for supported models).</li>
 </ul>
 <p>This example complements the guide by showcasing how to handle audio inputs asynchronously, expanding on the multimodal capabilities of the G4F AsyncClient API.</p>
-<div class="markdown-heading"><h4 class="heading-element"><strong>More examples for Transcription:</strong></h4><a id="user-content-more-examples-for-transcription" class="anchor" aria-label="Permalink: More examples for Transcription:" href="#more-examples-for-transcription"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4><strong>More examples for Transcription:</strong></h4>
 <details>
 <summary>JavaScript</summary>
-<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-s1">endpoint</span> <span class="pl-c1">=</span> <span class="pl-s">"/v1/audio/transcriptions"</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">const</span> <span class="pl-s1">endpoint</span> <span class="pl-c1">=</span> <span class="pl-s">"/v1/audio/transcriptions"</span><span class="pl-kos">;</span>
 <span class="pl-k">const</span> <span class="pl-s1">formData</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">FormData</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
 <span class="pl-s1">formData</span><span class="pl-kos">.</span><span class="pl-en">append</span><span class="pl-kos">(</span><span class="pl-s">"file"</span><span class="pl-kos">,</span> <span class="pl-s1">audioFile</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
@@ -359,15 +336,15 @@
 <details>
 <summary>JavaScript with MediaRecorder</summary>
 <p>Required:</p>
-<pre><code>pip install markitdown[audio-transcription]
+<pre class="notranslate"><code class="notranslate">pip install markitdown[audio-transcription]
 </code></pre>
-<pre><code>apt-get install ffmpeg flac
+<pre class="notranslate"><code class="notranslate">apt-get install ffmpeg flac
 </code></pre>
 <p>Optional:</p>
-<pre><code>pip install faster_whisper soundfile
+<pre class="notranslate"><code class="notranslate">pip install faster_whisper soundfile
 </code></pre>
 <p>Full example:</p>
-<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> <span class="pl-s1">mediaRecorder</span><span class="pl-kos">;</span>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">let</span> <span class="pl-s1">mediaRecorder</span><span class="pl-kos">;</span>
 
 <span class="pl-s1">audioButton</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-k">async</span> <span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
     <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">mediaRecorder</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
@@ -417,7 +394,7 @@
 </details>
 <details>
 <summary>Python and requests</summary>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-k">with</span> <span class="pl-en">open</span>(<span class="pl-s">'audio.wav'</span>, <span class="pl-s">'rb'</span>) <span class="pl-k">as</span> <span class="pl-s1">audio_file</span>:
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">requests</span>.<span class="pl-c1">post</span>(<span class="pl-s">'http://localhost:8080/api/markitdown'</span>, <span class="pl-s1">files</span><span class="pl-c1">=</span>{<span class="pl-s">'file'</span>: <span class="pl-s1">audio_file</span>})
@@ -429,7 +406,7 @@
 </details>
 <details>
 <summary>Python and openai</summary>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">OpenAI</span>(<span class="pl-s1">base_url</span><span class="pl-c1">=</span><span class="pl-s">"http://localhost:8080/v1"</span>, <span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"secret"</span>)
 
@@ -442,11 +419,10 @@
 <span class="pl-en">print</span>(<span class="pl-s1">transcript</span>.<span class="pl-c1">text</span>)</pre></div>
 </details>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">2. <strong>Image Generation</strong>
-</h3><a id="user-content-2-image-generation" class="anchor" aria-label="Permalink: 2. Image Generation" href="#2-image-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>2. <strong>Image Generation</strong></h3>
 <p>G4F can generate images from text prompts and provides options to retrieve images as URLs or base64-encoded strings.</p>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Generate an Image:</strong></h4><a id="user-content-generate-an-image" class="anchor" aria-label="Permalink: Generate an Image:" href="#generate-an-image"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Generate an Image:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -462,8 +438,8 @@
     <span class="pl-en">print</span>(<span class="pl-s">f"Generated image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">image_url</span><span class="pl-kos">}</span></span>"</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Base64 Response Format:</strong></h4><a id="user-content-base64-response-format" class="anchor" aria-label="Permalink: Base64 Response Format:" href="#base64-response-format"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Base64 Response Format:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -479,27 +455,21 @@
     <span class="pl-en">print</span>(<span class="pl-s1">base64_text</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Image Parameters:</strong></h4><a id="user-content-image-parameters" class="anchor" aria-label="Permalink: Image Parameters:" href="#image-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4><strong>Image Parameters:</strong></h4>
 <ul>
-<li>
-<strong><code>width</code></strong>: Defines the width of the generated image.</li>
-<li>
-<strong><code>height</code></strong>: Defines the height of the generated image.</li>
-<li>
-<strong><code>n</code></strong>: Specifies the number of images to generate.</li>
-<li>
-<strong><code>response_format</code></strong>: Specifies the format of the response:
+<li><strong><code class="notranslate">width</code></strong>: Defines the width of the generated image.</li>
+<li><strong><code class="notranslate">height</code></strong>: Defines the height of the generated image.</li>
+<li><strong><code class="notranslate">n</code></strong>: Specifies the number of images to generate.</li>
+<li><strong><code class="notranslate">response_format</code></strong>: Specifies the format of the response:
 <ul>
-<li>
-<code>"url"</code>: Returns the URL of the image.</li>
-<li>
-<code>"b64_json"</code>: Returns the image as a base64-encoded JSON string.</li>
+<li><code class="notranslate">"url"</code>: Returns the URL of the image.</li>
+<li><code class="notranslate">"b64_json"</code>: Returns the image as a base64-encoded JSON string.</li>
 <li>(Default): Saves the image locally and returns a local url.</li>
 </ul>
 </li>
 </ul>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Example with Image Parameters:</strong></h4><a id="user-content-example-with-image-parameters" class="anchor" aria-label="Permalink: Example with Image Parameters:" href="#example-with-image-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Example with Image Parameters:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -519,11 +489,10 @@
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">3. <strong>Creating Image Variations</strong>
-</h3><a id="user-content-3-creating-image-variations" class="anchor" aria-label="Permalink: 3. Creating Image Variations" href="#3-creating-image-variations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>3. <strong>Creating Image Variations</strong></h3>
 <p>You can generate variations of an existing image using G4F.</p>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Create Image Variations:</strong></h4><a id="user-content-create-image-variations" class="anchor" aria-label="Permalink: Create Image Variations:" href="#create-image-variations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Create Image Variations:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">OpenaiChat</span>
 
@@ -531,7 +500,6 @@
     <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(<span class="pl-s1">image_provider</span><span class="pl-c1">=</span><span class="pl-v">OpenaiChat</span>)
 
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">images</span>.<span class="pl-c1">create_variation</span>(
-        <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"a white siamese cat"</span>,
         <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-en">open</span>(<span class="pl-s">"docs/images/cat.jpg"</span>, <span class="pl-s">"rb"</span>),
         <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"dall-e-3"</span>,
     )
@@ -541,11 +509,10 @@
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">4. <strong>Video Generation</strong>
-</h3><a id="user-content-4-video-generation" class="anchor" aria-label="Permalink: 4. Video Generation" href="#4-video-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>4. <strong>Video Generation</strong></h3>
 <p>G4F supports video generation through providers like HuggingFaceMedia.</p>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Generate a Video:</strong></h4><a id="user-content-generate-a-video" class="anchor" aria-label="Permalink: Generate a Video:" href="#generate-a-video"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4><strong>Generate a Video:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">HuggingFaceMedia</span>
 
@@ -567,33 +534,26 @@
     <span class="pl-en">print</span>(<span class="pl-s">"Generated Video URL:"</span>, <span class="pl-s1">result</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">url</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Video Parameters:</strong></h4><a id="user-content-video-parameters" class="anchor" aria-label="Permalink: Video Parameters:" href="#video-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4><strong>Video Parameters:</strong></h4>
 <ul>
-<li>
-<strong><code>resolution</code></strong>: Specifies the resolution of the generated video. Options include:
+<li><strong><code class="notranslate">resolution</code></strong>: Specifies the resolution of the generated video. Options include:
 <ul>
-<li>
-<code>"480p"</code> (default)</li>
-<li><code>"720p"</code></li>
+<li><code class="notranslate">"480p"</code> (default)</li>
+<li><code class="notranslate">"720p"</code></li>
 </ul>
 </li>
-<li>
-<strong><code>aspect_ratio</code></strong>: Defines the width-to-height ratio (e.g., <code>"16:9"</code>).</li>
-<li>
-<strong><code>n</code></strong>: Specifies the number of videos to generate.</li>
-<li>
-<strong><code>response_format</code></strong>: Specifies the format of the response:
+<li><strong><code class="notranslate">aspect_ratio</code></strong>: Defines the width-to-height ratio (e.g., <code class="notranslate">"16:9"</code>).</li>
+<li><strong><code class="notranslate">n</code></strong>: Specifies the number of videos to generate.</li>
+<li><strong><code class="notranslate">response_format</code></strong>: Specifies the format of the response:
 <ul>
-<li>
-<code>"url"</code>: Returns the URL of the video.</li>
-<li>
-<code>"b64_json"</code>: Returns the video as a base64-encoded JSON string.</li>
+<li><code class="notranslate">"url"</code>: Returns the URL of the video.</li>
+<li><code class="notranslate">"b64_json"</code>: Returns the video as a base64-encoded JSON string.</li>
 <li>(Default): Saves the video locally and returns a local url.</li>
 </ul>
 </li>
 </ul>
-<div class="markdown-heading"><h4 class="heading-element"><strong>Example with Video Parameters:</strong></h4><a id="user-content-example-with-video-parameters" class="anchor" aria-label="Permalink: Example with Video Parameters:" href="#example-with-video-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">os</span>
+<h4><strong>Example with Video Parameters:</strong></h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">os</span>
 <span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">HuggingFaceMedia</span>
@@ -622,17 +582,12 @@
 <hr>
 <p><strong>Key Points:</strong></p>
 <ul>
-<li>
-<strong>Provider Selection</strong>: Ensure the selected provider supports the desired media generation or processing task.</li>
-<li>
-<strong>API Keys</strong>: Some providers require API keys for authentication.</li>
-<li>
-<strong>Response Formats</strong>: Use <code>response_format</code> to control the output format (URL, base64, local file).</li>
-<li>
-<strong>Parameter Usage</strong>: Use parameters like <code>width</code>, <code>height</code>, <code>resolution</code>, <code>aspect_ratio</code>, and <code>n</code> to customize the generated media.</li>
+<li><strong>Provider Selection</strong>: Ensure the selected provider supports the desired media generation or processing task.</li>
+<li><strong>API Keys</strong>: Some providers require API keys for authentication.</li>
+<li><strong>Response Formats</strong>: Use <code class="notranslate">response_format</code> to control the output format (URL, base64, local file).</li>
+<li><strong>Parameter Usage</strong>: Use parameters like <code class="notranslate">width</code>, <code class="notranslate">height</code>, <code class="notranslate">resolution</code>, <code class="notranslate">aspect_ratio</code>, and <code class="notranslate">n</code> to customize the generated media.</li>
 </ul>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

@@ -55,11 +55,11 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Vision Support in Chat Completion</h2><a id="user-content-g4f---vision-support-in-chat-completion" class="anchor" aria-label="Permalink: G4F - Vision Support in Chat Completion" href="#g4f---vision-support-in-chat-completion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Vision Support in Chat Completion</h2>
 <p>This documentation provides an overview of how to integrate vision support into chat completions using an API and a client. It includes examples to guide you through the process.</p>
-<div class="markdown-heading"><h3 class="heading-element">Example with the API</h3><a id="user-content-example-with-the-api" class="anchor" aria-label="Permalink: Example with the API" href="#example-with-the-api"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Example with the API</h3>
 <p>To use vision support in chat completion with the API, follow the example below:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">requests</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">requests</span>
 <span class="pl-k">import</span> <span class="pl-s1">json</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">image</span> <span class="pl-k">import</span> <span class="pl-s1">to_data_uri</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">requests</span>.<span class="pl-s1">raise_for_status</span> <span class="pl-k">import</span> <span class="pl-s1">raise_for_status</span>
@@ -80,20 +80,15 @@
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">json</span>())</pre></div>
 <p>In this example:</p>
 <ul>
-<li>
-<code>url</code> is the endpoint for the chat completion API.</li>
-<li>
-<code>body</code> contains the model, provider, messages, and images.</li>
-<li>
-<code>messages</code> is a list of message objects with roles and content.</li>
-<li>
-<code>images</code> is a list of image data in Data URI format and optional filenames.</li>
-<li>
-<code>response</code> stores the API response.</li>
+<li><code class="notranslate">url</code> is the endpoint for the chat completion API.</li>
+<li><code class="notranslate">body</code> contains the model, provider, messages, and images.</li>
+<li><code class="notranslate">messages</code> is a list of message objects with roles and content.</li>
+<li><code class="notranslate">images</code> is a list of image data in Data URI format and optional filenames.</li>
+<li><code class="notranslate">response</code> stores the API response.</li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Example with the Client</h3><a id="user-content-example-with-the-client" class="anchor" aria-label="Permalink: Example with the Client" href="#example-with-the-client"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Example with the Client</h3>
 <p>To use vision support in chat completion with the client, follow the example below:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span>
 
 <span class="pl-k">def</span> <span class="pl-en">chat_completion</span>(<span class="pl-s1">prompt</span>):
@@ -107,7 +102,7 @@
 
 <span class="pl-s1">prompt</span> <span class="pl-c1">=</span> <span class="pl-s">"what are on this images?"</span>
 <span class="pl-en">chat_completion</span>(<span class="pl-s1">prompt</span>)</pre></div>
-<pre><code>**Image 1**
+<pre class="notranslate"><code class="notranslate">**Image 1**
 
 * A waterfall with a rainbow
 * Lush greenery surrounding the waterfall
@@ -121,22 +116,18 @@
 </code></pre>
 <p>In this example:</p>
 <ul>
-<li>
-<code>client</code> initializes a new client with the specified provider.</li>
-<li>
-<code>images</code> is a list of image data and optional filenames.</li>
-<li>
-<code>response</code> stores the response from the client.</li>
-<li>The <code>chat_completion</code> function prints the chat completion output.</li>
+<li><code class="notranslate">client</code> initializes a new client with the specified provider.</li>
+<li><code class="notranslate">images</code> is a list of image data and optional filenames.</li>
+<li><code class="notranslate">response</code> stores the response from the client.</li>
+<li>The <code class="notranslate">chat_completion</code> function prints the chat completion output.</li>
 </ul>
-<div class="markdown-heading"><h3 class="heading-element">Notes</h3><a id="user-content-notes" class="anchor" aria-label="Permalink: Notes" href="#notes"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Notes</h3>
 <ul>
 <li>Multiple images can be sent. Each image has two data parts: image data (in Data URI format for the API) and an optional filename.</li>
 <li>The client supports bytes, IO objects, and PIL images as input.</li>
 <li>Ensure you use a provider that supports vision and multiple images.</li>
 </ul>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

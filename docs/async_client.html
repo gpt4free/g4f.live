@@ -55,11 +55,11 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - AsyncClient API Guide</h2><a id="user-content-g4f---asyncclient-api-guide" class="anchor" aria-label="Permalink: G4F - AsyncClient API Guide" href="#g4f---asyncclient-api-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - AsyncClient API Guide</h2>
 <p>The G4F AsyncClient API is a powerful asynchronous interface for interacting with various AI models. This guide provides comprehensive information on how to use the API effectively, including setup, usage examples, best practices, and important considerations for optimal performance.</p>
-<div class="markdown-heading"><h2 class="heading-element">Compatibility Note</h2><a id="user-content-compatibility-note" class="anchor" aria-label="Permalink: Compatibility Note" href="#compatibility-note"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Compatibility Note</h2>
 <p>The G4F AsyncClient API is designed to be compatible with the OpenAI API, making it easy for developers familiar with OpenAI's interface to transition to G4F.</p>
-<div class="markdown-heading"><h2 class="heading-element">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Table of Contents</h2>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#key-features">Key Features</a></li>
@@ -72,13 +72,9 @@
 <li><a href="#text-completions">Text Completions</a></li>
 <li><a href="#streaming-completions">Streaming Completions</a></li>
 <li><a href="#using-a-vision-model">Using a Vision Model</a></li>
-<li>
-<strong><a href="#transcribing-audio-with-chat-completions">Transcribing Audio with Chat Completions</a></strong> <em>(New Section)</em>
-</li>
+<li><strong><a href="#transcribing-audio-with-chat-completions">Transcribing Audio with Chat Completions</a></strong> <em>(New Section)</em></li>
 <li><a href="#image-generation">Image Generation</a></li>
-<li>
-<strong><a href="#video-generation">Video Generation</a></strong> <em>(New Section)</em>
-</li>
+<li><strong><a href="#video-generation">Video Generation</a></strong> <em>(New Section)</em></li>
 <li><a href="#advanced-usage">Advanced Usage</a></li>
 <li><a href="#conversation-memory">Conversation Memory</a></li>
 <li><a href="#search-tool-support">Search Tool Support</a></li>
@@ -88,25 +84,20 @@
 <li><a href="#rate-limiting-and-api-usage">Rate Limiting and API Usage</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Introduction</h2><a id="user-content-introduction" class="anchor" aria-label="Permalink: Introduction" href="#introduction"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Introduction</h2>
 <p>The G4F AsyncClient API is an asynchronous version of the standard G4F Client API. It offers the same functionality as the synchronous API but with improved performance due to its asynchronous nature. This guide will walk you through the key features and usage of the G4F AsyncClient API.</p>
-<div class="markdown-heading"><h2 class="heading-element">Key Features</h2><a id="user-content-key-features" class="anchor" aria-label="Permalink: Key Features" href="#key-features"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Key Features</h2>
 <ul>
-<li>
-<strong>Custom Providers</strong>: Use custom providers for enhanced flexibility.</li>
-<li>
-<strong>ChatCompletion Interface</strong>: Interact with chat models through the ChatCompletion class.</li>
-<li>
-<strong>Streaming Responses</strong>: Get responses iteratively as they are received.</li>
-<li>
-<strong>Non-Streaming Responses</strong>: Generate complete responses in a single call.</li>
-<li>
-<strong>Image Generation and Vision Models</strong>: Support for image-related tasks.</li>
+<li><strong>Custom Providers</strong>: Use custom providers for enhanced flexibility.</li>
+<li><strong>ChatCompletion Interface</strong>: Interact with chat models through the ChatCompletion class.</li>
+<li><strong>Streaming Responses</strong>: Get responses iteratively as they are received.</li>
+<li><strong>Non-Streaming Responses</strong>: Generate complete responses in a single call.</li>
+<li><strong>Image Generation and Vision Models</strong>: Support for image-related tasks.</li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Getting Started</h2><a id="user-content-getting-started" class="anchor" aria-label="Permalink: Getting Started" href="#getting-started"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Initializing the AsyncClient</h3><a id="user-content-initializing-the-asyncclient" class="anchor" aria-label="Permalink: Initializing the AsyncClient" href="#initializing-the-asyncclient"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>To use the G4F <code>AsyncClient</code>, create a new instance:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
+<h2>Getting Started</h2>
+<h3>Initializing the AsyncClient</h3>
+<p><strong>To use the G4F <code class="notranslate">AsyncClient</code>, create a new instance:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">OpenaiChat</span>, <span class="pl-v">Gemini</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(
@@ -114,9 +105,9 @@
     <span class="pl-s1">image_provider</span><span class="pl-c1">=</span><span class="pl-v">Gemini</span>,
     <span class="pl-c"># Add other parameters as needed</span>
 )</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Creating Chat Completions</h2><a id="user-content-creating-chat-completions" class="anchor" aria-label="Permalink: Creating Chat Completions" href="#creating-chat-completions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Creating Chat Completions</h2>
 <p><strong>Here’s an improved example of creating chat completions:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
     <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gpt-4o-mini"</span>,
     <span class="pl-s1">messages</span><span class="pl-c1">=</span>[
         {
@@ -128,43 +119,41 @@
 )</pre></div>
 <p><strong>This example:</strong></p>
 <ul>
-<li>Asks a specific question <code>Say this is a test</code>
-</li>
+<li>Asks a specific question <code class="notranslate">Say this is a test</code></li>
 <li>Configures various parameters like temperature and max_tokens for more control over the output</li>
 <li>Disables streaming for a complete response</li>
 </ul>
 <p>You can adjust these parameters based on your specific needs.</p>
-<div class="markdown-heading"><h3 class="heading-element">Configuration</h3><a id="user-content-configuration" class="anchor" aria-label="Permalink: Configuration" href="#configuration"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>Configure the <code>AsyncClient</code> with additional settings:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(
+<h3>Configuration</h3>
+<p><strong>Configure the <code class="notranslate">AsyncClient</code> with additional settings:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(
     <span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"your_api_key_here"</span>,
     <span class="pl-s1">proxies</span><span class="pl-c1">=</span><span class="pl-s">"http://user:pass@host"</span>,
     <span class="pl-c"># Add other parameters as needed</span>
 )</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Explanation of Parameters</h2><a id="user-content-explanation-of-parameters" class="anchor" aria-label="Permalink: Explanation of Parameters" href="#explanation-of-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Explanation of Parameters</h2>
 <p><strong>When using the G4F to create chat completions or perform related tasks, you can configure the following parameters:</strong></p>
 <ul>
 <li>
-<p><strong><code>model</code></strong>:<br>
-Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"</code> for GPT-4 Optimized or <code>"gpt-4o-mini"</code> for a lightweight version. The choice of model determines the quality and speed of the response. Always ensure the selected model is supported by the provider.</p>
+<p><strong><code class="notranslate">model</code></strong>:<br>
+Specifies the AI model to be used for the task. Examples include <code class="notranslate">"gpt-4o"</code> for GPT-4 Optimized or <code class="notranslate">"gpt-4o-mini"</code> for a lightweight version. The choice of model determines the quality and speed of the response. Always ensure the selected model is supported by the provider.</p>
 </li>
 <li>
-<p><strong><code>messages</code></strong>:<br>
-<strong>A list of dictionaries representing the conversation context. Each dictionary contains two keys:</strong>
-- <code>role</code>: Defines the role of the message sender, such as <code>"user"</code> (input from the user) or <code>"system"</code> (instructions to the AI).<br>
-- <code>content</code>: The actual text of the message.<br>
+<p><strong><code class="notranslate">messages</code></strong>:<br>
+<strong>A list of dictionaries representing the conversation context. Each dictionary contains two keys:</strong><br>
+- <code class="notranslate">role</code>: Defines the role of the message sender, such as <code class="notranslate">"user"</code> (input from the user) or <code class="notranslate">"system"</code> (instructions to the AI).<br>
+- <code class="notranslate">content</code>: The actual text of the message.<br>
 <strong>Example:</strong></p>
-<div class="highlight highlight-source-python"><pre>[
+<div class="highlight highlight-source-python"><pre class="notranslate">[
     {<span class="pl-s">"role"</span>: <span class="pl-s">"system"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"You are a helpful assistant."</span>},
     {<span class="pl-s">"role"</span>: <span class="pl-s">"user"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"What day is it today?"</span>}
 ]</pre></div>
 </li>
 <li>
-<p><strong><code>web_search</code></strong>:
+<p><strong><code class="notranslate">web_search</code></strong>:<br>
 <em>(Optional)</em> A Boolean flag indicating whether to enable internet-based search capabilities. If set to <strong>True</strong>, the system performs a web search using the provider’s native method to retrieve up-to-date information. This is especially useful for obtaining real-time or specific details not included in the model’s training data.</p>
 <ul>
-<li>
-<strong>Providers Supporting</strong> <code>web_search</code>:</li>
+<li><strong>Providers Supporting</strong> <code class="notranslate">web_search</code>:</li>
 <li>ChatGPT</li>
 <li>HuggingChat</li>
 <li>Blackbox</li>
@@ -172,15 +161,15 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 </ul>
 </li>
 <li>
-<p><strong><code>provider</code></strong>:
-<em>(Optional)</em> Specifies the backend provider for the API. Examples include <code>g4f.Provider.Blackbox</code> or <code>g4f.Provider.OpenaiChat</code>. Each provider may support a different subset of models and features, so select one that matches your requirements.</p>
+<p><strong><code class="notranslate">provider</code></strong>:<br>
+<em>(Optional)</em> Specifies the backend provider for the API. Examples include <code class="notranslate">g4f.Provider.Blackbox</code> or <code class="notranslate">g4f.Provider.OpenaiChat</code>. Each provider may support a different subset of models and features, so select one that matches your requirements.</p>
 </li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Usage Examples</h2><a id="user-content-usage-examples" class="anchor" aria-label="Permalink: Usage Examples" href="#usage-examples"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Text Completions</h3><a id="user-content-text-completions" class="anchor" aria-label="Permalink: Text Completions" href="#text-completions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Usage Examples</h2>
+<h3>Text Completions</h3>
 <details>
 <summary>Generate text completions using the ChatCompletions endpoint</summary>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -204,7 +193,7 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <details>
 <summary>Streaming Completions</summary>
 <p><strong>Process responses incrementally as they are generated:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -230,7 +219,7 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <details>
 <summary>Using a Vision Model</summary>
 <p><strong>Analyze an image and generate a description:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">import</span> <span class="pl-s1">requests</span>
 <span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
@@ -261,8 +250,8 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 </details>
 <details>
 <summary>Transcribing Audio with Chat Completions</summary>
-<p>Some providers in G4F support audio inputs in chat completions, allowing you to transcribe audio files by instructing the model accordingly. This example demonstrates how to use the <code>AsyncClient</code> to transcribe an audio file asynchronously:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<p>Some providers in G4F support audio inputs in chat completions, allowing you to transcribe audio files by instructing the model accordingly. This example demonstrates how to use the <code class="notranslate">AsyncClient</code> to transcribe an audio file asynchronously:</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">models</span>
@@ -282,42 +271,31 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Explanation</h4><a id="user-content-explanation" class="anchor" aria-label="Permalink: Explanation" href="#explanation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Explanation</h4>
 <ul>
-<li>
-<strong>Client Initialization</strong>: An <code>AsyncClient</code> instance is created with a provider that supports audio inputs, such as <code>PollinationsAI</code> or <code>Microsoft_Phi_4</code>.</li>
-<li>
-<strong>File Handling</strong>: The audio file (<code>audio.wav</code>) is opened in binary read mode (<code>"rb"</code>) using a context manager (<code>with</code> statement) to ensure proper file closure after use.</li>
-<li>
-<strong>API Call</strong>: The <code>chat.completions.create</code> method is called with:
+<li><strong>Client Initialization</strong>: An <code class="notranslate">AsyncClient</code> instance is created with a provider that supports audio inputs, such as <code class="notranslate">PollinationsAI</code> or <code class="notranslate">Microsoft_Phi_4</code>.</li>
+<li><strong>File Handling</strong>: The audio file (<code class="notranslate">audio.wav</code>) is opened in binary read mode (<code class="notranslate">"rb"</code>) using a context manager (<code class="notranslate">with</code> statement) to ensure proper file closure after use.</li>
+<li><strong>API Call</strong>: The <code class="notranslate">chat.completions.create</code> method is called with:
 <ul>
-<li>
-<code>model=g4f.models.default</code>: Uses the default model for the selected provider.</li>
-<li>
-<code>messages</code>: A list containing a user message instructing the model to transcribe the audio.</li>
-<li>
-<code>media</code>: A list of lists, where each inner list contains the file object and its name (<code>[[audio_file, "audio.wav"]]</code>).</li>
-<li>
-<code>modalities=["text"]</code>: Specifies that the output should be text (the transcription).</li>
+<li><code class="notranslate">model=g4f.models.default</code>: Uses the default model for the selected provider.</li>
+<li><code class="notranslate">messages</code>: A list containing a user message instructing the model to transcribe the audio.</li>
+<li><code class="notranslate">media</code>: A list of lists, where each inner list contains the file object and its name (<code class="notranslate">[[audio_file, "audio.wav"]]</code>).</li>
+<li><code class="notranslate">modalities=["text"]</code>: Specifies that the output should be text (the transcription).</li>
 </ul>
 </li>
-<li>
-<strong>Response</strong>: The transcription is extracted from <code>response.choices[0].message.content</code> and printed.</li>
+<li><strong>Response</strong>: The transcription is extracted from <code class="notranslate">response.choices[0].message.content</code> and printed.</li>
 </ul>
-<div class="markdown-heading"><h4 class="heading-element">Notes</h4><a id="user-content-notes" class="anchor" aria-label="Permalink: Notes" href="#notes"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Notes</h4>
 <ul>
-<li>
-<strong>Provider Support</strong>: Ensure the chosen provider (e.g., <code>PollinationsAI</code> or <code>Microsoft_Phi_4</code>) supports audio inputs in chat completions. Not all providers may offer this functionality.</li>
-<li>
-<strong>File Path</strong>: Replace <code>"audio.wav"</code> with the path to your own audio file. The file format (e.g., WAV) should be compatible with the provider.</li>
-<li>
-<strong>Model Selection</strong>: If <code>g4f.models.default</code> does not support audio transcription, you may need to specify a model that does (consult the provider's documentation for supported models).</li>
+<li><strong>Provider Support</strong>: Ensure the chosen provider (e.g., <code class="notranslate">PollinationsAI</code> or <code class="notranslate">Microsoft_Phi_4</code>) supports audio inputs in chat completions. Not all providers may offer this functionality.</li>
+<li><strong>File Path</strong>: Replace <code class="notranslate">"audio.wav"</code> with the path to your own audio file. The file format (e.g., WAV) should be compatible with the provider.</li>
+<li><strong>Model Selection</strong>: If <code class="notranslate">g4f.models.default</code> does not support audio transcription, you may need to specify a model that does (consult the provider's documentation for supported models).</li>
 </ul>
 <p>This example complements the guide by showcasing how to handle audio inputs asynchronously, expanding on the multimodal capabilities of the G4F AsyncClient API.</p>
 </details>
 <details>
 <summary>Reuse Conversation in Chat Completions</summary>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">OpenaiAccount</span>
@@ -342,18 +320,15 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 </details>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Image Generation</h3><a id="user-content-image-generation" class="anchor" aria-label="Permalink: Image Generation" href="#image-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>The <code>response_format</code> parameter is optional and can have the following values:</strong></p>
+<h3>Image Generation</h3>
+<p><strong>The <code class="notranslate">response_format</code> parameter is optional and can have the following values:</strong></p>
 <ul>
-<li>
-<strong>If not specified (default):</strong> The image will be saved locally, and a local path will be returned (e.g., "/media/1733331238_cf9d6aa9-f606-4fea-ba4b-f06576cba309.jpg").</li>
-<li>
-<strong>"url":</strong> Returns a URL to the generated image.</li>
-<li>
-<strong>"b64_json":</strong> Returns the image as a base64-encoded JSON string.</li>
+<li><strong>If not specified (default):</strong> The image will be saved locally, and a local path will be returned (e.g., "/media/1733331238_cf9d6aa9-f606-4fea-ba4b-f06576cba309.jpg").</li>
+<li><strong>"url":</strong> Returns a URL to the generated image.</li>
+<li><strong>"b64_json":</strong> Returns the image as a base64-encoded JSON string.</li>
 </ul>
 <p><strong>Generate images using a specified prompt:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -370,8 +345,8 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
     <span class="pl-en">print</span>(<span class="pl-s">f"Generated image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">image_url</span><span class="pl-kos">}</span></span>"</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Base64 Response Format</h4><a id="user-content-base64-response-format" class="anchor" aria-label="Permalink: Base64 Response Format" href="#base64-response-format"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h4>Base64 Response Format</h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -389,9 +364,9 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Creating Image Variations</h3><a id="user-content-creating-image-variations" class="anchor" aria-label="Permalink: Creating Image Variations" href="#creating-image-variations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Creating Image Variations</h3>
 <p><strong>Create variations of an existing image:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">OpenaiChat</span>
 
@@ -399,7 +374,6 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
     <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(<span class="pl-s1">image_provider</span><span class="pl-c1">=</span><span class="pl-v">OpenaiChat</span>)
     
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">images</span>.<span class="pl-c1">create_variation</span>(
-        <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"a white siamese cat"</span>,
         <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-en">open</span>(<span class="pl-s">"docs/images/cat.jpg"</span>, <span class="pl-s">"rb"</span>),
         <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"dall-e-3"</span>,
         <span class="pl-c"># Add any other necessary parameters</span>
@@ -410,10 +384,10 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Video Generation</h3><a id="user-content-video-generation" class="anchor" aria-label="Permalink: Video Generation" href="#video-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>The G4F <code>AsyncClient</code> also supports <strong>video generation</strong> through supported providers like <code>HuggingFaceMedia</code>. You can retrieve the list of available video models and generate videos from prompts.</p>
+<h3>Video Generation</h3>
+<p>The G4F <code class="notranslate">AsyncClient</code> also supports <strong>video generation</strong> through supported providers like <code class="notranslate">HuggingFaceMedia</code>. You can retrieve the list of available video models and generate videos from prompts.</p>
 <p><strong>Example: Generate a video using a prompt</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">HuggingFaceMedia</span>
 
@@ -437,25 +411,21 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
     <span class="pl-en">print</span>(<span class="pl-s">"Generated Video URL:"</span>, <span class="pl-s1">result</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">url</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Explanation</h4><a id="user-content-explanation-1" class="anchor" aria-label="Permalink: Explanation" href="#explanation-1"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h4>Explanation</h4>
 <ul>
-<li>
-<strong>Client Initialization</strong>: An <code>AsyncClient</code> is initialized using the <code>HuggingFaceMedia</code> provider with an API key.</li>
-<li>
-<strong>Model Discovery</strong>: <code>client.models.get_video()</code> fetches a list of supported video models.</li>
-<li>
-<strong>Video Generation</strong>: A prompt is submitted to generate a video using <code>await client.media.generate(...)</code>.</li>
-<li>
-<strong>Output</strong>: The result includes a URL to the generated video, accessed via <code>result.data[0].url</code>.</li>
+<li><strong>Client Initialization</strong>: An <code class="notranslate">AsyncClient</code> is initialized using the <code class="notranslate">HuggingFaceMedia</code> provider with an API key.</li>
+<li><strong>Model Discovery</strong>: <code class="notranslate">client.models.get_video()</code> fetches a list of supported video models.</li>
+<li><strong>Video Generation</strong>: A prompt is submitted to generate a video using <code class="notranslate">await client.media.generate(...)</code>.</li>
+<li><strong>Output</strong>: The result includes a URL to the generated video, accessed via <code class="notranslate">result.data[0].url</code>.</li>
 </ul>
 <blockquote>
 <p>Make sure your selected provider supports media generation and your API key has appropriate permissions.</p>
 </blockquote>
-<div class="markdown-heading"><h2 class="heading-element">Advanced Usage</h2><a id="user-content-advanced-usage" class="anchor" aria-label="Permalink: Advanced Usage" href="#advanced-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Conversation Memory</h3><a id="user-content-conversation-memory" class="anchor" aria-label="Permalink: Conversation Memory" href="#conversation-memory"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Advanced Usage</h2>
+<h3>Conversation Memory</h3>
 <p>To maintain a coherent conversation, it's important to store the context or history of the dialogue. This can be achieved by appending both the user's inputs and the bot's responses to a messages list. This allows the model to reference past exchanges when generating responses.</p>
 <p><strong>The following example demonstrates how to implement conversation memory with the G4F:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">class</span> <span class="pl-v">Conversation</span>:
@@ -512,10 +482,10 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Search Tool Support</h2><a id="user-content-search-tool-support" class="anchor" aria-label="Permalink: Search Tool Support" href="#search-tool-support"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>The <strong>Search Tool Support</strong> feature enables triggering a web search during chat completions. This is useful for retrieving real-time or specific data, offering a more flexible solution than <code>web_search</code>.</p>
+<h2>Search Tool Support</h2>
+<p>The <strong>Search Tool Support</strong> feature enables triggering a web search during chat completions. This is useful for retrieving real-time or specific data, offering a more flexible solution than <code class="notranslate">web_search</code>.</p>
 <p><strong>Example Usage:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -553,30 +523,24 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 
 <span class="pl-k">if</span> <span class="pl-s1">__name__</span> <span class="pl-c1">==</span> <span class="pl-s">"__main__"</span>:
     <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<p><strong>Parameters for <code>search_tool</code>:</strong></p>
+<p><strong>Parameters for <code class="notranslate">search_tool</code>:</strong></p>
 <ul>
-<li>
-<strong><code>query</code></strong>: The search query string.</li>
-<li>
-<strong><code>max_results</code></strong>: Number of search results to retrieve.</li>
-<li>
-<strong><code>max_words</code></strong>: Maximum number of words in the response.</li>
-<li>
-<strong><code>backend</code></strong>: The backend used for search (e.g., <code>"api"</code>).</li>
-<li>
-<strong><code>add_text</code></strong>: Whether to include text snippets in the response.</li>
-<li>
-<strong><code>timeout</code></strong>: Maximum time (in seconds) for the search operation.</li>
+<li><strong><code class="notranslate">query</code></strong>: The search query string.</li>
+<li><strong><code class="notranslate">max_results</code></strong>: Number of search results to retrieve.</li>
+<li><strong><code class="notranslate">max_words</code></strong>: Maximum number of words in the response.</li>
+<li><strong><code class="notranslate">backend</code></strong>: The backend used for search (e.g., <code class="notranslate">"api"</code>).</li>
+<li><strong><code class="notranslate">add_text</code></strong>: Whether to include text snippets in the response.</li>
+<li><strong><code class="notranslate">timeout</code></strong>: Maximum time (in seconds) for the search operation.</li>
 </ul>
 <p><strong>Advantages of Search Tool Support:</strong></p>
 <ul>
-<li>Works with any provider, irrespective of <code>web_search</code> support.</li>
+<li>Works with any provider, irrespective of <code class="notranslate">web_search</code> support.</li>
 <li>Offers more customization and control over the search process.</li>
 <li>Bypasses provider-specific limitations.</li>
 </ul>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Using a List of Providers with RetryProvider</h3><a id="user-content-using-a-list-of-providers-with-retryprovider" class="anchor" aria-label="Permalink: Using a List of Providers with RetryProvider" href="#using-a-list-of-providers-with-retryprovider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<h3>Using a List of Providers with RetryProvider</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">debug</span>
@@ -603,9 +567,9 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Concurrent Tasks with asyncio.gather</h3><a id="user-content-concurrent-tasks-with-asynciogather" class="anchor" aria-label="Permalink: Concurrent Tasks with asyncio.gather" href="#concurrent-tasks-with-asynciogather"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Concurrent Tasks with asyncio.gather</h3>
 <p><strong>Execute multiple tasks concurrently:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main</span>():
@@ -639,9 +603,9 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
         <span class="pl-en">print</span>(<span class="pl-s">f"An error occurred: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">e</span><span class="pl-kos">}</span></span>"</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main</span>())</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Available Models and Providers</h2><a id="user-content-available-models-and-providers" class="anchor" aria-label="Permalink: Available Models and Providers" href="#available-models-and-providers"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Available Models and Providers</h2>
 <p>The G4F AsyncClient supports a wide range of AI models and providers, allowing you to choose the best option for your specific use case.</p>
-<p><strong>Here's a brief overview of the available models and providers:</strong>
+<p><strong>Here's a brief overview of the available models and providers:</strong><br>
 <strong>Models</strong></p>
 <ul>
 <li>GPT-3.5-Turbo</li>
@@ -661,7 +625,7 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <li>Custom providers</li>
 </ul>
 <p><strong>To use a specific model or provider, specify it when creating the client or in the API call:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(<span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-s1">g4f</span>.<span class="pl-c1">Provider</span>.<span class="pl-c1">OpenaiChat</span>)
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>(<span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-s1">g4f</span>.<span class="pl-c1">Provider</span>.<span class="pl-c1">OpenaiChat</span>)
 
 <span class="pl-c"># or</span>
 
@@ -675,13 +639,13 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
         }
     ]
 )</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Error Handling and Best Practices</h2><a id="user-content-error-handling-and-best-practices" class="anchor" aria-label="Permalink: Error Handling and Best Practices" href="#error-handling-and-best-practices"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Error Handling and Best Practices</h2>
 <p>Implementing proper error handling and following best practices is crucial when working with the G4F AsyncClient API. This ensures your application remains robust and can gracefully handle various scenarios.</p>
 <p><strong>Here are some key practices to follow:</strong></p>
 <ol>
 <li><strong>Use try-except blocks to catch and handle exceptions:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">try</span>:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">try</span>:
     <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
         <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gpt-4o-mini"</span>,
         <span class="pl-s1">messages</span><span class="pl-c1">=</span>[
@@ -696,26 +660,26 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <ol start="2">
 <li><strong>Check the response status and handle different scenarios:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">if</span> <span class="pl-s1">response</span>.<span class="pl-c1">choices</span>:
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">if</span> <span class="pl-s1">response</span>.<span class="pl-c1">choices</span>:
     <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)
 <span class="pl-k">else</span>:
     <span class="pl-en">print</span>(<span class="pl-s">"No response generated"</span>)</pre></div>
 <ol start="3">
 <li><strong>Implement retries for transient errors:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">tenacity</span> <span class="pl-k">import</span> <span class="pl-s1">retry</span>, <span class="pl-s1">stop_after_attempt</span>, <span class="pl-s1">wait_exponential</span>
 
 <span class="pl-en">@<span class="pl-en">retry</span>(<span class="pl-s1">stop</span><span class="pl-c1">=</span><span class="pl-en">stop_after_attempt</span>(<span class="pl-c1">3</span>), <span class="pl-s1">wait</span><span class="pl-c1">=</span><span class="pl-en">wait_exponential</span>(<span class="pl-s1">multiplier</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">min</span><span class="pl-c1">=</span><span class="pl-c1">4</span>, <span class="pl-s1">max</span><span class="pl-c1">=</span><span class="pl-c1">10</span>))</span>
 <span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">make_api_call</span>():
     <span class="pl-c"># Your API call here</span>
     <span class="pl-k">pass</span></pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Rate Limiting and API Usage</h2><a id="user-content-rate-limiting-and-api-usage" class="anchor" aria-label="Permalink: Rate Limiting and API Usage" href="#rate-limiting-and-api-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Rate Limiting and API Usage</h2>
 <p>When working with the G4F AsyncClient API, it's important to implement rate limiting and monitor your API usage. This helps ensure fair usage, prevents overloading the service, and optimizes your application's performance. Here are some key strategies to consider:</p>
 <ol>
 <li><strong>Implement rate limiting in your application:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">aiolimiter</span> <span class="pl-k">import</span> <span class="pl-v">AsyncLimiter</span>
 
 <span class="pl-s1">rate_limit</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncLimiter</span>(<span class="pl-s1">max_rate</span><span class="pl-c1">=</span><span class="pl-c1">10</span>, <span class="pl-s1">time_period</span><span class="pl-c1">=</span><span class="pl-c1">1</span>)  <span class="pl-c"># 10 requests per second</span>
@@ -727,7 +691,7 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <ol start="2">
 <li><strong>Monitor your API usage and implement logging:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">logging</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">logging</span>
 
 <span class="pl-s1">logging</span>.<span class="pl-c1">basicConfig</span>(<span class="pl-s1">level</span><span class="pl-c1">=</span><span class="pl-s1">logging</span>.<span class="pl-c1">INFO</span>)
 <span class="pl-s1">logger</span> <span class="pl-c1">=</span> <span class="pl-s1">logging</span>.<span class="pl-c1">getLogger</span>(<span class="pl-s1">__name__</span>)
@@ -741,17 +705,16 @@ Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"<
 <ol start="3">
 <li><strong>Use caching to reduce API calls for repeated queries:</strong></li>
 </ol>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">functools</span> <span class="pl-k">import</span> <span class="pl-s1">lru_cache</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">functools</span> <span class="pl-k">import</span> <span class="pl-s1">lru_cache</span>
 
 <span class="pl-en">@<span class="pl-en">lru_cache</span>(<span class="pl-s1">maxsize</span><span class="pl-c1">=</span><span class="pl-c1">100</span>)</span>
 <span class="pl-k">def</span> <span class="pl-en">get_cached_response</span>(<span class="pl-s1">query</span>):
     <span class="pl-c"># Your API call here</span>
     <span class="pl-k">pass</span></pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Conclusion</h2><a id="user-content-conclusion" class="anchor" aria-label="Permalink: Conclusion" href="#conclusion"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Conclusion</h2>
 <p>The G4F AsyncClient API provides a powerful and flexible way to interact with various AI models asynchronously. By leveraging its features and following best practices, you can build efficient and responsive applications that harness the power of AI for text generation, image analysis, and image creation.</p>
 <p>Remember to handle errors gracefully, implement rate limiting, and monitor your API usage to ensure optimal performance and reliability in your applications.</p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

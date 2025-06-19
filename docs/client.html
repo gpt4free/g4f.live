@@ -55,8 +55,8 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading"><h2 class="heading-element">G4F - Client API Guide</h2><a id="user-content-g4f---client-api-guide" class="anchor" aria-label="Permalink: G4F - Client API Guide" href="#g4f---client-api-guide"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h2 class="heading-element">Table of Contents</h2><a id="user-content-table-of-contents" class="anchor" aria-label="Permalink: Table of Contents" href="#table-of-contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Client API Guide</h2>
+<h2>Table of Contents</h2>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#getting-started">Getting Started</a></li>
@@ -78,21 +78,21 @@
 <li><a href="#using-a-vision-model">Using a Vision Model</a></li>
 <li><a href="#command-line-chat-program">Command-line Chat Program</a></li>
 </ul>
-<div class="markdown-heading"><h2 class="heading-element">Introduction</h2><a id="user-content-introduction" class="anchor" aria-label="Permalink: Introduction" href="#introduction"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Introduction</h2>
 <p>Welcome to the G4F Client API, a cutting-edge tool for seamlessly integrating advanced AI capabilities into your Python applications. This guide is designed to facilitate your transition from using the OpenAI client to the G4F Client, offering enhanced features while maintaining compatibility with the existing OpenAI API.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Getting Started</h2><a id="user-content-getting-started" class="anchor" aria-label="Permalink: Getting Started" href="#getting-started"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Switching to G4F Client</h3><a id="user-content-switching-to-g4f-client" class="anchor" aria-label="Permalink: Switching to G4F Client" href="#switching-to-g4f-client"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Getting Started</h2>
+<h3>Switching to G4F Client</h3>
 <p><strong>To begin using the G4F Client, simply update your import statement in your Python code:</strong></p>
 <p><strong>Old Import:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span></pre></div>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">openai</span> <span class="pl-k">import</span> <span class="pl-v">OpenAI</span></pre></div>
 <p><strong>New Import:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span> <span class="pl-k">as</span> <span class="pl-v">OpenAI</span></pre></div>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span> <span class="pl-k">as</span> <span class="pl-v">OpenAI</span></pre></div>
 <p>The G4F Client preserves the same familiar API interface as OpenAI, ensuring a smooth transition process.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Initializing the Client</h2><a id="user-content-initializing-the-client" class="anchor" aria-label="Permalink: Initializing the Client" href="#initializing-the-client"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Initializing the Client</h2>
 <p>To utilize the G4F Client, create a new instance. <strong>Below is an example showcasing custom providers:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">BingCreateImages</span>, <span class="pl-v">OpenaiChat</span>, <span class="pl-v">Gemini</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(
@@ -101,9 +101,9 @@
     <span class="pl-c"># Add any other necessary parameters</span>
 )</pre></div>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Creating Chat Completions</h2><a id="user-content-creating-chat-completions" class="anchor" aria-label="Permalink: Creating Chat Completions" href="#creating-chat-completions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Creating Chat Completions</h2>
 <p><strong>Here’s an improved example of creating chat completions:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
     <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gpt-4o-mini"</span>,
     <span class="pl-s1">messages</span><span class="pl-c1">=</span>[
         {
@@ -115,15 +115,14 @@
 )</pre></div>
 <p><strong>This example:</strong></p>
 <ul>
-<li>Asks a specific question <code>Say this is a test</code>
-</li>
+<li>Asks a specific question <code class="notranslate">Say this is a test</code></li>
 <li>Configures various parameters like temperature and max_tokens for more control over the output</li>
 <li>Disables streaming for a complete response</li>
 </ul>
 <p>You can adjust these parameters based on your specific needs.</p>
-<div class="markdown-heading"><h2 class="heading-element">Configuration</h2><a id="user-content-configuration" class="anchor" aria-label="Permalink: Configuration" href="#configuration"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>You can set an <code>api_key</code> for your provider in the client and define a proxy for all outgoing requests:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h2>Configuration</h2>
+<p><strong>You can set an <code class="notranslate">api_key</code> for your provider in the client and define a proxy for all outgoing requests:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(
     <span class="pl-s1">api_key</span><span class="pl-c1">=</span><span class="pl-s">"your_api_key_here"</span>,
@@ -131,49 +130,38 @@
     <span class="pl-c"># Add any other necessary parameters</span>
 )</pre></div>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Explanation of Parameters</h2><a id="user-content-explanation-of-parameters" class="anchor" aria-label="Permalink: Explanation of Parameters" href="#explanation-of-parameters"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Explanation of Parameters</h2>
 <p><strong>When using the G4F to create chat completions or perform related tasks, you can configure the following parameters:</strong></p>
 <ul>
 <li>
-<p><strong><code>model</code></strong>:<br>
-Specifies the AI model to be used for the task. Examples include <code>"gpt-4o"</code> for GPT-4 Optimized or <code>"gpt-4o-mini"</code> for a lightweight version. The choice of model determines the quality and speed of the response. Always ensure the selected model is supported by the provider.</p>
+<p><strong><code class="notranslate">model</code></strong>:<br>
+Specifies the AI model to be used for the task. Examples include <code class="notranslate">"gpt-4o"</code> for GPT-4 Optimized or <code class="notranslate">"gpt-4o-mini"</code> for a lightweight version. The choice of model determines the quality and speed of the response. Always ensure the selected model is supported by the provider.</p>
 </li>
 <li>
-<p><strong><code>messages</code></strong>:<br>
-<strong>A list of dictionaries representing the conversation context. Each dictionary contains two keys:</strong>
-- <code>role</code>: Defines the role of the message sender, such as <code>"user"</code> (input from the user) or <code>"system"</code> (instructions to the AI).<br>
-- <code>content</code>: The actual text of the message.<br>
+<p><strong><code class="notranslate">messages</code></strong>:<br>
+<strong>A list of dictionaries representing the conversation context. Each dictionary contains two keys:</strong><br>
+- <code class="notranslate">role</code>: Defines the role of the message sender, such as <code class="notranslate">"user"</code> (input from the user) or <code class="notranslate">"system"</code> (instructions to the AI).<br>
+- <code class="notranslate">content</code>: The actual text of the message.<br>
 <strong>Example:</strong></p>
-<div class="highlight highlight-source-python"><pre>[
+<div class="highlight highlight-source-python"><pre class="notranslate">[
     {<span class="pl-s">"role"</span>: <span class="pl-s">"system"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"You are a helpful assistant."</span>},
     {<span class="pl-s">"role"</span>: <span class="pl-s">"user"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"What day is it today?"</span>}
 ]</pre></div>
 </li>
 <li>
-<p><strong><code>provider</code></strong>:
-<em>(Optional)</em> Specifies the backend provider for the API. Examples include <code>g4f.Provider.Blackbox</code> or <code>g4f.Provider.OpenaiChat</code>. Each provider may support a different subset of models and features, so select one that matches your requirements.</p>
+<p><strong><code class="notranslate">provider</code></strong>:<br>
+<em>(Optional)</em> Specifies the backend provider for the API. Examples include <code class="notranslate">g4f.Provider.Blackbox</code> or <code class="notranslate">g4f.Provider.OpenaiChat</code>. Each provider may support a different subset of models and features, so select one that matches your requirements.</p>
 </li>
 <li>
-<p><strong><code>web_search</code></strong> (Optional):<br>
+<p><strong><code class="notranslate">web_search</code></strong> (Optional):<br>
 Boolean flag indicating whether to enable internet-based search capabilities. This is useful for obtaining real-time or specific details not included in the model’s training data.</p>
 </li>
 </ul>
-<div class="markdown-heading"><h4 class="heading-element">Providers Limitation</h4><a id="user-content-providers-limitation" class="anchor" aria-label="Permalink: Providers Limitation" href="#providers-limitation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>The <code>web_search</code> argument is <strong>limited to specific providers</strong>, including:</p>
-<ul>
-<li>ChatGPT</li>
-<li>HuggingChat</li>
-<li>Blackbox</li>
-<li>RubiksAI</li>
-</ul>
-<p>If your chosen provider does not support <code>web_search</code>, it will not function as expected.</p>
-<p><strong>Alternative Solution:</strong><br>
-Instead of relying on the <code>web_search</code> argument, you can use the more versatile <strong>Search Tool Support</strong>, which allows for highly customizable web search operations. The search tool enables you to define parameters such as query, number of results, word limit, and timeout, offering greater control over search capabilities.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Usage Examples</h2><a id="user-content-usage-examples" class="anchor" aria-label="Permalink: Usage Examples" href="#usage-examples"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Text Completions</h3><a id="user-content-text-completions" class="anchor" aria-label="Permalink: Text Completions" href="#text-completions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>Generate text completions using the <code>ChatCompletions</code> endpoint:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h2>Usage Examples</h2>
+<h3>Text Completions</h3>
+<p><strong>Generate text completions using the <code class="notranslate">ChatCompletions</code> endpoint:</strong></p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
 
@@ -184,14 +172,13 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
             <span class="pl-s">"role"</span>: <span class="pl-s">"user"</span>,
             <span class="pl-s">"content"</span>: <span class="pl-s">"Say this is a test"</span>
         }
-    ],
-    <span class="pl-s1">web_search</span> <span class="pl-c1">=</span> <span class="pl-c1">False</span>
+    ]
 )
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">Streaming Completions</h3><a id="user-content-streaming-completions" class="anchor" aria-label="Permalink: Streaming Completions" href="#streaming-completions"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Streaming Completions</h3>
 <p><strong>Process responses incrementally as they are generated:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
 
@@ -203,17 +190,16 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
             <span class="pl-s">"content"</span>: <span class="pl-s">"Say this is a test"</span>
         }
     ],
-    <span class="pl-s1">stream</span><span class="pl-c1">=</span><span class="pl-c1">True</span>,
-    <span class="pl-s1">web_search</span> <span class="pl-c1">=</span> <span class="pl-c1">False</span>
+    <span class="pl-s1">stream</span><span class="pl-c1">=</span><span class="pl-c1">True</span>
 )
 
 <span class="pl-k">for</span> <span class="pl-s1">chunk</span> <span class="pl-c1">in</span> <span class="pl-s1">stream</span>:
     <span class="pl-k">if</span> <span class="pl-s1">chunk</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">delta</span>.<span class="pl-c1">content</span>:
         <span class="pl-en">print</span>(<span class="pl-s1">chunk</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">delta</span>.<span class="pl-c1">content</span> <span class="pl-c1">or</span> <span class="pl-s">""</span>, <span class="pl-s1">end</span><span class="pl-c1">=</span><span class="pl-s">""</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Using a Vision Model</h3><a id="user-content-using-a-vision-model" class="anchor" aria-label="Permalink: Using a Vision Model" href="#using-a-vision-model"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Using a Vision Model</h3>
 <p><strong>Analyze an image and generate a description:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">import</span> <span class="pl-s1">requests</span>
 
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
@@ -242,18 +228,15 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Image Generation</h3><a id="user-content-image-generation" class="anchor" aria-label="Permalink: Image Generation" href="#image-generation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p><strong>The <code>response_format</code> parameter is optional and can have the following values:</strong></p>
+<h3>Image Generation</h3>
+<p><strong>The <code class="notranslate">response_format</code> parameter is optional and can have the following values:</strong></p>
 <ul>
-<li>
-<strong>If not specified (default):</strong> The image will be saved locally, and a local path will be returned (e.g., "/images/1733331238_cf9d6aa9-f606-4fea-ba4b-f06576cba309.jpg").</li>
-<li>
-<strong>"url":</strong> Returns a URL to the generated image.</li>
-<li>
-<strong>"b64_json":</strong> Returns the image as a base64-encoded JSON string.</li>
+<li><strong>If not specified (default):</strong> The image will be saved locally, and a local path will be returned (e.g., "/images/1733331238_cf9d6aa9-f606-4fea-ba4b-f06576cba309.jpg").</li>
+<li><strong>"url":</strong> Returns a URL to the generated image.</li>
+<li><strong>"b64_json":</strong> Returns the image as a base64-encoded JSON string.</li>
 </ul>
 <p><strong>Generate images using a specified prompt:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
 
@@ -267,8 +250,8 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
 <span class="pl-s1">image_url</span> <span class="pl-c1">=</span> <span class="pl-s1">response</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">url</span>
 
 <span class="pl-en">print</span>(<span class="pl-s">f"Generated image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">image_url</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
-<div class="markdown-heading"><h4 class="heading-element">Base64 Response Format</h4><a id="user-content-base64-response-format" class="anchor" aria-label="Permalink: Base64 Response Format" href="#base64-response-format"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h4>Base64 Response Format</h4>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
 
@@ -281,9 +264,9 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
 
 <span class="pl-s1">base64_text</span> <span class="pl-c1">=</span> <span class="pl-s1">response</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">b64_json</span>
 <span class="pl-en">print</span>(<span class="pl-s1">base64_text</span>)</pre></div>
-<div class="markdown-heading"><h3 class="heading-element">Creating Image Variations</h3><a id="user-content-creating-image-variations" class="anchor" aria-label="Permalink: Creating Image Variations" href="#creating-image-variations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h3>Creating Image Variations</h3>
 <p><strong>Create variations of an existing image:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">OpenaiChat</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>(
@@ -300,20 +283,17 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
 
 <span class="pl-en">print</span>(<span class="pl-s">f"Generated image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">image_url</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Advanced Usage</h2><a id="user-content-advanced-usage" class="anchor" aria-label="Permalink: Advanced Usage" href="#advanced-usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="markdown-heading"><h3 class="heading-element">Conversation Memory</h3><a id="user-content-conversation-memory" class="anchor" aria-label="Permalink: Conversation Memory" href="#conversation-memory"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Advanced Usage</h2>
+<h3>Conversation Memory</h3>
 <p>To maintain a coherent conversation, it's important to store the context or history of the dialogue. This can be achieved by appending both the user's inputs and the bot's responses to a messages list. This allows the model to reference past exchanges when generating responses.</p>
 <p><strong>The conversation history consists of messages with different roles:</strong></p>
 <ul>
-<li>
-<code>system</code>: Initial instructions that define the AI's behavior</li>
-<li>
-<code>user</code>: Messages from the user</li>
-<li>
-<code>assistant</code>: Responses from the AI</li>
+<li><code class="notranslate">system</code>: Initial instructions that define the AI's behavior</li>
+<li><code class="notranslate">user</code>: Messages from the user</li>
+<li><code class="notranslate">assistant</code>: Responses from the AI</li>
 </ul>
 <p><strong>The following example demonstrates how to implement conversation memory with the G4F:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-k">class</span> <span class="pl-v">Conversation</span>:
     <span class="pl-k">def</span> <span class="pl-en">__init__</span>(<span class="pl-s1">self</span>):
@@ -376,16 +356,16 @@ Instead of relying on the <code>web_search</code> argument, you can use the more
 <li>Simple and clean implementation using a class-based approach</li>
 </ul>
 <p><strong>Usage Example:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-s1">conversation</span> <span class="pl-c1">=</span> <span class="pl-en">Conversation</span>()
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">conversation</span> <span class="pl-c1">=</span> <span class="pl-en">Conversation</span>()
 <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">conversation</span>.<span class="pl-c1">get_response</span>(<span class="pl-s">"Hello, how are you?"</span>)
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>)</pre></div>
-<p><strong>Note:</strong>
+<p><strong>Note:</strong><br>
 The conversation history grows with each interaction. For long conversations, you might want to implement a method to limit the history size or clear old messages to manage token usage.</p>
 <hr>
-<div class="markdown-heading"><h2 class="heading-element">Search Tool Support</h2><a id="user-content-search-tool-support" class="anchor" aria-label="Permalink: Search Tool Support" href="#search-tool-support"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<p>The <strong>Search Tool Support</strong> feature enables triggering a web search during chat completions. This is useful for retrieving real-time or specific data, offering a more flexible solution than <code>web_search</code>.</p>
+<h2>Search Tool Support</h2>
+<p>The <strong>Search Tool Support</strong> feature enables triggering a web search during chat completions. This is useful for retrieving real-time or specific data, offering a more flexible solution than <code class="notranslate">web_search</code>.</p>
 <p><strong>Example Usage</strong>:</p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
 
@@ -415,30 +395,24 @@ The conversation history grows with each interaction. For long conversations, yo
 )
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
-<p><strong>Parameters for <code>search_tool</code>:</strong></p>
+<p><strong>Parameters for <code class="notranslate">search_tool</code>:</strong></p>
 <ul>
-<li>
-<strong><code>query</code></strong>: The search query string.</li>
-<li>
-<strong><code>max_results</code></strong>: Number of search results to retrieve.</li>
-<li>
-<strong><code>max_words</code></strong>: Maximum number of words in the response.</li>
-<li>
-<strong><code>backend</code></strong>: The backend used for search (e.g., <code>"api"</code>).</li>
-<li>
-<strong><code>add_text</code></strong>: Whether to include text snippets in the response.</li>
-<li>
-<strong><code>timeout</code></strong>: Maximum time (in seconds) for the search operation.</li>
+<li><strong><code class="notranslate">query</code></strong>: The search query string.</li>
+<li><strong><code class="notranslate">max_results</code></strong>: Number of search results to retrieve.</li>
+<li><strong><code class="notranslate">max_words</code></strong>: Maximum number of words in the response.</li>
+<li><strong><code class="notranslate">backend</code></strong>: The backend used for search (e.g., <code class="notranslate">"api"</code>).</li>
+<li><strong><code class="notranslate">add_text</code></strong>: Whether to include text snippets in the response.</li>
+<li><strong><code class="notranslate">timeout</code></strong>: Maximum time (in seconds) for the search operation.</li>
 </ul>
 <p><strong>Advantages of Search Tool Support:</strong></p>
 <ul>
-<li>Works with any provider, irrespective of <code>web_search</code> support.</li>
+<li>Works with any provider, irrespective of <code class="notranslate">web_search</code> support.</li>
 <li>Offers more customization and control over the search process.</li>
 <li>Bypasses provider-specific limitations.</li>
 </ul>
 <hr>
-<div class="markdown-heading"><h3 class="heading-element">Using a List of Providers with RetryProvider</h3><a id="user-content-using-a-list-of-providers-with-retryprovider" class="anchor" aria-label="Permalink: Using a List of Providers with RetryProvider" href="#using-a-list-of-providers-with-retryprovider"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+<h3>Using a List of Providers with RetryProvider</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">RetryProvider</span>, <span class="pl-v">Phind</span>, <span class="pl-v">FreeChatgpt</span>, <span class="pl-v">Liaobots</span>
 <span class="pl-k">import</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">debug</span>
 
@@ -460,9 +434,9 @@ The conversation history grows with each interaction. For long conversations, yo
 )
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
-<div class="markdown-heading"><h2 class="heading-element">Command-line Chat Program</h2><a id="user-content-command-line-chat-program" class="anchor" aria-label="Permalink: Command-line Chat Program" href="#command-line-chat-program"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<h2>Command-line Chat Program</h2>
 <p><strong>Here's an example of a simple command-line chat program using the G4F Client:</strong></p>
-<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">g4f</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
 
 <span class="pl-c"># Initialize the GPT client with the desired provider</span>
@@ -501,7 +475,6 @@ The conversation history grows with each interaction. For long conversations, yo
         <span class="pl-en">print</span>(<span class="pl-s">f"An error occurred: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">e</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
 <p>This guide provides a comprehensive overview of the G4F Client API, demonstrating its versatility in handling various AI tasks, from text generation to image analysis and creation. By leveraging these features, you can build powerful and responsive applications that harness the capabilities of advanced AI models.</p>
 <hr>
-<p><a href="/docs/">Return to Documentation</a></p>
-</article>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

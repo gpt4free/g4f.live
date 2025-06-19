@@ -3057,12 +3057,11 @@ audioButton.addEventListener('click', async (event) => {
         const formData = new FormData();
         formData.append('files', event.data);
         const bucket_id = generateUUID();
-        const language = document.getElementById("recognition-language")?.value;
         const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
             method: 'POST',
             body: formData,
             headers: {
-                "x-recognition-language": language,
+                "x-recognition-language": await get_navigator_language()
             }
         });
         document.body.removeChild(loadingIndicator);

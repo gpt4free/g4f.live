@@ -1195,7 +1195,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 play_last_message(); // Play last message async
             }
         }
-        message_index = message_index < 0 ? conversation.items.length-1 : message_index+1;
+        message_index = message_index < 0 ? conversation.items.length : message_index+1;
         const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
         new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
         let cursorDiv = message_el.querySelector(".cursor");

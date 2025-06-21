@@ -3547,7 +3547,7 @@ async function load_provider_models(provider=null) {
         }
         return;
     }
-    if (provider.startsWith("Puter") || provider == "AnyProvider") {
+    if (provider.startsWith("Puter")) {
         await injectPuter();
         if (provider == "Puter") {
             await load_puter_models();

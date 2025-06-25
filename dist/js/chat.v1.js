@@ -86,7 +86,6 @@ let image_storage = {};
 let is_demo = false;
 let wakeLock = null;
 let countTokensEnabled = true;
-let reloadConversation = true;
 let privateConversation = null;
 let suggestions = null;
 let lastUpdated = null;
@@ -351,7 +350,6 @@ const register_message_buttons = async () => {
                     chatBody.removeChild(message_el);
                 }
             }
-            reloadConversation = true;
             await safe_load_conversation(window.conversation_id, false);
         });
     });
@@ -1130,7 +1128,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             let usage = {};
             if (usage_storage[message_id]) {
                 usage = usage_storage[message_id];
-                delete usage_storage[message_id];
             }
             // Calculate usage if we don't have it jet
             if (countTokensEnabled && document.getElementById("track_usage").checked && !usage.prompt_tokens && window.GPTTokenizer_cl100k_base) {
@@ -1156,7 +1153,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                                 + (error_storage[message_id] ? " [error]" : "")
                                 + (stop_generating.classList.contains('stop_generating-hidden') ? " [aborted]" : "")
             // Save message in local storage
-            await add_message(
+            message_index = await add_message(
                 window.conversation_id,
                 "assistant",
                 final_message,
@@ -1171,6 +1168,11 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 action=="continue"
             );
             delete message_storage[message_id];
+            delete reasoning_storage[message_id];
+            delete synthesize_storage[message_id];
+            delete title_storage[message_id];
+            delete finish_storage[message_id];
+            delete usage_storage[message_id];
             // Send usage to the server
             if (document.getElementById("track_usage").checked) {
                 usage = {
@@ -1190,14 +1192,13 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             delete controller_storage[message_id];
         }
         // Reload conversation if no error
-        if (!error_storage[message_id] && reloadConversation) {
+        if (!error_storage[message_id]) {
             if(await safe_load_conversation(window.conversation_id)) {
                 play_last_message(); // Play last message async
+                const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
+                new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
             }
         }
-        message_index = message_index < 0 ? conversation.items.length : message_index+1;
-        const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
-        new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
         let cursorDiv = message_el.querySelector(".cursor");
         if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         await safe_remove_cancel_button();
@@ -1209,8 +1210,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     const media = [];
     if (provider == "Puter" || provider == "Live") {
         if (mediaChunks.length > 0) {
-            const data = await toBase64(new Blob(mediaChunks, { type: 'audio/wav' }));
-            mediaChunks = []
+            const data = await toBase64(mediaChunks.pop());
             media.push({
                 "type": "input_audio",
                 "input_audio": {

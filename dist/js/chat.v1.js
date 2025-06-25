@@ -2896,7 +2896,7 @@ async function on_api() {
 
     const method = switchInput.checked ? "add" : "remove";
     searchButton.classList[method]("active");
-    document.getElementById('recognition-language').placeholder = await get_navigator_language();
+    document.getElementById('recognition-language').placeholder = await get_recognition_language();
 }
 
 async function load_version() {
@@ -3028,12 +3028,11 @@ audioButton.addEventListener('click', async (event) => {
     i.classList.add("fa-stop");
 
     stream = await navigator.mediaDevices.getUserMedia({
-        video: false,
-        audio: true,
-    })
+        audio: true
+    });
 
     if (providerSelect.value == "Live") {
-        mediaRecorder = new Recorder();
+        mediaRecorder = new Recorder(stream);
         mediaRecorder.start();
         return;
     }
@@ -3060,7 +3059,7 @@ audioButton.addEventListener('click', async (event) => {
             method: 'POST',
             body: formData,
             headers: {
-                "x-recognition-language": await get_navigator_language()
+                "x-recognition-language": await get_recognition_language()
             }
         });
         document.body.removeChild(loadingIndicator);
@@ -3780,7 +3779,11 @@ function import_memory() {
     add_conversation_to_memory(0)
 }
 
-async function get_navigator_language() {
+async function get_recognition_language() {
+    const lang = document.getElementById("recognition-language")?.value;
+    if (lang) {
+        return lang;
+    }
     let locale = navigator.language;
     if (!locale.includes("-")) {
         locale = appStorage.getItem(navigator.language);
@@ -3863,8 +3866,7 @@ if (SpeechRecognition) {
     microLabel.addEventListener("click", async (e) => {
         if (!stopRecognition()) {
             microLabel.classList.add("recognition");
-            const lang = document.getElementById("recognition-language")?.value;
-            recognition.lang = lang || await get_navigator_language();
+            recognition.lang = await get_recognition_language();
             recognition.start();
         }
     });

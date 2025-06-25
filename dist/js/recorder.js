@@ -1,6 +1,6 @@
 // Recorder Class
 class Recorder {
-    constructor() {
+    constructor(stream) {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.source = this.audioContext.createMediaStreamSource(stream);;
         this.processor = null;

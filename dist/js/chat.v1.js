@@ -952,9 +952,6 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             content_map.inner.appendChild(div);
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-            const i = document.createElement("i");
-            i.classList.add("fas", "fa-spinner", "fa-spin");
-            content_map.appendChild(i);
         } else {
             update_message(content_map, message_id, null, scroll);
         }

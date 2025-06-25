@@ -21,6 +21,7 @@
     <script src="../dist/js/highlight.min.js" async></script>
     <script src="../dist/js/highlightjs-copy.min.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
     <script src="../dist/js/sanitize-html.js" async></script>
     <link rel="stylesheet" href="../dist/css/dracula.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe/dist/photoswipe.css">
@@ -269,8 +270,7 @@
                         <button class="hide-input">
                             <i class="fa-solid fa-angles-down"></i>
                         </button>
-                        <input type="checkbox" id="agree" name="agree" value="yes" checked>
-                        <label for="agree" class="text" onclick="this.innerText='';">Scroll to bottom</label>
+                        <label for="agree" class="text" onclick="this.innerText='';"></label>
                     </div>
                     <div class="stop_generating stop_generating-hidden">
                         <button id="cancelButton">

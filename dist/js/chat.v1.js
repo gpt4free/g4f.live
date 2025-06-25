@@ -3297,11 +3297,7 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         }
         return pywebview.api[`get_${ressource}`]();
     }
-    const user = localStorage.getItem("user");
-    const headers = {};
-    if (user) {
-        headers.x_user = user;
-    }
+    let headers = {};
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
@@ -3330,7 +3326,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         });
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);
-        headers.accept = 'text/event-stream';
+        headers = {
+            accept: 'text/event-stream',
+            ...await framework.getHeaders()
+        };
         if (files.length > 0) {
             const formData = new FormData();
             for (const file of files) {

@@ -234,7 +234,33 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     }
     return defaultValue;
 }
+async function getPublicKey() {
+    const response = await fetch(`${framework.backendUrl}/backend-api/v2/public-key`);
+    if (response.ok) {
+        return await response.json();
+    }
+    throw new Error("Failed to load public key");
+}
+async function getHeaders() {
+    const headers = {}
+    const user = localStorage.getItem("user");
+    if (user) {
+        headers.x_user = user;
+    }
+    try {
+        const encrypt = new JSEncrypt();
+        const publicKey = await getPublicKey();
+        encrypt.setPublicKey(publicKey.public_key);
+        const headerKey = ["x_", "sec", "ret"].join("")
+        headers[headerKey] = encrypt.encrypt(publicKey.data);
+        return headers;
+    } catch (error) {
+        console.error("Encryption failed:", error);
+    }
+    return headers;
+}
 framework.query = query;
 framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
+framework.getHeaders = getHeaders;

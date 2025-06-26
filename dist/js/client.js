@@ -3,9 +3,11 @@ class Client {
         if (options.baseUrl) {
             this.baseUrl = options.baseUrl;
             this.apiEndpoint = `${this.baseUrl}/chat/completions`
+            this.imageEndpoint = `${this.baseUrl}/images/generations`
         } else {
             this.baseUrl = 'https://text.pollinations.ai';
             this.apiEndpoint = `${this.baseUrl}/openai`;
+            this.imageEndpoint = `https://image.pollinations.ai/prompt/{prompt}`;
         }
         this.apiKey = options.apiKey;
         this.headers = {
@@ -28,6 +30,8 @@ class Client {
           "phi-4": "phi",
           "qwen2.5-coder": "qwen-coder",
           "gpt-4o-mini-search": "searchgpt",
+          "gpt-image": "gptimage",
+          "sdxl-turbo": "turbo",
         } : {};
         this.swapAliases = {}
         Object.keys(this.modelAliases).forEach(key => {
@@ -83,6 +87,25 @@ class Client {
       };
     }
 
+    get images() {
+        return {
+            generate: async (params) => {
+                if (params.model && this.modelAliases[params.model]) {
+                    params.model = this.modelAliases[params.model];
+                }
+                if (this.imageEndpoint.includes('{prompt}')) {
+                    return this._defaultImageGeneration(params, {headers: this.headers});
+                }
+                const requestOptions = {
+                    method: 'POST',
+                    headers: this.headers,
+                    body: JSON.stringify(params)
+                };
+                return this._regularImageGeneration(requestOptions);
+            }
+        };
+    }
+
     async _regularCompletion(requestOptions) {
         const response = await fetch(this.apiEndpoint, requestOptions);
 
@@ -93,56 +116,90 @@ class Client {
         return await response.json();
     }
 
-  async *_streamCompletion(requestOptions) {
-    const response = await fetch(this.apiEndpoint, requestOptions);
-    
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
+    async *_streamCompletion(requestOptions) {
+      const response = await fetch(this.apiEndpoint, requestOptions);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
 
-    if (!response.body) {
-      throw new Error('Streaming not supported in this environment');
-    }
+      if (!response.body) {
+        throw new Error('Streaming not supported in this environment');
+      }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
+          buffer += decoder.decode(value, { stream: true });
 
-        const parts = buffer.split('\n');
-        buffer = parts.pop();
+          const parts = buffer.split('\n');
+          buffer = parts.pop();
 
-        for (const part of parts) {
-          if (!part.trim()) continue;
-          if (part === 'data: [DONE]') continue;
+          for (const part of parts) {
+            if (!part.trim()) continue;
+            if (part === 'data: [DONE]') continue;
 
-          try {
-            if (part.startsWith('data: ')) {
-              const data = JSON.parse(part.slice(6));
-              yield data;
+            try {
+              if (part.startsWith('data: ')) {
+                const data = JSON.parse(part.slice(6));
+                yield data;
+              }
+            } catch (err) {
+              console.error('Error parsing chunk:', part, err);
             }
-          } catch (err) {
-            console.error('Error parsing chunk:', part, err);
           }
         }
+      } finally {
+        reader.releaseLock();
       }
-    } finally {
-      reader.releaseLock();
     }
-  }
 
-  _normalizeMessages(messages) {
-    return messages.map(message => ({
-      role: message.role,
-      content: message.content
-    }));
-  }
+    _normalizeMessages(messages) {
+      return messages.map(message => ({
+        role: message.role,
+        content: message.content
+      }));
+    }
+
+    async _defaultImageGeneration(params, requestOptions) {
+        params = {...params};
+        let prompt = params.prompt ? params.prompt : '';
+        prompt = encodeURIComponent(prompt.replaceAll(" ", "+"));
+        delete params.prompt;
+        if (params.nologo === undefined) {
+            params.nologo = true;
+        }
+        if (params.size) {
+            [params.width, params.height] = params.size.split('x');
+            delete params.size;
+        }
+        const encodedParams = new URLSearchParams(params);
+        let url = this.imageEndpoint.replace('{prompt}', prompt);
+        url += '?' + encodedParams.toString();
+        const response = await fetch(url, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`Image generation request failed with status ${response.status}`);
+        }
+
+        return {data: [{url: response.url}]}
+    }
+
+    async _regularImageGeneration(requestOptions) {
+        const response = await fetch(this.imageEndpoint, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`Image generation request failed with status ${response.status}`);
+        }
+
+        return await response.json();
+    }
 }
 
 export default Client;

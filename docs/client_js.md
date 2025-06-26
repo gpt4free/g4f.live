@@ -105,6 +105,33 @@ const audioResponse = await client.chat.completions.create({
 });
 ```
 
+### Image Generation
+
+You can generate images using the `client.images.generate` method. Choose from supported models like `"flux"`, `"gpt-image"`, or `"sdxl-turbo"` and control image size if needed.
+
+```js
+const result = await client.images.generate({
+    model: 'flux',  // Or "gpt-image", "sdxl-turbo"
+    prompt: 'Generate a logo for the URL https://g4f.dev',
+    size: '512x512' // Optional, default is 1024x1024
+});
+const image = new Image();
+image.src = result.data[0].url;
+document.body.appendChild(image);
+```
+
+**Parameters:**
+
+| Option | Type | Description | Default |
+| --- | --- | --- | --- |
+| `model` | string | Image generation model: `"flux"`, `"gpt-image"`, `"sdxl-turbo"` | — |
+| `prompt` | string | Text prompt describing the desired image | — |
+| `size` | string | Image resolution, e.g. `"512x512"` or `"1024x1024"` | `"1024x1024"` |
+
+The `result.data` array contains URLs to generated images. You can add these images directly to the page, as shown above.
+
+---
+
 ## Notes
 - When using Pollinations.AI (`baseUrl` not specified), additional model aliases are automatically applied
 - The client normalizes message formats before sending requests

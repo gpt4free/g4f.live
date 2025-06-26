@@ -88,9 +88,9 @@ Use the **official JS client** right in the browser—no backend needed:
     console.log(result.choices[0].message.content);
 </script>
 ```
-<!--
+
 - You can call `.images.generate({ ... })` in JS too, just like Python!
--->
+
 [See more JS client usage →](client_js.md)
 
 ---

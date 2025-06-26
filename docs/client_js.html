@@ -187,6 +187,49 @@
     <span class="pl-kos">}</span><span class="pl-kos">,</span>
     <span class="pl-c1">modalities</span>: <span class="pl-kos">[</span><span class="pl-s">'text'</span><span class="pl-kos">,</span> <span class="pl-s">'audio'</span><span class="pl-kos">]</span>
 <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<h3>Image Generation</h3>
+<p>You can generate images using the <code class="notranslate">client.images.generate</code> method. Choose from supported models like <code class="notranslate">"flux"</code>, <code class="notranslate">"gpt-image"</code>, or <code class="notranslate">"sdxl-turbo"</code> and control image size if needed.</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">const</span> <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">.</span><span class="pl-en">generate</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+    <span class="pl-c1">model</span>: <span class="pl-s">'flux'</span><span class="pl-kos">,</span>  <span class="pl-c">// Or "gpt-image", "sdxl-turbo"</span>
+    <span class="pl-c1">prompt</span>: <span class="pl-s">'Generate a logo for the URL https://g4f.dev'</span><span class="pl-kos">,</span>
+    <span class="pl-c1">size</span>: <span class="pl-s">'512x512'</span> <span class="pl-c">// Optional, default is 1024x1024</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-k">const</span> <span class="pl-s1">image</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Image</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-s1">image</span><span class="pl-kos">.</span><span class="pl-c1">src</span> <span class="pl-c1">=</span> <span class="pl-s1">result</span><span class="pl-kos">.</span><span class="pl-c1">data</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">url</span><span class="pl-kos">;</span>
+<span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">image</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
+<p><strong>Parameters:</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">model</code></td>
+<td>string</td>
+<td>Image generation model: <code class="notranslate">"flux"</code>, <code class="notranslate">"gpt-image"</code>, <code class="notranslate">"sdxl-turbo"</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code class="notranslate">prompt</code></td>
+<td>string</td>
+<td>Text prompt describing the desired image</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code class="notranslate">size</code></td>
+<td>string</td>
+<td>Image resolution, e.g. <code class="notranslate">"512x512"</code> or <code class="notranslate">"1024x1024"</code></td>
+<td><code class="notranslate">"1024x1024"</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>The <code class="notranslate">result.data</code> array contains URLs to generated images. You can add these images directly to the page, as shown above.</p>
+<hr>
 <h2>Notes</h2>
 <ul>
 <li>When using Pollinations.AI (<code class="notranslate">baseUrl</code> not specified), additional model aliases are automatically applied</li>

@@ -10,6 +10,10 @@ Include the client in your HTML:
     import Client from 'https://g4f.dev/dist/js/client.js';
 </script>
 ```
+Or install the NPM package:
+```js
+npm install @gpt4free/g4f.dev
+```
 
 ## Initialization
 ```javascript

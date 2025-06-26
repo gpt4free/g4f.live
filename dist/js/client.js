@@ -1,9 +1,10 @@
 class Client {
     constructor(options = {}) {
-        this.baseUrl = options.baseUrl || 'https://text.pollinations.ai';
-        if (this.baseUrl != "https://text.pollinations.ai") {
+        if (options.baseUrl) {
+            this.baseUrl = options.baseUrl;
             this.apiEndpoint = `${this.baseUrl}/chat/completions`
         } else {
+            this.baseUrl = 'https://text.pollinations.ai';
             this.apiEndpoint = `${this.baseUrl}/openai`;
         }
         this.apiKey = options.apiKey;

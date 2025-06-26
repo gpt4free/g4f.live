@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G4F - Documentation</title>
+    <title>GPT4Free Documentation Hub</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/dist/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/dist/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/dist/img/favicon-16x16.png">
@@ -55,32 +55,89 @@
     </style>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>G4F - Documentation</h2>
-<p>Welcome to the GPT4Free (G4F) documentation hub! This guide provides everything you need to get started, understand the available features, and integrate G4F into your projects. Use the sections below to explore various aspects of the G4F ecosystem.</p>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>GPT4Free Documentation Hub</h2>
+<p>Welcome to the official docs for <strong>GPT4Free</strong> – free and convenient AI endpoints you can use directly in your apps, scripts, and even right in your browser. Here you’ll find a clear overview, quick examples, and entry points to deeper docs for every major feature.</p>
 <hr>
-<h3>📦 Installation</h3>
+<h3>🏁 Quick Table of Contents</h3>
 <ul>
-<li><a href="git.html">Git Installation Guide</a></li>
-<li><a href="docker.html">Docker Setup</a></li>
-<li><a href="requirements.html">Additional Requirements</a></li>
+<li><a href="#installation--setup">Installation &amp; Setup</a></li>
+<li><a href="#getting-started">Getting Started Examples</a>
+<ul>
+<li><a href="#-text-generation">Text Generation</a></li>
+<li><a href="#-image-generation">Image Generation</a></li>
+<li><a href="#-using-gpt4freejs">Web JS Usage</a></li>
+</ul>
+</li>
+<li><a href="#deep-dives">Docs by Topic</a></li>
+<li><a href="#community--links">Community &amp; Links</a></li>
 </ul>
 <hr>
-<h3>🚀 Getting Started</h3>
+<h2>Installation &amp; Setup</h2>
+<p>For full install guides—choose your method:</p>
 <ul>
-<li><a href="local.html">Local Usage Guide</a></li>
-<li><a href="authentication.html">Authentication Guide</a></li>
-<li><a href="configuration.html">Configuration Guide (.har and cookies)</a></li>
+<li><a href="git.html">Git Install</a></li>
+<li><a href="docker.html">Docker</a></li>
+<li><a href="requirements.html">Requirements</a></li>
 </ul>
+<p>For rapid starts, you can use either <strong>Python</strong> or <strong>JavaScript</strong> (web).</p>
 <hr>
-<h3>🤖 G4F Clients</h3>
+<h2>Getting Started</h2>
+<h3>📝 Text Generation</h3>
+<p>Python example for chat completion (with and without web search):</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+
+<span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
+<span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">chat</span>.<span class="pl-c1">completions</span>.<span class="pl-c1">create</span>(
+    <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gpt-4.1"</span>,  <span class="pl-c"># Try "gpt-4o", "deepseek-v3", etc.</span>
+    <span class="pl-s1">messages</span><span class="pl-c1">=</span>[{<span class="pl-s">"role"</span>: <span class="pl-s">"user"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"Hello"</span>}],
+    <span class="pl-s1">web_search</span><span class="pl-c1">=</span><span class="pl-c1">False</span>
+)
+<span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
+<p><strong>Output:</strong></p>
+<pre class="notranslate"><code class="notranslate">Hello! How can I assist you today?
+</code></pre>
+<hr>
+<h3>🎨  Image Generation</h3>
+<p>Generate images with a single call (returns URLs or base64):</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">Client</span>
+
+<span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">Client</span>()
+<span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">images</span>.<span class="pl-c1">generate</span>(
+    <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"flux"</span>,  <span class="pl-c"># Other models: 'dalle-3', 'gpt-image', etc.</span>
+    <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"a white siamese cat"</span>,
+    <span class="pl-s1">response_format</span><span class="pl-c1">=</span><span class="pl-s">"url"</span>
+)
+<span class="pl-en">print</span>(<span class="pl-s">f"Generated image URL: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">response</span>.<span class="pl-c1">data</span>[<span class="pl-c1">0</span>].<span class="pl-c1">url</span><span class="pl-kos">}</span></span>"</span>)</pre></div>
+<p><a href="client.html">More Python client info →</a> <a href="async_client.html">and Async client →</a></p>
+<hr>
+<h3>🧙‍♂️ Using GPT4Free.js</h3>
+<p>Use the <strong>official JS client</strong> right in the browser—no backend needed:</p>
+<div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-kos">&lt;</span><span class="pl-ent">script</span> <span class="pl-c1">type</span>="<span class="pl-s">module</span>"<span class="pl-kos">&gt;</span>
+    <span class="pl-k">import</span> <span class="pl-v">Client</span> <span class="pl-k">from</span> <span class="pl-s">'https://g4f.dev/dist/js/client.js'</span><span class="pl-kos">;</span>
+
+    <span class="pl-k">const</span> <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Client</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span><span class="pl-kos">.</span><span class="pl-c1">chat</span><span class="pl-kos">.</span><span class="pl-c1">completions</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+        <span class="pl-c1">model</span>: <span class="pl-s">'gpt-4.1'</span><span class="pl-kos">,</span>  <span class="pl-c">// Or "gpt-4o", "deepseek-v3"</span>
+        <span class="pl-c1">messages</span>: <span class="pl-kos">[</span><span class="pl-kos">{</span> <span class="pl-c1">role</span>: <span class="pl-s">'user'</span><span class="pl-kos">,</span> <span class="pl-c1">content</span>: <span class="pl-s">'Explain quantum computing'</span> <span class="pl-kos">}</span><span class="pl-kos">]</span>
+    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">result</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span></pre></div>
+
+<p><a href="client_js.html">See more JS client usage →</a></p>
+<hr>
+<h2>Deep Dives</h2>
 <ul>
-<li><a href="client.html">Python Client</a></li>
-<li><a href="async_client.html">AsyncClient API Guide</a></li>
-<li><a href="requests.html">Requests API Guide</a></li>
-<li><a href="interference-api.html">Interference API Guide</a></li>
-<li><a href="legacy.html">Legacy API</a></li>
+<li><a href="providers-and-models.html">Available Providers &amp; Models</a></li>
+<li><a href="/api-docs">API docs (full spec)</a></li>
+<li><a href="file.html">File API Documentation (Files and Documents)</a></li>
+<li><a href="media.html">Media Documentation (Audio, Image and Video)</a></li>
+<li><a href="vision.html">Vision Support (Image Upload)</a></li>
+<li><a href="authentication.html">Authentication</a>, <a href="configuration.html">Configuration Guide (.har and cookies)</a></li>
+<li><a href="guides/create_provider.html">Advanced: Create your own Provider</a></li>
+<li><a href="pydantic_ai.html">Integrations: LangChain, PydanticAI</a></li>
+<li><a href="gui.html">GUI/WebUI</a>, <a href="guides/phone.html">Phone</a>, <a href="backend_api_documentation.html">Backend API</a></li>
+<li><a href="https://github.com/gpt4free/g4f.dev/issues">Troubleshooting</a></li>
 </ul>
-<hr>
 <h3>🧠 Providers &amp; Models</h3>
 <ul>
 <li><a href="providers-and-models.html">Available Providers and Models</a></li>
@@ -94,43 +151,26 @@
 <li><a href="vision.html">Vision Support (Image Upload)</a></li>
 </ul>
 <hr>
-<h3>🖥️ Interfaces</h3>
+<h2>Community &amp; Links</h2>
 <ul>
-<li><a href="gui.html">GUI Documentation</a></li>
-<li><a href="webview.html">Run in a Window on any OS (Webview)</a></li>
-<li><a href="guides/phone.html">Run on Your Smartphone Guide</a></li>
-<li><a href="backend_api_documentation.html">Backend API Documentation</a></li>
+<li>
+<p><strong>Open Source:</strong> <a href="https://github.com/gpt4free/g4f.dev">GitHub: gpt4free/g4f.dev</a></p>
+</li>
+<li>
+<p><strong>Contribute &amp; Report Bugs:</strong> PRs &amp; issues are welcome!</p>
+</li>
+<li>
+<p><strong>Project Website:</strong> <a href="https://g4f.dev/" rel="nofollow">https://g4f.dev/</a></p>
+</li>
+<li>
+<p><strong>Pollinations AI:</strong><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/42abea0d5c9cece8dde650803d108ad2157cd70ccd83ca7fc2f49718b70f4d15/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652b612b6c6f676f2b666f722b506f6c6c696e6174696f6e732b41492b666561747572696e672b616e2b61627374726163742b666c6f7765722b626c6f6f6d696e672b6469676974616c2b706574616c732b676c6f77696e672b63656e7465722b667574757269737469632b666f6e742b506f6c6c696e6174696f6e732b41493f77696474683d353132266865696768743d323536266e6f6c6f676f3d74727565"><img src="https://camo.githubusercontent.com/42abea0d5c9cece8dde650803d108ad2157cd70ccd83ca7fc2f49718b70f4d15/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652b612b6c6f676f2b666f722b506f6c6c696e6174696f6e732b41492b666561747572696e672b616e2b61627374726163742b666c6f7765722b626c6f6f6d696e672b6469676974616c2b706574616c732b676c6f77696e672b63656e7465722b667574757269737469632b666f6e742b506f6c6c696e6174696f6e732b41493f77696474683d353132266865696768743d323536266e6f6c6f676f3d74727565" height="80" data-canonical-src="https://image.pollinations.ai/prompt/Create+a+logo+for+Pollinations+AI+featuring+an+abstract+flower+blooming+digital+petals+glowing+center+futuristic+font+Pollinations+AI?width=512&amp;height=256&amp;nologo=true" style="max-width: 100%;"></a></p>
+<p><a href="https://github.com/pollinations/pollinations">GitHub: pollinations/pollinations</a></p>
+</li>
 </ul>
 <hr>
-<h3>🧩 Integrations</h3>
-<ul>
-<li><a href="pydantic_ai.html">PydanticAI &amp; LangChain Integration</a></li>
-</ul>
-<hr>
-<h3>📖 Guides</h3>
-<h6>Guide: How do I create a new Provider?</h6>
-<ul>
-<li><strong>Read:</strong> <a href="https://github.com/gpt4free/gpt4free.github.io/blob/main/docs/guides/create_provider.html">Create Provider Guide</a></li>
-</ul>
-<h6>Guide: How can AI help me with writing code?</h6>
-<ul>
-<li><strong>Read:</strong> <a href="https://github.com/gpt4free/gpt4free.github.io/blob/main/docs/guides/help_me.html">AI Assistance Guide</a></li>
-</ul>
-<hr>
-<h3>📚 API Documentation</h3>
-<ul>
-<li>Check out the <a href="https://gpt4free.github.io/api-docs" rel="nofollow">official API docs</a> for more details.</li>
-</ul>
-<hr>
-<h3>🌟 Pollinations AI</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/42abea0d5c9cece8dde650803d108ad2157cd70ccd83ca7fc2f49718b70f4d15/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652b612b6c6f676f2b666f722b506f6c6c696e6174696f6e732b41492b666561747572696e672b616e2b61627374726163742b666c6f7765722b626c6f6f6d696e672b6469676974616c2b706574616c732b676c6f77696e672b63656e7465722b667574757269737469632b666f6e742b506f6c6c696e6174696f6e732b41493f77696474683d353132266865696768743d323536266e6f6c6f676f3d74727565"><img src="https://camo.githubusercontent.com/42abea0d5c9cece8dde650803d108ad2157cd70ccd83ca7fc2f49718b70f4d15/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652b612b6c6f676f2b666f722b506f6c6c696e6174696f6e732b41492b666561747572696e672b616e2b61627374726163742b666c6f7765722b626c6f6f6d696e672b6469676974616c2b706574616c732b676c6f77696e672b63656e7465722b667574757269737469632b666f6e742b506f6c6c696e6174696f6e732b41493f77696474683d353132266865696768743d323536266e6f6c6f676f3d74727565" height="128" data-canonical-src="https://image.pollinations.ai/prompt/Create+a+logo+for+Pollinations+AI+featuring+an+abstract+flower+blooming+digital+petals+glowing+center+futuristic+font+Pollinations+AI?width=512&amp;height=256&amp;nologo=true" style="max-width: 100%;"></a></p>
-<p>A creative AI content platform that generates images, audios, and other media using advanced generative models. Pollinations AI empowers users and developers to turn text into visuals and multimedia experiences.</p>
-<blockquote>
-<p><a href="https://github.com/pollinations/pollinations">pollinations/pollinations on GitHub</a></p>
-</blockquote>
-<hr>
-<p>We are constantly improving GPT4Free. If you encounter issues or want to contribute, visit our GitHub repository. Happy building!</p>
-<hr>
-<p><a href="https://github.com/xtekky/gpt4free">Return to GPT4Free Repository</a></p></article>
+<p>GPT4Free and g4f.dev are continuously improving. Have fun building, and let the bots do the heavy lifting for you!</p>
+<p><a href="https://github.com/xtekky/gpt4free">← Back to GPT4Free GitHub</a></p>
+<hr></article>
 </body>
 </html>

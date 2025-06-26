@@ -1,93 +1,128 @@
-## G4F - Documentation
+## GPT4Free Documentation Hub
 
-Welcome to the GPT4Free (G4F) documentation hub! This guide provides everything you need to get started, understand the available features, and integrate G4F into your projects. Use the sections below to explore various aspects of the G4F ecosystem.
-
----
-
-### 📦 Installation
-
-- [Git Installation Guide](git.md)
-- [Docker Setup](docker.md)
-- [Additional Requirements](requirements.md)
+Welcome to the official docs for **GPT4Free** – free and convenient AI endpoints you can use directly in your apps, scripts, and even right in your browser. Here you’ll find a clear overview, quick examples, and entry points to deeper docs for every major feature.
 
 ---
 
-### 🚀 Getting Started
+### 🏁 Quick Table of Contents
 
-- [Local Usage Guide](local.md)
-- [Authentication Guide](authentication.md)
-- [Configuration Guide (.har and cookies)](configuration.md)
-
----
-
-### 🤖 G4F Clients
-
-- [Python Client](client.md)
-- [AsyncClient API Guide](async_client.md)
-- [Requests API Guide](requests.md)
-- [Interference API Guide](interference-api.md)
-- [Legacy API](legacy.md)
+- [Installation & Setup](#installation--setup)
+- [Getting Started Examples](#getting-started)
+  - [Text Generation](#-text-generation)
+  - [Image Generation](#-image-generation)
+  - [Web JS Usage](#-using-gpt4freejs)
+- [Docs by Topic](#deep-dives)
+- [Community & Links](#community--links)
 
 ---
 
-### 🧠 Providers & Models
+## Installation & Setup
 
-- [Available Providers and Models](providers-and-models.md)
+For full install guides—choose your method:
+
+- [Git Install](git.md)
+- [Docker](docker.md)
+- [Requirements](requirements.md)
+
+For rapid starts, you can use either **Python** or **JavaScript** (web).
+
+---
+
+## Getting Started
+
+### 📝 Text Generation
+
+Python example for chat completion (with and without web search):
+
+```python
+from g4f.client import Client
+
+client = Client()
+response = client.chat.completions.create(
+    model="gpt-4.1",  # Try "gpt-4o", "deepseek-v3", etc.
+    messages=[{"role": "user", "content": "Hello"}],
+    web_search=False
+)
+print(response.choices[0].message.content)
+```
+**Output:**
+```
+Hello! How can I assist you today?
+```
+
+---
+
+### 🎨  Image Generation
+
+Generate images with a single call (returns URLs or base64):
+
+```python
+from g4f.client import Client
+
+client = Client()
+response = client.images.generate(
+    model="flux",  # Other models: 'dalle-3', 'gpt-image', etc.
+    prompt="a white siamese cat",
+    response_format="url"
+)
+print(f"Generated image URL: {response.data[0].url}")
+```
+
+[More Python client info →](client.md) [and Async client →](async_client.md)
+
+---
+
+### 🧙‍♂️ Using GPT4Free.js
+
+Use the **official JS client** right in the browser—no backend needed:
+
+```html
+<script type="module">
+    import Client from 'https://g4f.dev/dist/js/client.js';
+
+    const client = new Client();
+    const result = await client.chat.completions.create({
+        model: 'gpt-4.1',  // Or "gpt-4o", "deepseek-v3"
+        messages: [{ role: 'user', content: 'Explain quantum computing' }]
+    });
+    console.log(result.choices[0].message.content);
+</script>
+```
+<!--
+- You can call `.images.generate({ ... })` in JS too, just like Python!
+-->
+[See more JS client usage →](client_js.md)
+
+---
+
+## Deep Dives
+
+- [Available Providers & Models](providers-and-models.md)
 - [Selecting a Provider](selecting_a_provider.md)
-
----
-
-### 📂 Files and Media
-
+- [API docs (full spec)](/api-docs)
 - [File API Documentation (Files and Documents)](file.md)
 - [Media Documentation (Audio, Image and Video)](media.md)
 - [Vision Support (Image Upload)](vision.md)
+- [Authentication](authentication.md), [Configuration Guide (.har and cookies)](configuration.md)
+- [Advanced: Create your own Provider](guides/create_provider.md)
+- [Integrations: LangChain, PydanticAI](pydantic_ai.md)
+- [GUI/WebUI](gui.md), [Phone](guides/phone.md), [Backend API](backend_api_documentation.md)
+- [Troubleshooting](https://github.com/gpt4free/g4f.dev/issues)
 
 ---
 
-### 🖥️ Interfaces
+## Community & Links
 
-- [GUI Documentation](gui.md)
-- [Run in a Window on any OS (Webview)](webview.md)
-- [Run on Your Smartphone Guide](guides/phone.md)
-- [Backend API Documentation](backend_api_documentation.md)
+- **Open Source:** [GitHub: gpt4free/g4f.dev](https://github.com/gpt4free/g4f.dev)
+- **Contribute & Report Bugs:** PRs & issues are welcome!
+- **Project Website:** [https://g4f.dev/](https://g4f.dev/)
+- **Pollinations AI:**  
+  <img src="https://image.pollinations.ai/prompt/Create+a+logo+for+Pollinations+AI+featuring+an+abstract+flower+blooming+digital+petals+glowing+center+futuristic+font+Pollinations+AI?width=512&height=256&nologo=true" height="80">
 
----
-
-### 🧩 Integrations
-
-- [PydanticAI & LangChain Integration](pydantic_ai.md)
+  [GitHub: pollinations/pollinations](https://github.com/pollinations/pollinations)
 
 ---
 
-### 📖 Guides
+GPT4Free and g4f.dev are continuously improving. Have fun building, and let the bots do the heavy lifting for you!
 
-###### Guide: How do I create a new Provider?  
-- **Read:** [Create Provider Guide](https://github.com/gpt4free/gpt4free.github.io/blob/main/docs/guides/create_provider.md)
-
-###### Guide: How can AI help me with writing code?  
-- **Read:** [AI Assistance Guide](https://github.com/gpt4free/gpt4free.github.io/blob/main/docs/guides/help_me.md)
-
----
-
-### 📚 API Documentation
-
-- Check out the [official API docs](https://gpt4free.github.io/api-docs) for more details.
-
----
-
-### 🌟 Pollinations AI
-
-<img src="https://image.pollinations.ai/prompt/Create+a+logo+for+Pollinations+AI+featuring+an+abstract+flower+blooming+digital+petals+glowing+center+futuristic+font+Pollinations+AI?width=512&height=256&nologo=true" height="128">
-
-A creative AI content platform that generates images, audios, and other media using advanced generative models. Pollinations AI empowers users and developers to turn text into visuals and multimedia experiences.
-
-> [pollinations/pollinations on GitHub](https://github.com/pollinations/pollinations)
-
----
-
-We are constantly improving GPT4Free. If you encounter issues or want to contribute, visit our GitHub repository. Happy building!
-
----
-
-[Return to GPT4Free Repository](https://github.com/xtekky/gpt4free)
+[← Back to GPT4Free GitHub](https://github.com/xtekky/gpt4free)

@@ -968,7 +968,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "finish") {
         finish_storage[message_id] = message.finish;
     } else if (message.type == "continue") {
-        continue_storage[message_id] = message.finish;
+        continue_storage[message_id] = message;
     } else if (message.type == "usage") {
         usage_storage[message_id] = message.usage;
     } else if (message.type == "reasoning") {
@@ -1120,7 +1120,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             content_map.inner.innerHTML = html;
             highlight(content_map.inner);
         }
-        if (message_storage[message_id] || reasoning_storage[message_id]?.status) {
+        if (message_storage[message_id] || reasoning_storage[message_id]?.status || reasoning_storage[message_id]?.text) {
             const message_provider = message_id in provider_storage ? provider_storage[message_id] : null;
             let usage = {};
             if (usage_storage[message_id]) {
@@ -1743,7 +1743,10 @@ const load_conversation = async (conversation) => {
         let synthesize_url = "";
         let synthesize_params;
         let synthesize_provider;
-        const text = Array.isArray(buffer) && buffer.length ? buffer[0].text : buffer;
+        let text = Array.isArray(buffer) && buffer.length ? buffer[0].text : buffer;
+        if (!text) {
+            text = item.reasoning ? item.reasoning.text : "";
+        }
         if (text) {
             if (!framework.backendUrl) {
                 synthesize_params = (new URLSearchParams({input: text, voice: "alloy"})).toString();

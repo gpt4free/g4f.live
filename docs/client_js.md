@@ -11,7 +11,7 @@ Include the client in your HTML:
 </script>
 ```
 Or install the NPM package:
-```js
+```bash
 npm install @gpt4free/g4f.dev
 ```
 
@@ -20,7 +20,7 @@ npm install @gpt4free/g4f.dev
 // For Pollinations.AI (default)
 const client = new Client();
 
-// For your GPT4Free endpoint
+// For GPT4Free / openai endpoint
 const client = new Client({ baseUrl: "http://localhost:8080/v1" });
 
 // With API key

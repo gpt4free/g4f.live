@@ -68,7 +68,6 @@ framework.init({
     translations: true
 });
 
-let hasPuter = false;
 let provider_storage = {};
 let message_storage = {};
 let controller_storage = {};
@@ -3494,13 +3493,12 @@ async function load_puter_models() {
 
 async function injectPuter() {
     return new Promise((resolve, reject) => {
-        if (hasPuter) {
+        if (window.puter) {
             resolve(puter)
         }
         var tag = document.createElement('script');
         tag.src = "https://js.puter.com/v2/";
         tag.onload = () => {
-            hasPuter = true;
             resolve(puter);
             if (!localStorage.getItem("puter.auth.token")) {
                 puter.auth.signIn().then((res) => {

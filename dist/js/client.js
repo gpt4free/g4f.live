@@ -56,9 +56,9 @@ class Client {
                 };
 
                 if (params.stream) {
-                    return this._streamCompletion(requestOptions);
+                    return this._streamCompletion(this.apiEndpoint, requestOptions);
                 } else {
-                    return this._regularCompletion(requestOptions);
+                    return this._regularCompletion(this.apiEndpoint, requestOptions);
                 }
             }
             }
@@ -104,8 +104,8 @@ class Client {
         };
     }
 
-    async _regularCompletion(requestOptions) {
-        const response = await fetch(this.apiEndpoint, requestOptions);
+    async _regularCompletion(apiEndpoint, requestOptions) {
+        const response = await fetch(apiEndpoint, requestOptions);
 
         if (!response.ok) {
             throw new Error(`API request failed with status ${response.status}`);
@@ -114,8 +114,8 @@ class Client {
         return await response.json();
     }
 
-    async *_streamCompletion(requestOptions) {
-      const response = await fetch(this.apiEndpoint, requestOptions);
+    async *_streamCompletion(apiEndpoint, requestOptions) {
+      const response = await fetch(apiEndpoint, requestOptions);
       
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
@@ -201,6 +201,16 @@ class Client {
         }
 
         return await response.json();
+    }
+}
+
+class DeepInfra extends Client {
+    constructor(options = {}) {
+        super({
+            baseUrl: 'https://api.deepinfra.com/v1/openai',
+            defaultModel: 'deepseek-ai/DeepSeek-V3-0324',
+            ...options
+        });
     }
 }
 
@@ -314,5 +324,148 @@ class Puter {
     }
 }
 
-export { Client, Together, Puter };
+class HuggingFace extends Client {
+    constructor(options = {}) {
+        this.apiBase = options.apiBase || "https://api-inference.huggingface.co/v1";
+        if (!options.apiKey) {
+            if (typeof process !== 'undefined' && process.env.HUGGINGFACE_API_KEY) {
+                options.apiKey = process.env.HUGGINGFACE_API_KEY;
+            } else {
+                throw new Error("HuggingFace API key is required. Set it in the options or as an environment variable HUGGINGFACE_API_KEY.");
+            }
+        }
+        this.apiKey = options.apiKey;
+        this.defaultModel = "meta-llama/Meta-Llama-3-8B-Instruct";
+        this.modelAliases = {
+            // Chat //
+            "llama-3": "meta-llama/Llama-3.3-70B-Instruct",
+            "llama-3.3-70b": "meta-llama/Llama-3.3-70B-Instruct",
+            "command-r-plus": "CohereForAI/c4ai-command-r-plus-08-2024",
+            "deepseek-r1": "deepseek-ai/DeepSeek-R1",
+            "deepseek-v3": "deepseek-ai/DeepSeek-V3",
+            "qwq-32b": "Qwen/QwQ-32B",
+            "nemotron-70b": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
+            "qwen-2.5-coder-32b": "Qwen/Qwen2.5-Coder-32B-Instruct",
+            "llama-3.2-11b": "meta-llama/Llama-3.2-11B-Vision-Instruct",
+            "mistral-nemo": "mistralai/Mistral-Nemo-Instruct-2407",
+            "phi-3.5-mini": "microsoft/Phi-3.5-mini-instruct",
+            "gemma-3-27b": "google/gemma-3-27b-it",
+            // Image //
+            "flux": "black-forest-labs/FLUX.1-dev",
+            "flux-dev": "black-forest-labs/FLUX.1-dev",
+            "flux-schnell": "black-forest-labs/FLUX.1-schnell",
+            "stable-diffusion-3.5-large": "stabilityai/stable-diffusion-3.5-large",
+            "sdxl-1.0": "stabilityai/stable-diffusion-xl-base-1.0",
+            "sdxl-turbo": "stabilityai/sdxl-turbo",
+            "sd-3.5-large": "stabilityai/stable-diffusion-3.5-large",
+        };
+        this.providerMapping = {
+            "google/gemma-3-27b-it": {
+                "hf-inference/models/google/gemma-3-27b-it": {
+                    "task": "conversational",
+                    "providerId": "google/gemma-3-27b-it"
+                }
+            }
+        };
+        this.headers = {
+            'Content-Type': 'application/json',
+            ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
+            ...(options.headers || {})
+        };
+    }
+
+    get models() {
+      return {
+        list: async () => {
+            const response = await fetch("https://huggingface.co/api/models?inference=warm&&expand[]=inferenceProviderMapping");
+            if (!response.ok) {
+              throw new Error(`Failed to fetch models: ${response.status}`);
+            }
+            const data = await response.json();
+            return data
+                .filter(model => 
+                    model.inferenceProviderMapping?.some(provider => 
+                        provider.status === "live" && provider.task === "conversational"
+                    )
+                )
+                .concat(Object.keys(this.providerMapping).map(model => ({
+                    id: model,
+                    type: "chat"
+                })))
+        }
+      };
+    }
+
+    async _getMapping(model) {
+        if (this.providerMapping[model]) {
+            return this.providerMapping[model];
+        }
+        const response = await fetch(`https://huggingface.co/api/models/${model}?expand[]=inferenceProviderMapping`, {
+            headers: this.headers
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch model mapping: ${response.status}`);
+        }
+
+        const modelData = await response.json();
+        this.providerMapping[model] = modelData.inferenceProviderMapping;
+        return this.providerMapping[model];
+    }
+
+    get chat() {
+        return {
+            completions: {
+                create: async (params) => {
+                    let { model, ...options } = params;
+
+                    if (model && this.modelAliases[model]) {
+                      model = this.modelAliases[model];
+                    } else if (!model && this.defaultModel) {
+                      model = this.defaultModel;
+                    }
+
+                    // Model resolution would go here
+                    const providerMapping = await this._getMapping(model);
+                    if (!providerMapping) {
+                        throw new Error(`Model is not supported: ${model}`);
+                    }
+
+                    let apiBase = this.apiBase;
+                    for (const providerKey in providerMapping) {
+                        const apiPath = providerKey === "novita" ? 
+                            "novita/v3/openai" : 
+                            `${providerKey}/v1`;
+                        apiBase = `https://router.huggingface.co/${apiPath}`;
+
+                        const task = providerMapping[providerKey].task;
+                        if (task !== "conversational") {
+                            throw new Error(`Model is not supported: ${model} task: ${task}`);
+                        }
+
+                        model = providerMapping[providerKey].providerId;
+                        break;
+                    }
+
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: this.headers,
+                        body: JSON.stringify({
+                            model,
+                            ...options
+                        })
+                    };
+
+                    if (params.stream) {
+                        return this._streamCompletion(`${apiBase}/chat/completions`, requestOptions);
+                    } else {
+                        return this._regularCompletion(`${apiBase}/chat/completions`, requestOptions);
+                    }
+                }
+            }
+        };
+    }
+}
+
+export { Client, DeepInfra, Together, Puter, HuggingFace };
 export default Client;

@@ -14,7 +14,7 @@ Install g4f with slim dependencies (without Browser):
 ```
 pip install -U g4f[slim]
 ```
-Install required packages for the Interference API:
+Install required packages for the Inference API:
 ```
 pip install -U g4f[api]
 ```

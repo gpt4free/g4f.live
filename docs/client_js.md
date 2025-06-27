@@ -20,7 +20,7 @@ npm install @gpt4free/g4f.dev
 // For Pollinations.AI (default)
 const client = new Client();
 
-// For GPT4Free / openai endpoint
+// For GPT4Free / OpenAI endpoint
 const client = new Client({ baseUrl: "http://localhost:8080/v1" });
 
 // With API key

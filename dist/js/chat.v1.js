@@ -2094,7 +2094,11 @@ const add_message = async (
             body: JSON.stringify(data),
         });
     }
-    return conversation.items.length - 1;
+    if (message_index == -1) {
+        return conversation.items.length - 1;
+    } else {
+        return message_index + 1;
+    }
 };
 
 const toLocaleDateString = (date) => {

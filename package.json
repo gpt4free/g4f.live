@@ -1,12 +1,12 @@
 {
   "name": "@gpt4free/g4f.dev",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Use the official GPT4Free.js client right in the browser—no backend needed",
   "main": "dist/js/client.js",
   "directories": {
     "doc": "docs"
   },
-  "files": [],
+  "files": ["dist/js/client.d.ts"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

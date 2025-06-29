@@ -93,6 +93,14 @@ Use the **official JS client** right in the browser—no backend needed:
 
 [See more JS client usage →](client_js.md)
 
+### 💻 Using CLI Client
+
+```bash
+$ g4f "Explain quantum computing"
+```
+
+[CLI Client documentation →](client_cli.md)
+
 ---
 
 ## Deep Dives

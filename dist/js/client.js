@@ -15,10 +15,10 @@ class Client {
             }
         }
         this.apiKey = options.apiKey;
-        this.headers = {
+        this.extraHeaders = {
             'Content-Type': 'application/json',
             ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
-            ...(options.headers || {})
+            ...(options.extraHeaders || {})
         };
         this.modelAliases = options.modelAliases || (!options.baseUrl ? {
           "deepseek-v3": "deepseek",
@@ -58,7 +58,7 @@ class Client {
                 }
                 const requestOptions = {
                     method: 'POST',
-                    headers: this.headers,
+                    headers: this.extraHeaders,
                     body: JSON.stringify(params)
                 };
 
@@ -77,7 +77,7 @@ class Client {
         list: async () => {
           const response = await fetch(`${this.baseUrl}/models`, {
             method: 'GET',
-            headers: this.headers
+            headers: this.extraHeaders
           });
           
           if (!response.ok) {
@@ -104,9 +104,9 @@ class Client {
                     params.model = this.modelAliases[params.model];
                 }
                 if (this.imageEndpoint.includes('{prompt}')) {
-                    return this._defaultImageGeneration(params, { headers: this.headers });
+                    return this._defaultImageGeneration(params, { headers: this.extraHeaders });
                 }
-                return this._regularImageGeneration(params, { headers: this.headers });
+                return this._regularImageGeneration(params, { headers: this.extraHeaders });
             }
         };
     }
@@ -262,7 +262,7 @@ class Together extends Client {
 
 class Puter {
     constructor(options = {}) {
-        this.defaultModel = options.defaultModel || null;
+        super(options);
         this.puter = options.puter || this._injectPuter();
     }
 
@@ -350,7 +350,6 @@ class Puter {
 
 class HuggingFace extends Client {
     constructor(options = {}) {
-        this.apiBase = options.apiBase || "https://api-inference.huggingface.co/v1";
         if (!options.apiKey) {
             if (typeof process !== 'undefined' && process.env.HUGGINGFACE_API_KEY) {
                 options.apiKey = process.env.HUGGINGFACE_API_KEY;
@@ -358,31 +357,34 @@ class HuggingFace extends Client {
                 throw new Error("HuggingFace API key is required. Set it in the options or as an environment variable HUGGINGFACE_API_KEY.");
             }
         }
-        this.apiKey = options.apiKey;
-        this.defaultModel = "meta-llama/Meta-Llama-3-8B-Instruct";
-        this.modelAliases = {
-            // Chat //
-            "llama-3": "meta-llama/Llama-3.3-70B-Instruct",
-            "llama-3.3-70b": "meta-llama/Llama-3.3-70B-Instruct",
-            "command-r-plus": "CohereForAI/c4ai-command-r-plus-08-2024",
-            "deepseek-r1": "deepseek-ai/DeepSeek-R1",
-            "deepseek-v3": "deepseek-ai/DeepSeek-V3",
-            "qwq-32b": "Qwen/QwQ-32B",
-            "nemotron-70b": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
-            "qwen-2.5-coder-32b": "Qwen/Qwen2.5-Coder-32B-Instruct",
-            "llama-3.2-11b": "meta-llama/Llama-3.2-11B-Vision-Instruct",
-            "mistral-nemo": "mistralai/Mistral-Nemo-Instruct-2407",
-            "phi-3.5-mini": "microsoft/Phi-3.5-mini-instruct",
-            "gemma-3-27b": "google/gemma-3-27b-it",
-            // Image //
-            "flux": "black-forest-labs/FLUX.1-dev",
-            "flux-dev": "black-forest-labs/FLUX.1-dev",
-            "flux-schnell": "black-forest-labs/FLUX.1-schnell",
-            "stable-diffusion-3.5-large": "stabilityai/stable-diffusion-3.5-large",
-            "sdxl-1.0": "stabilityai/stable-diffusion-xl-base-1.0",
-            "sdxl-turbo": "stabilityai/sdxl-turbo",
-            "sd-3.5-large": "stabilityai/stable-diffusion-3.5-large",
-        };
+        super({
+            baseUrl: 'https://api-inference.huggingface.co/v1',
+            defaultModel: 'meta-llama/Meta-Llama-3-8B-Instruct',
+            modelAliases: {
+                // Chat //
+                "llama-3": "meta-llama/Llama-3.3-70B-Instruct",
+                "llama-3.3-70b": "meta-llama/Llama-3.3-70B-Instruct",
+                "command-r-plus": "CohereForAI/c4ai-command-r-plus-08-2024",
+                "deepseek-r1": "deepseek-ai/DeepSeek-R1",
+                "deepseek-v3": "deepseek-ai/DeepSeek-V3",
+                "qwq-32b": "Qwen/QwQ-32B",
+                "nemotron-70b": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
+                "qwen-2.5-coder-32b": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "llama-3.2-11b": "meta-llama/Llama-3.2-11B-Vision-Instruct",
+                "mistral-nemo": "mistralai/Mistral-Nemo-Instruct-2407",
+                "phi-3.5-mini": "microsoft/Phi-3.5-mini-instruct",
+                "gemma-3-27b": "google/gemma-3-27b-it",
+                // Image //
+                "flux": "black-forest-labs/FLUX.1-dev",
+                "flux-dev": "black-forest-labs/FLUX.1-dev",
+                "flux-schnell": "black-forest-labs/FLUX.1-schnell",
+                "stable-diffusion-3.5-large": "stabilityai/stable-diffusion-3.5-large",
+                "sdxl-1.0": "stabilityai/stable-diffusion-xl-base-1.0",
+                "sdxl-turbo": "stabilityai/sdxl-turbo",
+                "sd-3.5-large": "stabilityai/stable-diffusion-3.5-large",
+            },
+            ...options
+        });
         this.providerMapping = {
             "google/gemma-3-27b-it": {
                 "hf-inference/models/google/gemma-3-27b-it": {
@@ -390,11 +392,6 @@ class HuggingFace extends Client {
                     "providerId": "google/gemma-3-27b-it"
                 }
             }
-        };
-        this.headers = {
-            'Content-Type': 'application/json',
-            ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
-            ...(options.headers || {})
         };
     }
 
@@ -425,7 +422,7 @@ class HuggingFace extends Client {
             return this.providerMapping[model];
         }
         const response = await fetch(`https://huggingface.co/api/models/${model}?expand[]=inferenceProviderMapping`, {
-            headers: this.headers
+            headers: this.extraHeaders
         });
 
         if (!response.ok) {
@@ -473,7 +470,7 @@ class HuggingFace extends Client {
 
                     const requestOptions = {
                         method: 'POST',
-                        headers: this.headers,
+                        headers: this.extraHeaders,
                         body: JSON.stringify({
                             model,
                             ...options

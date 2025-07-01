@@ -206,7 +206,7 @@
 
       let fullResponse = '';
       for await (const chunk of stream) {
-        const delta = chunk.choices[0]?.delta?.content || '';
+        const delta = chunk.choices[0]?.delta?.content || chunk.choices[0]?.delta?.reasoning_content || '';
         fullResponse += delta;
         assistantEl.innerHTML = marked.parse(fullResponse);
         chat.scrollTop = chat.scrollHeight;

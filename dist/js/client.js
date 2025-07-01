@@ -262,7 +262,7 @@ class Together extends Client {
 
 class Puter {
     constructor(options = {}) {
-        super(options);
+        this.defaultModel = options.defaultModel || 'gpt-4.1';
         this.puter = options.puter || this._injectPuter();
     }
 

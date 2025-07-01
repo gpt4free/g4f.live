@@ -9,6 +9,10 @@ class Client {
             this.baseUrl = 'https://text.pollinations.ai';
             this.apiEndpoint = `${this.baseUrl}/openai`;
             this.imageEndpoint = `https://image.pollinations.ai/prompt/{prompt}`;
+            this.referrer = options.referrer || 'https://g4f.dev';
+            if (typeof process !== 'undefined' && process.env.POLLINATIONS_API_KEY) {
+                options.apiKey = process.env.POLLINATIONS_API_KEY;
+            }
         }
         this.apiKey = options.apiKey;
         this.headers = {
@@ -48,6 +52,9 @@ class Client {
                   params.model = this.modelAliases[params.model];
                 } else if (!params.model && this.defaultModel) {
                   params.model = this.defaultModel;
+                }
+                if (this.referrer) {
+                    params.referrer = this.referrer;
                 }
                 const requestOptions = {
                     method: 'POST',
@@ -225,6 +232,23 @@ class Together extends Client {
             },
             ...options
         });
+    }
+
+    async getApiKey() {
+        if (!this.apiKey) {
+            if (typeof process !== 'undefined' && process.env.TOGETHER_API_KEY) {
+                this.apiKey = process.env.TOGETHER_API_KEY;
+                return this.apiKey;
+            }
+            const activation_endpoint = "https://www.codegeneration.ai/activate-v2";
+            const response = await fetch(activation_endpoint);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch API key: ${response.status}`);
+            }
+            const data = await response.json();
+            this.apiKey = data.openAIParams?.api_key;
+        }
+        return this.apiKey;
     }
 
     async _regularImageGeneration(params, requestOptions) {

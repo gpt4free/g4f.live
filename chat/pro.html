@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GPT Chat UI</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #f8f9fa;
+    }
+    #topbar {
+      padding: 1rem;
+      background: #e9ecef;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .message {
+      margin-bottom: 1rem;
+    }
+    .user {
+      text-align: right;
+      font-weight: bold;
+    }
+    .assistant {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      max-width: 80%;
+    }
+    #form {
+      display: flex;
+      padding: 1rem;
+      background: #fff;
+      border-top: 1px solid #ccc;
+    }
+    #input {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #submit {
+      margin-left: 0.5rem;
+      padding: 0.75rem 1.2rem;
+      font-size: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    select, input[type="text"] {
+      padding: 0.4rem;
+      font-size: 0.9rem;
+    }
+    code {
+      background: #eee;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background: #eee;
+      padding: 1em;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+<div id="topbar">
+  <div>
+    <label>Provider:
+      <select id="provider">
+        <option value="pollinations">Pollinations.AI</option>
+        <option value="deepinfra">DeepInfra</option>
+        <option value="huggingface">HuggingFace</option>
+        <option value="together">Together</option>
+        <option value="puter">Puter</option>
+        <option value="custom">Custom (http://localhost:8080/v1)</option>
+      </select>
+    </label>
+    <label>API Key: <input type="text" id="apiKey" placeholder="Optional" /></label>
+  </div>
+  <label>Model:
+    <select id="modelSelect"><option>Loading...</option></select>
+  </label>
+</div>
+
+<div id="chat"></div>
+
+<form id="form">
+  <input type="text" id="input" placeholder="Ask something..." autocomplete="off" />
+  <button id="submit">Send</button>
+</form>
+
+<script type="module">
+  import { Client, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
+  import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
+  const chat = document.getElementById('chat');
+  const form = document.getElementById('form');
+  const input = document.getElementById('input');
+  const providerSelect = document.getElementById('provider');
+  const apiKeyInput = document.getElementById('apiKey');
+  const modelSelect = document.getElementById('modelSelect');
+
+  let client = null;
+  let messages = [];
+  let defaultModel = '';
+
+  async function initClient() {
+    const provider = providerSelect.value;
+    const apiKey = apiKeyInput.value.trim();
+    const options = apiKey ? { apiKey } : {};
+    let ClientClass = Client;
+
+    switch (provider) {
+      case 'pollinations':
+        ClientClass = Client;
+        options.defaultModel = 'deepseek';
+        break;
+      case 'deepinfra':
+        ClientClass = DeepInfra;
+        break;
+      case 'huggingface':
+        ClientClass = HuggingFace;
+        break;
+      case 'together':
+        ClientClass = Together;
+        break;
+      case 'puter':
+        ClientClass = Puter;
+        break;
+      case 'custom':
+        ClientClass = Client;
+        options.baseUrl = 'http://localhost:8080/v1';
+        break;
+    }
+
+    client = new ClientClass(options);
+    if (!client.apiKey && client.getApiKey) {
+      client.apiKey = await client.getApiKey();
+    }
+    await loadModels();
+  }
+
+  async function loadModels() {
+    modelSelect.innerHTML = '<option disabled selected>Loading...</option>';
+    try {
+      const models = await client.models.list();
+      modelSelect.innerHTML = '';
+      models.forEach(model => {
+        const opt = document.createElement('option');
+        opt.value = model.id;
+        opt.textContent = model.id;
+        if (model.id === client.defaultModel) opt.selected = true;
+        modelSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error('Model load failed:', err);
+      modelSelect.innerHTML = `<option value="${client.defaultModel}">${client.defaultModel}</option>`;
+    }
+  }
+
+  providerSelect.addEventListener('change', initClient);
+  apiKeyInput.addEventListener('change', initClient);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    const selectedModel = modelSelect.value || defaultModel;
+    addMessage('user', text);
+    messages.push({ role: 'user', content: text });
+    input.value = '';
+
+    const assistantEl = document.createElement('div');
+    assistantEl.className = 'message assistant';
+    assistantEl.innerHTML = '<em>Typing...</em>';
+    chat.appendChild(assistantEl);
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+      const stream = await client.chat.completions.create({
+        model: selectedModel,
+        messages,
+        stream: true
+      });
+
+      let fullResponse = '';
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta?.content || '';
+        fullResponse += delta;
+        assistantEl.innerHTML = marked.parse(fullResponse);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      messages.push({ role: 'assistant', content: fullResponse });
+    } catch (err) {
+      assistantEl.innerHTML = '<strong>Error:</strong> ' + err.message;
+    }
+  });
+
+  function addMessage(role, content) {
+    const el = document.createElement('div');
+    el.className = 'message ' + role;
+    el.innerHTML = role === 'user'
+      ? `<div class="user">${content}</div>`
+      : marked.parse(content);
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  await initClient();
+</script>
+
+</body>
+</html>

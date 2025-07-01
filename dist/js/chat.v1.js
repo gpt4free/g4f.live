@@ -951,8 +951,8 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             content_map.inner.appendChild(div);
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-        } else {
-            update_message(content_map, message_id, null, scroll);
+        } else if(message.content) {
+            update_message(content_map, message_id, null);
         }
     } else if (message.type == "log") {
         let p = document.createElement("p");

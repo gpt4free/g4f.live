@@ -114,8 +114,8 @@
 </form>
 
 <script type="module">
-  import { Client, Pollinations, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
-  //import { Client, Pollinations, DeepInfra, Together, Puter, HuggingFace } from '../dist/js/client.js';
+  import { Client, PollinationsAi, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
+  //import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from '../dist/js/client.js';
   
   import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
@@ -128,7 +128,6 @@
 
   let client = null;
   let messages = [];
-  let defaultModel = '';
 
   async function initClient() {
     const provider = providerSelect.value;
@@ -138,7 +137,7 @@
 
     switch (provider) {
       case 'pollinations':
-        ClientClass = Pollinations;
+        ClientClass = PollinationsAI;
         break;
       case 'deepinfra':
         ClientClass = DeepInfra;
@@ -159,9 +158,6 @@
     }
 
     client = new ClientClass(options);
-    if (!client.apiKey && client.getApiKey) {
-      client.apiKey = await client.getApiKey();
-    }
     await loadModels();
   }
 
@@ -173,13 +169,11 @@
       models.forEach(model => {
         const opt = document.createElement('option');
         opt.value = model.id;
-        opt.textContent = model.id;
-        // --- CHANGE START ---
+        opt.textContent = model.id + (model.type == "image" ? " 🎨" : "");
         // Store the model type (e.g., 'chat' or 'image') in a data attribute.
         if (model.type) {
           opt.dataset.type = model.type;
         }
-        // --- CHANGE END ---
         if (model.id === client.defaultModel) opt.selected = true;
         modelSelect.appendChild(opt);
       });
@@ -197,12 +191,10 @@
     const text = input.value.trim();
     if (!text) return;
 
-    // --- CHANGE START ---
     // Get the full selected option element to access its data attributes.
     const selectedOption = modelSelect.options[modelSelect.selectedIndex];
-    const selectedModel = selectedOption.value || defaultModel;
+    const selectedModel = selectedOption.value || client.defaultModel;
     const modelType = selectedOption.dataset.type || 'chat'; // Default to 'chat' if type is not specified
-    // --- CHANGE END ---
 
     addMessage('user', text);
     messages.push({ role: 'user', content: text });
@@ -215,7 +207,6 @@
     chat.scrollTop = chat.scrollHeight;
 
     try {
-      // --- CHANGE START ---
       // Conditionally call the correct client method based on model type.
       if (modelType === 'image') {
         // Handle image generation
@@ -245,7 +236,6 @@
         }
         messages.push({ role: 'assistant', content: fullResponse });
       }
-      // --- CHANGE END ---
     } catch (err) {
       assistantEl.innerHTML = '<strong>Error:</strong> ' + err.message;
       console.error(err);

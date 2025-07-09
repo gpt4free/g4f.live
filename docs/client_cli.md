@@ -8,14 +8,13 @@ A command-line interface for interacting with various AI providers and models, s
 pip install g4f[all]
 ```
 
-For system-wide access (Linux):
+Call it in your terminal:
 
 ```bash
-sudo cp g4f/cli/client.py /usr/bin/g4f
-sudo chmod +x /usr/bin/g4f
+g4f client "Explain generative AI"
 ```
 
-Or use:
+Or with:
 
 ```bash
 python -m g4f.cli.client "Explain quantum computing"

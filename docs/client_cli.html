@@ -59,11 +59,10 @@
 <p>A command-line interface for interacting with various AI providers and models, supporting text and image generation with conversation history.</p>
 <h2>Installation</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">pip install g4f[all]</pre></div>
-<p>For system-wide access (Linux):</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo cp g4f/cli/client.py /usr/bin/g4f
-sudo chmod +x /usr/bin/g4f</pre></div>
-<p>Or use:</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">python -m g4f.cli.client <span class="pl-s"><span class="pl-pds">"</span>Hello World<span class="pl-pds">"</span></span></pre></div>
+<p>Call it in your terminal:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">g4f client <span class="pl-s"><span class="pl-pds">"</span>Explain generative AI<span class="pl-pds">"</span></span></pre></div>
+<p>Or with:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">python -m g4f.cli.client <span class="pl-s"><span class="pl-pds">"</span>Explain quantum computing<span class="pl-pds">"</span></span></pre></div>
 <h2>Usage</h2>
 <pre lang="text" class="notranslate"><code class="notranslate">usage: g4f [-h] [--debug] [-p PROVIDER] [-m MODEL] [-O [FILE]] [-i INSTRUCTIONS] [-c COOKIES_DIR]
            [--conversation-file CONVERSATION_FILE] [-C]

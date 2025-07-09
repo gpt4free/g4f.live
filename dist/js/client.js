@@ -50,6 +50,7 @@ class Client {
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel || null;
+        this.defaulImageModel = options.defaultImageModel || 'flux';
         this.apiKey = options.apiKey;
         this.referrer = options.referrer;
         
@@ -67,19 +68,18 @@ class Client {
 
         // Caching for models
         this._models = [];
-        this._modelsCached = false;
     }
     
-    async _fetchWithProxyRotation(targetUrl) {
+    async _fetchWithProxyRotation(targetUrl, requestConfig={}) {
         const maxAttempts = this.proxyManager.proxies.length;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             const proxiedUrl = this.proxyManager.getProxiedUrl(targetUrl);
             try {
-                const response = await fetch(proxiedUrl);
+                const response = await fetch(proxiedUrl, requestConfig);
                 if (!response.ok) {
                     throw new Error(`Proxy fetch failed with status ${response.status}`);
                 }
-                return await response.json();
+                return response
             } catch (error) {
                 console.warn(`CORS proxy attempt ${attempt + 1}/${maxAttempts} failed for ${targetUrl}:`, error.message);
                 this.proxyManager.rotateProxy();
@@ -97,7 +97,6 @@ class Client {
                     modelId = this.modelAliases[modelId];
                 }
                 params.model = modelId;
-
                 if (this.referrer) {
                     params.referrer = this.referrer;
                 }
@@ -106,11 +105,11 @@ class Client {
                     headers: this.extraHeaders,
                     body: JSON.stringify(params)
                 };
-
+                const response = await fetch(this.apiEndpoint, requestOptions);
                 if (params.stream) {
-                    return this._streamCompletion(this.apiEndpoint, requestOptions);
+                    return this._streamCompletion(response);
                 } else {
-                    return this._regularCompletion(this.apiEndpoint, requestOptions);
+                    return this._regularCompletion(response);
                 }
             }
             }
@@ -138,7 +137,7 @@ class Client {
     get images() {
         return {
             generate: async (params) => {
-                let modelId = params.model || "flux";
+                let modelId = params.model || this.defaulImageModel;
                 if(this.modelAliases[modelId]) {
                     modelId = this.modelAliases[modelId];
                 }
@@ -152,16 +151,14 @@ class Client {
         };
     }
 
-    async _regularCompletion(apiEndpoint, requestOptions) {
-        const response = await fetch(apiEndpoint, requestOptions);
+    async _regularCompletion(response) {
         if (!response.ok) {
             throw new Error(`API request failed with status ${response.status}`);
         }
         return await response.json();
     }
 
-    async *_streamCompletion(apiEndpoint, requestOptions) {
-      const response = await fetch(apiEndpoint, requestOptions);
+    async *_streamCompletion(response) {
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
@@ -197,7 +194,7 @@ class Client {
     async _defaultImageGeneration(params, requestOptions) {
         params = {...params};
         let prompt = params.prompt ? params.prompt : '';
-        prompt = encodeURIComponent(prompt.replaceAll(" ", "+"));
+        prompt = encodeURIComponent(prompt).replaceAll('%20', '+');
         delete params.prompt;
         if (params.nologo === undefined) params.nologo = true;
         if (params.size) {
@@ -230,7 +227,7 @@ class Client {
     }
 }
 
-class Pollinations extends Client {
+class PollinationsAI extends Client {
     constructor(options = {}) {
         super({
             baseUrl: 'https://text.pollinations.ai',
@@ -239,16 +236,25 @@ class Pollinations extends Client {
             defaultModel: 'gpt-4o-mini',
             referrer: 'https://g4f.dev',
             modelAliases: {
-                "gpt-4o-mini": "openai", "gpt-4.1-nano": "openai-fast", "gpt-4": "openai-large",
-                "gpt-4o": "openai-large", "gpt-4.1": "openai-large", "o4-mini": "openai-reasoning",
-                "gpt-4.1-mini": "openai", "command-r-plus": "command-r", "gemini-2.5-flash": "gemini",
-                "gemini-2.0-flash-thinking": "gemini-thinking", "qwen-2.5-coder-32b": "qwen-coder",
-                "llama-3.3-70b": "llama", "llama-4-scout": "llamascout", "llama-4-scout-17b": "llamascout",
-                "mistral-small-3.1-24b": "mistral", "deepseek-r1": "deepseek-reasoning-large",
-                "deepseek-r1-distill-llama-70b": "deepseek-reasoning-large", "deepseek-r1-distill-qwen-32b": "deepseek-reasoning",
-                "phi-4": "phi", "qwq-32b": "qwen-qwq", "deepseek-v3": "deepseek", "deepseek-v3-0324": "deepseek",
-                "grok-3-mini": "grok", "gpt-4o-audio": "openai-audio", "gpt-4o-mini-audio": "openai-audio",
-                "sdxl-turbo": "turbo", "gpt-image": "gptimage", "dall-e-3": "gptimage", "flux-pro": "flux", "flux-schnell": "flux"
+                "gpt-4o-mini": "openai",
+                "gpt-4.1-nano": "openai-fast",
+                "gpt-4.1": "openai-large",
+                "o4-mini": "openai-reasoning",
+                "command-r-plus": "command-r",
+                "gemini-2.5-flash": "gemini",
+                "gemini-2.0-flash-thinking": "gemini-thinking",
+                "qwen-2.5-coder-32b": "qwen-coder",
+                "llama-3.3-70b": "llama",
+                "llama-4-scout": "llamascout",
+                "mistral-small-3.1-24b": "mistral",
+                "deepseek-r1": "deepseek-reasoning",
+                "phi-4": "phi",
+                "deepseek-v3": "deepseek",
+                "grok-3-mini-high": "grok",
+                "gpt-4o-audio": "openai-audio",
+                "sdxl-turbo": "turbo",
+                "gpt-image": "gptimage",
+                "flux-kontext": "kontext",
             },
             ...options
         });
@@ -257,9 +263,9 @@ class Pollinations extends Client {
     get models() {
       return {
         list: async () => {
-          if (this._modelsCached && this._models.length > 0) return this._models;
+          if (this._models.length > 0) return this._models;
           try {
-            const [textModelsResponse, imageModelsResponse] = await Promise.all([
+            let [textModelsResponse, imageModelsResponse] = await Promise.all([
                 this._fetchWithProxyRotation('https://text.pollinations.ai/models').catch(e => {
                     console.error("Failed to fetch text models from all proxies:", e); return { data: [] };
                 }),
@@ -267,27 +273,26 @@ class Pollinations extends Client {
                     console.error("Failed to fetch image models from all proxies:", e); return [];
                 }),
             ]);
-            const textModelIds = (textModelsResponse.data || textModelsResponse || []).map(m => m.id || m.name);
-            const imageModelIds = Array.isArray(imageModelsResponse) ? imageModelsResponse : [];
-            const allDisplayNames = new Set([
-                ...textModelIds.map(id => this.swapAliases[id] || id),
-                ...imageModelIds.map(id => this.swapAliases[id] || id),
-                ...Object.keys(this.modelAliases),
-            ].filter(Boolean));
-            this._models = Array.from(allDisplayNames).map(displayName => {
-                const internalName = this.modelAliases[displayName] || displayName;
-                const isImageModel = imageModelIds.includes(internalName) ||
-                    ["gpt-image", "sdxl-turbo", "flux", "dall-e-3"].some(imgAlias => internalName.includes(imgAlias));
-                return { id: displayName, type: isImageModel ? 'image' : 'chat' };
-            }).sort((a, b) => a.id.localeCompare(b.id));
-            this._modelsCached = true;
+            textModelsResponse = await textModelsResponse.json();
+            imageModelsResponse = await imageModelsResponse.json();
+            const textModels = (textModelsResponse.data || textModelsResponse || []);
+            this._models = [
+                ...textModels.map(model => {
+                    model.id = model.id || this.swapAliases[model.name]  || model.name;
+                    model.type = model.type || 'chat';
+                    return model
+                }),
+                ...imageModelsResponse.map(model => {
+                    return { id: this.swapAliases[model]  || model, type: 'image'};
+                })
+            ];
             return this._models;
           } catch (err) {
               console.error("Final fallback for Pollinations models:", err);
               return [
-                  { id: "gpt-4o-mini", type: "chat" }, { id: "deepseek-v3", type: "chat" },
-                  { id: "flux", type: "image" }, { id: "dall-e-3", type: "image" }
-              ].sort((a,b) => a.id.localeCompare(b.id));
+                  { id: "gpt-4.1-mini", type: "chat" }, { id: "deepseek-v3", type: "chat" },
+                  { id: "flux", type: "image" }, { id: "gpt-image", type: "image" }
+              ];
           }
         }
       };
@@ -309,6 +314,7 @@ class Together extends Client {
         super({
             baseUrl: 'https://api.together.xyz/v1',
             defaultModel: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+            defaulImageModel: 'black-forest-labs/FLUX.1.1-pro',
             modelAliases: {
                 // Models Chat/Language
                 // meta-llama
@@ -380,8 +386,6 @@ class Together extends Client {
         this.activationEndpoint = "https://www.codegeneration.ai/activate-v2";
         this.modelsEndpoint = "https://api.together.xyz/v1/models";
         this.modelConfigs = {};
-        this._modelsCached = false;
-        this._apiKeyCache = null;
         this._cachedModels = [];
         this.imageModels = [];
         
@@ -399,48 +403,36 @@ class Together extends Client {
     }
 
     async getApiKey() {
-        if (this._apiKeyCache) {
-            return this._apiKeyCache;
-        }
-        
         if (this.apiKey) {
-            this._apiKeyCache = this.apiKey;
             return this.apiKey;
         }
         
         if (typeof process !== 'undefined' && process.env.TOGETHER_API_KEY) {
             this.apiKey = process.env.TOGETHER_API_KEY;
-            this._apiKeyCache = this.apiKey;
             return this.apiKey;
         }
         
         try {
             console.log('Fetching Together API key via CORS proxy...');
             const response = await this._fetchWithProxyRotation('https://www.codegeneration.ai/activate-v2');
-            
-            if (response?.openAIParams?.apiKey) {
-                this.apiKey = response.openAIParams.apiKey;
-                this._apiKeyCache = this.apiKey;
+            const data = await response.json();
+            if (data?.openAIParams?.apiKey) {
+                this.apiKey = data.openAIParams.apiKey;
                 this.extraHeaders['Authorization'] = `Bearer ${this.apiKey}`;
                 console.log('Successfully obtained Together API key via proxy');
                 return this.apiKey;
             } else {
                 throw new Error('No API key found in response');
             }
-            
         } catch (error) {
             console.error('Failed to get Together API key via proxy:', error);
             throw new Error(`Failed to obtain Together API key: ${error.message}`);
         }
     }
 
-    getModel(model) {
+    _getModel(model) {
         if (!model) {
             return this.defaultModel;
-        }
-        
-        if (this._cachedModels.includes(model)) {
-            return model;
         }
         
         if (this.modelAliases[model]) {
@@ -457,26 +449,22 @@ class Together extends Client {
         return model;
     }
 
-    getModelConfig(model) {
-        const resolvedModel = this.getModel(model);
+    _getModelConfig(model) {
+        const resolvedModel = this._getModel(model);
         return this.modelConfigs[resolvedModel] || {};
     }
 
-    async loadModels() {
-        if (this._modelsCached && this._cachedModels.length > 0) {
+    async _loadModels() {
+        if (this._cachedModels.length > 0) {
             return this._cachedModels;
         }
         
         try {
-            const apiKey = await this.getApiKey();
+            await this.getApiKey();
             
             const response = await fetch(this.modelsEndpoint, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
+                headers: this.extraHeaders,
                 mode: 'cors',
                 credentials: 'omit'
             });
@@ -487,16 +475,13 @@ class Together extends Client {
             
             const modelsData = await response.json();
             
-            this._cachedModels = [];
+            this._cachedModels = modelsData;
             this.imageModels = [];
             this.modelConfigs = {};
             
             for (const model of modelsData) {
                 if (!model?.id) continue;
-                
-                const modelId = model.id;
-                const modelType = (model.type || '').toLowerCase();
-                
+                const modelId = model.id;                
                 if (model.config) {
                     this.modelConfigs[modelId] = {
                         stop: model.config.stop || [],
@@ -505,37 +490,14 @@ class Together extends Client {
                         eosToken: model.config.eos_token,
                         contextLength: model.context_length
                     };
-                }
-                
-                if (this.visionModels.includes(modelId)) {
-                    this._cachedModels.push(modelId);
-                } else if (modelType === 'chat' || modelType === 'language' || modelType === '') {
-                    this._cachedModels.push(modelId);
-                } else if (modelType === 'image') {
-                    this.imageModels.push(modelId);
-                    this._cachedModels.push(modelId); // Add to general list as well
+                } else {
+                    this.modelConfigs[modelId] = {};
                 }
             }
-            
-            if (!this._cachedModels.includes(this.defaultModel)) {
-                this._cachedModels.unshift(this.defaultModel);
-            }
-            
-            for (const visionModel of this.visionModels) {
-                if (!this._cachedModels.includes(visionModel)) {
-                    this._cachedModels.push(visionModel);
-                }
-            }
-            
-            this._cachedModels.sort();
-            this.imageModels.sort();
-            
-            this._modelsCached = true;
             return this._cachedModels;
             
         } catch (error) {
             console.error('Failed to load Together models:', error);
-            this._cachedModels = [this.defaultModel];
             return this._cachedModels;
         }
     }
@@ -543,11 +505,7 @@ class Together extends Client {
     get models() {
         return {
             list: async () => {
-                const models = await this.loadModels();
-                return models.map(model => ({
-                    id: model,
-                    type: this.imageModels.includes(model) ? 'image' : 'chat'
-                }));
+                return await this._loadModels();
             }
         };
     }
@@ -560,17 +518,17 @@ class Together extends Client {
                         await this.getApiKey();
                     }
                     
-                    if (!this._modelsCached) {
-                        await this.loadModels();
+                    if (!this._cachedModels.length < 1) {
+                        await this._loadModels();
                     }
                     
                     if (params.model) {
-                        params.model = this.getModel(params.model);
-                    } else if (this.defaultModel) {
+                        params.model = this._getModel(params.model);
+                    } else {
                         params.model = this.defaultModel;
                     }
                     
-                    const modelConfig = this.getModelConfig(params.model);
+                    const modelConfig = this._getModelConfig(params.model);
                     if (!params.stop && modelConfig.stop && modelConfig.stop.length > 0) {
                         params.stop = modelConfig.stop;
                     }
@@ -583,11 +541,11 @@ class Together extends Client {
                         },
                         body: JSON.stringify(params)
                     };
-
+                    const response = await fetch(this.apiEndpoint, requestOptions);
                     if (params.stream) {
-                        return this._streamCompletion(this.apiEndpoint, requestOptions);
+                        return this._streamCompletion(response);
                     } else {
-                        return this._regularCompletion(this.apiEndpoint, requestOptions);
+                        return this._regularCompletion(response);
                     }
                 }
             }
@@ -600,22 +558,14 @@ class Together extends Client {
                 if (!this.apiKey) {
                     await this.getApiKey();
                 }
-
-                if (!this._modelsCached) {
+                if (this._cachedModels.length < 1) {
                     await this.loadModels();
                 }
-
-                const resolvedModel = params.model ? this.getModel(params.model) : null;
-                
-                if (resolvedModel && this.imageModels.includes(resolvedModel)) {
-                    params.model = resolvedModel;
-                } else {
-                    if (resolvedModel) {
-                        console.warn(`Model '${resolvedModel}' is not a valid image model. Falling back to default.`);
-                    }
-                    params.model = 'black-forest-labs/FLUX.1.1-pro'; // Default image model
+                params.model = params.model ? this._getModel(params.model) : this.defaulImageModel;
+                if (!this.imageModels.includes(params.model)) {
+                    console.warn(`Model '${params.model}' is not a valid image model. Falling back to default.`);
+                    params.model = this.defaulImageModel
                 }
-                
                 return this._regularImageGeneration(params, { headers: this.extraHeaders });
             }
         };
@@ -716,6 +666,8 @@ class HuggingFace extends Client {
         if (!options.apiKey) {
             if (typeof process !== 'undefined' && process.env.HUGGINGFACE_API_KEY) {
                 options.apiKey = process.env.HUGGINGFACE_API_KEY;
+            } else if (typeof localStorage !== "undefined" && localStorage.getItem("HuggingFace-api_key")) {
+                options.apiKey = localStorage.getItem("HuggingFace-api_key");
             } else {
                 throw new Error("HuggingFace API key is required. Set it in the options or as an environment variable HUGGINGFACE_API_KEY.");
             }
@@ -803,10 +755,11 @@ class HuggingFace extends Client {
                 create: async (params) => {
                     let { model, ...options } = params;
 
-                    if (model && this.modelAliases[model]) {
-                      model = this.modelAliases[model];
-                    } else if (!model && this.defaultModel) {
+                    if (!model) {
                       model = this.defaultModel;
+                    }
+                    if (this.modelAliases[model]) {
+                      model = this.modelAliases[model];
                     }
 
                     // Model resolution would go here
@@ -817,9 +770,13 @@ class HuggingFace extends Client {
 
                     let apiBase = this.apiBase;
                     for (const providerKey in providerMapping) {
-                        const apiPath = providerKey === "novita" ? 
-                            "novita/v3/openai" : 
-                            `${providerKey}/v1`;
+                        let apiPath;
+                        if (providerKey === "novita")
+                            apiPath = "novita/v3/openai";
+                        else if (providerKey === "hf-inference")
+                            apiPath = `${providerKey}/models/${model}/v1`;
+                        else
+                            apiPath = `${providerKey}/v1`;
                         apiBase = `https://router.huggingface.co/${apiPath}`;
 
                         const task = providerMapping[providerKey].task;
@@ -839,11 +796,11 @@ class HuggingFace extends Client {
                             ...options
                         })
                     };
-
+                    const response = await fetch(`${apiBase}/chat/completions`, requestOptions);
                     if (params.stream) {
-                        return this._streamCompletion(`${apiBase}/chat/completions`, requestOptions);
+                        return this._streamCompletion(response);
                     } else {
-                        return this._regularCompletion(`${apiBase}/chat/completions`, requestOptions);
+                        return this._regularCompletion(response);
                     }
                 }
             }
@@ -852,5 +809,5 @@ class HuggingFace extends Client {
 }
 
 
-export { Client, Pollinations, DeepInfra, Together, Puter, HuggingFace };
+export { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace };
 export default Client;

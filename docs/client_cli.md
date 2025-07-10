@@ -81,23 +81,23 @@ usage: g4f [-h] [--debug] [-p PROVIDER] [-m MODEL] [-O [FILE]] [-i INSTRUCTIONS]
 
 2. **Debug mode**:
    ```bash
-   g4f --debug "What's the weather today?"
+   g4f client --debug "What's the weather today?"
    ```
 
 3. **Clear history and start fresh**:
    ```bash
-   g4f -C "New conversation"
+   g4f client -C "New conversation"
    ```
 
 4. **Save response to file**:
    ```bash
-   g4f -O generator.js "Write a poem generator in js"
+   g4f client -O generator.js "Write a poem generator in js"
    ```
 
 ## Configuration
 
-- Default conversation file: `~/.config/g4f-cli/conversation.json`
-- Default cookies directory: `~/.config/g4f-cli/cookies/`
+- Default conversation file: `~/.config/g4f/conversation.json`
+- Default cookies directory: `~/.config/g4f/cookies/`
 
 ## Supported Providers
 

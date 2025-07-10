@@ -197,6 +197,7 @@ class Client {
         prompt = encodeURIComponent(prompt).replaceAll('%20', '+');
         delete params.prompt;
         if (params.nologo === undefined) params.nologo = true;
+        if (this.referrer) params.referrer = this.referrer;
         if (params.size) {
             params.width = params.size.split('x')[0];
             params.height = params.size.split('x')[1];

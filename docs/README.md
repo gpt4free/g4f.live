@@ -126,6 +126,7 @@ $ g4f client "Explain quantum computing"
 - [File API Documentation (Files and Documents)](file.md)
 - [Media Documentation (Audio, Image and Video)](media.md)
 - [Vision Support (Image Upload)](vision.md)
+- [Image Editing & Variation](image_editing.md)
 - [Authentication](authentication.md), [Configuration Guide (.har and cookies)](configuration.md)
 - [Advanced: Create your own Provider](guides/create_provider.md)
 - [Integrations: LangChain, PydanticAI](pydantic_ai.md)

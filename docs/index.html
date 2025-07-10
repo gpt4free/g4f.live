@@ -121,7 +121,7 @@
         <span class="pl-c1">model</span>: <span class="pl-s">'gpt-4.1'</span><span class="pl-kos">,</span>  <span class="pl-c">// Or "gpt-4o", "deepseek-v3"</span>
         <span class="pl-c1">messages</span>: <span class="pl-kos">[</span><span class="pl-kos">{</span> <span class="pl-c1">role</span>: <span class="pl-s">'user'</span><span class="pl-kos">,</span> <span class="pl-c1">content</span>: <span class="pl-s">'Explain quantum computing'</span> <span class="pl-kos">}</span><span class="pl-kos">]</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
-    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">result</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">result</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span></pre></div>
 <p>And for image generation:</p>
 <div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-kos">&lt;</span><span class="pl-ent">script</span> <span class="pl-c1">type</span>="<span class="pl-s">module</span>"<span class="pl-kos">&gt;</span>
@@ -138,7 +138,7 @@
 <span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span></pre></div>
 <p><a href="client_js.html">See more JS client usage →</a></p>
 <h3>💻 Using CLI Client</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">$ g4f <span class="pl-s"><span class="pl-pds">"</span>Explain quantum computing<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">$ g4f client <span class="pl-s"><span class="pl-pds">"</span>Explain quantum computing<span class="pl-pds">"</span></span></pre></div>
 <p><a href="client_cli.html">CLI Client documentation →</a></p>
 <hr>
 <h2>Deep Dives</h2>
@@ -149,6 +149,7 @@
 <li><a href="file.html">File API Documentation (Files and Documents)</a></li>
 <li><a href="media.html">Media Documentation (Audio, Image and Video)</a></li>
 <li><a href="vision.html">Vision Support (Image Upload)</a></li>
+<li><a href="image_editing.html">Image Editing Variation Documentation</a></li>
 <li><a href="authentication.html">Authentication</a>, <a href="configuration.html">Configuration Guide (.har and cookies)</a></li>
 <li><a href="guides/create_provider.html">Advanced: Create your own Provider</a></li>
 <li><a href="pydantic_ai.html">Integrations: LangChain, PydanticAI</a></li>

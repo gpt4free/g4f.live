@@ -86,7 +86,7 @@ For text generation:
         model: 'gpt-4.1',  // Or "gpt-4o", "deepseek-v3"
         messages: [{ role: 'user', content: 'Explain quantum computing' }]
     });
-    console.log(result.choices.message.content);
+    console.log(result.choices[0].message.content);
 </script>
 ```
 
@@ -111,7 +111,7 @@ And for image generation:
 ### 💻 Using CLI Client
 
 ```bash
-$ g4f "Explain quantum computing"
+$ g4f client "Explain quantum computing"
 ```
 
 [CLI Client documentation →](client_cli.md)

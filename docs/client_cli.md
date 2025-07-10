@@ -32,22 +32,22 @@ usage: g4f [-h] [--debug] [-p PROVIDER] [-m MODEL] [-O [FILE]] [-i INSTRUCTIONS]
 
 1. **Text generation**:
    ```bash
-   g4f "Explain quantum computing in simple terms"
+   g4f client "Explain quantum computing in simple terms"
    ```
 
 2. **Image description**:
    ```bash
-   g4f image.jpg "Describe this image"
+   g4f client image.jpg "Describe this image"
    ```
 
 3. **Image generation** (with supported models):
    ```bash
-   g4f -m flux -O output.jpg "A futuristic cityscape"
+   g4f client -m flux -O output.jpg "A futuristic cityscape"
    ```
 
 4. **Continue conversation**:
    ```bash
-   g4f "Now explain it like I'm five"
+   g4f client "Now explain it like I'm five"
    ```
 
 ### Options
@@ -76,7 +76,7 @@ usage: g4f [-h] [--debug] [-p PROVIDER] [-m MODEL] [-O [FILE]] [-i INSTRUCTIONS]
 
 1. **Custom provider with instructions**:
    ```bash
-   g4f -p PollinationsAI -i "You are a helpful science tutor" "Explain photosynthesis"
+   g4f client -p PollinationsAI -i "You are a helpful science tutor" "Explain photosynthesis"
    ```
 
 2. **Debug mode**:
@@ -91,7 +91,7 @@ usage: g4f [-h] [--debug] [-p PROVIDER] [-m MODEL] [-O [FILE]] [-i INSTRUCTIONS]
 
 4. **Save response to file**:
    ```bash
-   g4f -O response.txt "Write a poem about the ocean"
+   g4f -O generator.js "Write a poem generator in js"
    ```
 
 ## Configuration

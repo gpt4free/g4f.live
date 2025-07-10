@@ -488,6 +488,14 @@ class Together extends Client {
         }
     }
 
+    async _regularImageGeneration(params, requestOptions) {
+        if (params.image) {
+            params.image_url = params.image;
+            delete params.image;
+        }
+        return await super._regularImageGeneration(params, requestOptions);
+    }
+
     get models() {
         return {
             list: async () => {

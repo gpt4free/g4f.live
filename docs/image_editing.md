@@ -31,7 +31,7 @@ The library supports multiple providers, including those that require local file
 
 | Provider | Input Type | Notes |
 |----------|------------|-------|
-| **PollinationsAI** | URL | Supports transparent background with `transparent=True` |
+| **PollinationsAI** | URL | Supports transparent background with `transparent=True`.<br> Has `gpt-image` and `flux-kontext` model |
 | **Together** | URL | Uses `flux-kontext-pro` model |
 | **OpenaiAccount** | Local file | Requires authentication |
 | **CopilotAccount** | Local file | Requires authentication |
@@ -75,15 +75,19 @@ async function upload_files(fileInput) {
 
 ## Example Results
 
-| Original Image | CopilotAccount Variant |
-|----------------|------------------------|
-| <img src="images/strawberry.jpg" alt="Original" height="160"> | <img src="images/strawberry_copilot.png" alt="Copilot" height="160"> |
-| | *Prompt: "Generate a variant"* |
+| Original Image |
+|----------------|
+| <img src="images/strawberry.jpg" alt="Original" height="160"> |
 
 | OpenAI Variant | Together Variant |
 |----------------|------------------|
-| <img src="images/strawberry_openai.png" alt="OpenAI" height="160"> | <img src="images/strawberry_together.jpg" alt="Together" height="160"> |
-| *Prompt: "Change to green"* | *Prompt: "Add nature background"* |
+| <img src="images/strawberry_openai.png" alt="OpenAI" height="160"> | <img src="images/strawberry_copilot.png" alt="Together" height="160"> |
+| *Prompt: "Change to green"* | *Prompt: "Generate a variant"* |
+
+| Pollinations.AI Variant | Microsoft Copilot Variant |
+|-------------------------|------------------------|
+| <img src="images/strawberry_pollinations.png" alt="Pollinations.AI" height="160"> | <img src="images/strawberry_together.jpg" alt="Copilot" height="160"> |
+| *Prompt: "Remove background"* | *Prompt: "Add nature background"* |
 
 ---
 

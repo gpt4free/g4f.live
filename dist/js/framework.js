@@ -186,6 +186,9 @@ const renderMarkdown = (content) => {
             if (item.name.endsWith(".mp4") || item.name.endsWith(".webm")) {
                 return `<video controls src="${item.url}"></video>` + (item.text ? `\n${item.text}` : "");
             }
+            if (item.width && item.height) {
+                return `<a href="${item.url}" data-width="${item.width}" data-height="${item.height}"><img src="${item.url.replaceAll("/media/", "/thumbnail/") || item.image_url?.url}" alt="${framework.escape(item.name)}"></a>`;
+            }
             return `[![${item.name}](${item.url.replaceAll("/media/", "/thumbnail/") || item.image_url?.url})](${item.url || item.image_url?.url})`;
         }).join("\n");
     }
@@ -206,7 +209,7 @@ const renderMarkdown = (content) => {
         content = window.sanitizeHtml(content, {
             allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'audio', 'video']),
             allowedAttributes: {
-                a: [ 'href', 'title', 'target' ],
+                a: [ 'href', 'title', 'target', 'data-width', 'data-height' ],
                 i: [ 'class' ],
                 code: [ 'class' ],
                 img: [ 'src', 'alt', 'width', 'height' ],

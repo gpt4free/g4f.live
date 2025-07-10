@@ -20,13 +20,16 @@ lightbox.addFilter('itemData', (itemData, index) => {
         itemData.height = itemData.element.videoHeight;
         return itemData;
     }
-    itemData.src = itemData.element.href;
+    itemData.width = itemData.element.dataset.width;
+    itemData.height = itemData.element.dataset.height;
     const img = itemData.element.querySelector('img');
     if (img) {
-        itemData.width = img.naturalWidth || 1024;
-        itemData.height = img.naturalHeight || 1024;
-        itemData.src = itemData.src || img.src;
+        itemData.src = itemData.src || img.getAttribute('src');
+        itemData.width = itemData.width || img.naturalWidth || 1024;
+        itemData.height = itemData.height || img.naturalHeight || 1024;
     }
+    itemData.src = itemData.src.replaceAll("/thumbnail/", "/media/");
+    console.log(`Item data for index ${index}:`, itemData);
     return itemData;
 });
 lightbox.on('uiRegister', function() {

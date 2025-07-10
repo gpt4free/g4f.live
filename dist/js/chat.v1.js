@@ -1861,9 +1861,14 @@ const load_conversation = async (conversation) => {
         el.onloadedmetadata = () => {
             if (el.videoWidth > 0) {
                 el.muted = true;
-                el.loop = true;
-                el.autoplay = true;
-                el.play()
+                el.onclick = () => el.click();
+                el.onmouseover = () => {
+                    el.loop = true;
+                    el.play()
+                };
+                el.onmouseleave = () => {
+                    el.loop = false;
+                };
             } else {
                 el.style.width = "300px";
                 el.style.height = "40px";

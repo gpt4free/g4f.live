@@ -13,17 +13,20 @@ const lightbox = new PhotoSwipeLightbox({
     pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe'),
 });
 lightbox.addFilter('itemData', (itemData, index) => {
-    if (itemData.element.videoWith) {
+    if (itemData.element.videoWidth) {
         itemData.type = 'video';
-        itemData.src = itemData.element.src;
+        itemData.videoSrc = itemData.element.src;
         itemData.width = itemData.element.videoWidth;
         itemData.height = itemData.element.videoHeight;
         return itemData;
     }
+    itemData.src = itemData.element.href;
     const img = itemData.element.querySelector('img');
-    itemData.width = img.naturalWidth || 1024;
-    itemData.height = img.naturalHeight || 1024;
-    itemData.src = itemData.element.href || img.src;
+    if (img) {
+        itemData.width = img.naturalWidth || 1024;
+        itemData.height = img.naturalHeight || 1024;
+        itemData.src = itemData.src || img.src;
+    }
     return itemData;
 });
 lightbox.on('uiRegister', function() {
@@ -38,6 +41,10 @@ lightbox.on('uiRegister', function() {
                 const currSlideElement = lightbox.pswp.currSlide.data.element;
                 if (currSlideElement) {
                     const img = currSlideElement.querySelector('img');
+                    if (!img) {
+                        el.innerHTML = '';
+                        return;
+                    }
                     const download = document.createElement("a");
                     download.setAttribute("href", img.getAttribute('src'));
                     let extension = img.getAttribute('src').includes(".webp") ? ".webp" : ".jpg";

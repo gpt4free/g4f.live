@@ -385,21 +385,8 @@ class Together extends Client {
         
         this.activationEndpoint = "https://www.codegeneration.ai/activate-v2";
         this.modelsEndpoint = "https://api.together.xyz/v1/models";
-        this.modelConfigs = {};
+        this._modelConfigs = {};
         this._cachedModels = [];
-        this.imageModels = [];
-        
-        this.visionModels = [
-            'Qwen/Qwen2-VL-72B-Instruct',
-            'Qwen/Qwen2.5-VL-72B-Instruct',
-            'arcee-ai/virtuoso-medium-v2',
-            'arcee_ai/arcee-spotlight',
-            'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
-            'meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo',
-            this.defaultModel,
-            'meta-llama/Llama-4-Scout-17B-16E-Instruct',
-            'meta-llama/Llama-Vision-Free',
-        ];
     }
 
     async getApiKey() {
@@ -430,9 +417,9 @@ class Together extends Client {
         }
     }
 
-    _getModel(model) {
+    _getModel(model, defaultModel) {
         if (!model) {
-            return this.defaultModel;
+            model = defaultModel;
         }
         
         if (this.modelAliases[model]) {
@@ -450,8 +437,7 @@ class Together extends Client {
     }
 
     _getModelConfig(model) {
-        const resolvedModel = this._getModel(model);
-        return this.modelConfigs[resolvedModel] || {};
+        return this._modelConfigs[model] || {};
     }
 
     async _loadModels() {
@@ -476,14 +462,13 @@ class Together extends Client {
             const modelsData = await response.json();
             
             this._cachedModels = modelsData;
-            this.imageModels = [];
-            this.modelConfigs = {};
+            this._modelConfigs = {};
             
             for (const model of modelsData) {
                 if (!model?.id) continue;
                 const modelId = model.id;                
                 if (model.config) {
-                    this.modelConfigs[modelId] = {
+                    this._modelConfigs[modelId] = {
                         stop: model.config.stop || [],
                         chatTemplate: model.config.chat_template,
                         bosToken: model.config.bos_token,
@@ -491,7 +476,7 @@ class Together extends Client {
                         contextLength: model.context_length
                     };
                 } else {
-                    this.modelConfigs[modelId] = {};
+                    this._modelConfigs[modelId] = {};
                 }
             }
             return this._cachedModels;
@@ -522,11 +507,7 @@ class Together extends Client {
                         await this._loadModels();
                     }
                     
-                    if (params.model) {
-                        params.model = this._getModel(params.model);
-                    } else {
-                        params.model = this.defaultModel;
-                    }
+                    params.model = this._getModel(params.model, this.defaultModel);
                     
                     const modelConfig = this._getModelConfig(params.model);
                     if (!params.stop && modelConfig.stop && modelConfig.stop.length > 0) {
@@ -561,11 +542,7 @@ class Together extends Client {
                 if (this._cachedModels.length < 1) {
                     await this.loadModels();
                 }
-                params.model = params.model ? this._getModel(params.model) : this.defaulImageModel;
-                if (!this.imageModels.includes(params.model)) {
-                    console.warn(`Model '${params.model}' is not a valid image model. Falling back to default.`);
-                    params.model = this.defaulImageModel
-                }
+                params.model = this._getModel(params.model, this.defaulImageModel);
                 return this._regularImageGeneration(params, { headers: this.extraHeaders });
             }
         };

@@ -13,6 +13,19 @@
       height: 100vh;
       background: #f8f9fa;
     }
+    .container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      max-width: 1200px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .block {
+      display: block;
+    }
     #topbar {
       padding: 1rem;
       background: #e9ecef;
@@ -73,6 +86,9 @@
       padding: 0.4rem;
       font-size: 0.9rem;
     }
+    select {
+      max-width: 300px;
+    }
     code {
       background: #eee;
       padding: 2px 4px;
@@ -88,8 +104,9 @@
   </style>
 </head>
 <body>
+<div class="container">
 <div id="topbar">
-  <div>
+  <div class="block">
     <label>Provider:
       <select id="provider">
         <option value="pollinations">Pollinations.AI</option>
@@ -100,11 +117,15 @@
         <option value="custom">Custom (http://localhost:8080/v1)</option>
       </select>
     </label>
-    <label>API Key: <input type="text" id="apiKey" placeholder="Optional" /></label>
   </div>
-  <label>Model:
+  <div class="block">
+    <label>Model:
     <select id="modelSelect"><option>Loading...</option></select>
   </label>
+  </div>
+  <div class="block">
+      <label>API Key: <input type="text" id="apiKey" placeholder="Optional" /></label>
+  </div>
 </div>
 
 <div id="chat"></div>
@@ -113,6 +134,7 @@
   <input type="text" id="input" placeholder="Ask something..." autocomplete="off" />
   <button id="submit">Send</button>
 </form>
+</div>
 
 <script type="module">
   import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';

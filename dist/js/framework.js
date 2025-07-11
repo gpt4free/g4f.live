@@ -262,6 +262,16 @@ async function getHeaders() {
     }
     return headers;
 }
+async function includeAdsense(params) {
+    const script = document.createElement("script");
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5896143631849307";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    document.head.appendChild(script);
+}
+if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
+    includeAdsense().catch(console.error);
+}
 framework.query = query;
 framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;

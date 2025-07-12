@@ -1203,7 +1203,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         regenerate_button.classList.remove("regenerate-hidden");
     }
     const media = [];
-    if (mediaRecorder.wavBlob) {
+    if (mediaRecorder && mediaRecorder.wavBlob) {
         const data = await toBase64(mediaRecorder.wavBlob);
         media.push({
             "type": "input_audio",

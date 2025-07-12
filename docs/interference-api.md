@@ -2,10 +2,10 @@
 
 ## Table of Contents
    - [Introduction](#introduction)
-   - [Running the Inference API](#running-the-inference-api)
+   - [Running the Inference API](#running-the-interference-api)
    - [From PyPI Package](#from-pypi-package)
    - [From Repository](#from-repository)
-   - [Using the Inference API](#using-the-inference-api)
+   - [Using the Inference API](#using-the-interference-api)
    - [Basic Usage](#basic-usage)
    - [Using the OpenAI Library](#using-the-openai-library)
    - [With Requests Library](#with-requests-library)
@@ -130,7 +130,7 @@ else:
 
 **Notes:**
 - The `api_key` is required by the OpenAI Python library. If your provider does not require an API key, you can set it to `"secret"`. This value will be ignored by providers in G4F.
-- Replace `"http://localhost:1337/v1"` with the appropriate URL for your custom or local inference API.
+- Replace `"http://localhost:1337/v1"` with the appropriate URL for your custom or local interference API.
 
 ---
   

@@ -2854,8 +2854,7 @@ async function on_api() {
                 <option value="Video">Video Provider</option>
                 <option value="HuggingFace">HuggingFace</option>
                 <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
-                <option value="HuggingSpace">HuggingSpace</option>
-                <option value="HuggingChat">HuggingChat</option>`;
+                <option value="HuggingSpace">HuggingSpace</option>`;
             document.getElementById("refine")?.parentElement.classList.add("hidden")
             const track_usage = document.getElementById("track_usage");
             track_usage.checked = true;

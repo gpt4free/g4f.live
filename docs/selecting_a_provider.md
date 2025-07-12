@@ -128,7 +128,7 @@ By specifying providers in a space-separated string, you can efficiently target 
 
 ---
 
-[Go to Inference API Docs](inference-api.md)
+[Go to Inference API Docs](interference-api.md)
 
 ---
 

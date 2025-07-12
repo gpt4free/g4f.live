@@ -4,10 +4,12 @@ class Recorder {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.source = this.audioContext.createMediaStreamSource(stream);;
         this.processor = null;
+        this.mediaChunks = [];
+        this.wavBlob = null;
     }
 
     start() {
-        mediaChunks = []; // Reset stored data
+        this.mediaChunks = []; // Reset stored data
         
         // Create script processor to capture audio buffers
         this.processor = this.source.context.createScriptProcessor(4096, 1, 1);
@@ -15,7 +17,7 @@ class Recorder {
         this.processor.onaudioprocess = (e) => {
             // Convert Float32 audio data to Int16 (WAV uses 16-bit)
             const data = this._floatTo16BitPCM(e.inputBuffer.getChannelData(0));
-            mediaChunks.push(data);
+            this.mediaChunks.push(data);
         };
         
         // Connect nodes
@@ -29,8 +31,7 @@ class Recorder {
         this.source.disconnect();
         
         // Generate WAV header + audio data
-        const wavBlob = this._encodeWAV(mediaChunks);
-        mediaChunks = [wavBlob]; // Store full WAV Blob
+        this.wavBlob = this._encodeWAV(this.mediaChunks);
     }
 
     // Convert Float32 to Int16 (WAV uses 16-bit integers)

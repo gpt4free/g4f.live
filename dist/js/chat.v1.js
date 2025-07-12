@@ -89,7 +89,6 @@ let privateConversation = null;
 let suggestions = null;
 let lastUpdated = null;
 let mediaRecorder = null;
-let mediaChunks = [];
 let stopRecognition = ()=>{};
 let providerModelSignal = null;
 
@@ -576,7 +575,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
             ${framework.markdown(message)}
             </div>
             <div class="count">
-                ${countTokensEnabled ? count_words_and_tokens(message, get_selected_model()?.value) : ""}
+                ${countTokensEnabled ? count_words_and_tokens(message, get_selected_model()) : ""}
             </div>
         </div>
     `;
@@ -1056,7 +1055,7 @@ const toUrl = async (file)=>{
 
 const ask_gpt = async (message_id, message_index = -1, regenerate = false, provider = null, model = null, action = null, message = null) => {
     if (!model && !provider) {
-        model = get_selected_model()?.value || null;
+        model = get_selected_model();
         provider = providerSelect.options[providerSelect.selectedIndex]?.value;
     }
     let conversation = await get_conversation(window.conversation_id);
@@ -1204,17 +1203,17 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         regenerate_button.classList.remove("regenerate-hidden");
     }
     const media = [];
+    if (mediaRecorder.wavBlob) {
+        const data = await toBase64(mediaRecorder.wavBlob);
+        media.push({
+            "type": "input_audio",
+            "input_audio": {
+                "data": data.split(",")[1],
+                "format": "wav"
+            }
+        });
+    }
     if (provider == "Puter" || provider == "Live") {
-        if (mediaChunks.length > 0) {
-            const data = await toBase64(mediaChunks.pop());
-            media.push({
-                "type": "input_audio",
-                "input_audio": {
-                    "data": data.split(",")[1],
-                    "format": "wav"
-                }
-            });
-        }
         for (const file of Object.values(image_storage)) {
             media.push({
                 "type": "image_url",
@@ -1239,11 +1238,14 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     if (messages.length > 0) {
         last_message = messages[messages.length-1];
         last_message.content = media.length > 0 ? [
-            {"type": "text", "text": last_message.content},
+            ...last_message.content,
             ...media
         ] : last_message.content;
     } else {
-        messages = media;
+        messages = [{
+            role: "user",
+            content: media.length > 0 ? media : message || ""
+        }];
     }
     if (!message) {
         message = last_message?.content;
@@ -2501,9 +2503,9 @@ let countFocus = userInput;
 const count_input = async () => {
     if (countTokensEnabled && countFocus.value) {
         if (window.matchMedia("(pointer:coarse)")) {
-            inputCount.innerText = `(${count_tokens(get_selected_model()?.value, countFocus.value)} tokens)`;
+            inputCount.innerText = `(${count_tokens(get_selected_model(), countFocus.value)} tokens)`;
         } else {
-            inputCount.innerText = count_words_and_tokens(countFocus.value, get_selected_model()?.value);
+            inputCount.innerText = count_words_and_tokens(countFocus.value, get_selected_model());
         }
     } else {
         inputCount.innerText = "";
@@ -3031,11 +3033,17 @@ audioButton.addEventListener('click', async (event) => {
         if(mediaRecorder.stream) {
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
         }
-        mediaRecorder = null;
-        if (providerSelect.value == "Live") {
+        if (mediaRecorder.wavBlob) {
             await add_conversation(window.conversation_id);
-            await ask_gpt(get_message_id(), -1, false, "Live", "openai-audio", "next");
+            provider = providerSelect.value;
+            model = get_selected_model();
+            if (provider == "Live") {
+                model = "openai-audio";
+            }
+            await ask_gpt(get_message_id(), -1, false, provider, model, "next");
+            mediaRecorder.wavBlob = null;
         }
+        mediaRecorder = null;
         return;
     }
 
@@ -3046,7 +3054,7 @@ audioButton.addEventListener('click', async (event) => {
         audio: true
     });
 
-    if (providerSelect.value == "Live") {
+    if (modelProvider.options[modelProvider.selectedIndex].dataset.audio) {
         mediaRecorder = new Recorder(stream);
         mediaRecorder.start();
         return;
@@ -3286,16 +3294,15 @@ chatPrompt?.addEventListener("input", async () => {
 });
 
 function get_selected_model() {
+    let model = null;
     if (custom_model.value) {
         return custom_model;
     } else if (modelProvider.selectedIndex >= 0) {
-        return modelProvider.options[modelProvider.selectedIndex];
+        model = modelProvider.options[modelProvider.selectedIndex];
     } else if (modelSelect.selectedIndex >= 0) {
         model = modelSelect.options[modelSelect.selectedIndex];
-        if (model.value) {
-            return model;
-        }
     }
+    return model.value ? model.value : null;
 }
 
 async function api(ressource, args=null, files=null, message_id=null, finish_message=null) {
@@ -3581,6 +3588,9 @@ async function load_provider_models(provider=null) {
                     option.value = model.model;
                     option.dataset.label = model.model;
                     option.text = model.label + (model.count > 1 ? ` (${model.count}+)` : "") + get_modelTags(model);
+                    if (model.audio) {
+                        option.dataset.audio = "true";
+                    }
                     group.appendChild(option);
                     if (model.default) {
                         defaultIndex = i;
@@ -3608,6 +3618,7 @@ async function load_provider_models(provider=null) {
             const value_option = modelProvider.querySelector(`option[value="${key}"]`)
             if (value_option) {
                 option.text = value_option.text;
+                option.dataset.audio = value_option.dataset.audio;
             }
             optgroup.appendChild(option);
             if (optgroup.childElementCount > 5) {

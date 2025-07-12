@@ -1869,6 +1869,13 @@ const load_conversation = async (conversation) => {
                 el.onmouseleave = () => {
                     el.loop = false;
                 };
+                el.ontouchstart = () => {
+                    el.loop = true;
+                    el.play();
+                };
+                el.ontouchend = () => {
+                    el.loop = false;
+                };
             } else {
                 el.style.width = "300px";
                 el.style.height = "40px";
@@ -2838,6 +2845,7 @@ async function on_api() {
         });
         if (is_demo) {
             providerSelect.innerHTML += `
+                <option value="Azure">Azure</option>
                 <option value="DeepSeekAPI">DeepSeek Provider</option>
                 <option value="Cloudflare">Cloudflare</option>
                 <option value="PerplexityLabs">Perplexity Labs</option>

@@ -45,6 +45,7 @@ const translationSnipptes = [
 ];
 
 let login_urls_storage = {
+    "Azure": ["Azure", "", []],
     "HuggingFace": ["HuggingFace", "https://huggingface.co/settings/tokens", ["HuggingFaceMedia"]],
     "HuggingSpace": ["HuggingSpace", "", []],
     "PollinationsAI": ["Pollinations AI", "https://auth.pollinations.ai", ["Live"]],

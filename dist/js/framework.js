@@ -46,11 +46,15 @@ framework.connectToBackend = async (connectStatus) => {
 framework.translationKey = "translations" + document.location.pathname;
 framework.translations = JSON.parse(localStorage.getItem(framework.translationKey) || "{}");
 framework.translateElements = function (elements = null) {
-    if (!framework.translations) {
+    if (!framework.translations && !document.body.classList.contains("translate")) {
         return;
     }
     elements = elements || document.querySelectorAll("p:not(:has(*)), a:not(:has(*)), h1, h2, h3, h4, h5, h6, button:not(:has(*)), title, span:not(:has(*)), strong, a:not(:has(*)), [data-translate], input, textarea, label:not(:has(span, a, i)), i, option[value='']");
     elements.forEach(function (element) {
+        let parent = element.parentElement;
+        if (element.classList.contains("notranslate") || parent && parent.classList.contains("notranslate")) {
+            return;
+        }
         if (element.textContent.trim()) {
             element.textContent = framework.translate(element.textContent);
         }

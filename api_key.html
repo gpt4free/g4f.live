@@ -103,14 +103,9 @@
     text-decoration: underline;
   }
 </style>
-<script src="dist/js/framework.js"></script>
-<script>
-    framework.init({
-        translations: true
-    })
-</script>
+<script async src="dist/js/framework.js"></script>
 </head>
-<body>
+<body class="translate">
   <main class="container" role="main" aria-label="API Key Generator and Donation Status">
     <h1>Generate Your API Key</h1>
     <label for="userInput">User ID</label>
@@ -127,7 +122,7 @@
     </div>
     <button id="generateBtn" aria-label="Generate API Key">Generate API Key</button>
     <section aria-live="polite" aria-atomic="true" aria-relevant="text">
-      <input class="output" type="text" id="apiBaseUrl" width="100%" placeholder="Base URL"/>
+      <input class="output notranslate" type="text" id="apiBaseUrl" width="100%" placeholder="Base URL"/>
       <textarea id="apiKeyOutput" class="output" role="textbox" aria-readonly="true" tabindex="0" aria-label="Encrypted API Key Output"></textarea>
     </section>
 

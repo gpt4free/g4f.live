@@ -86,6 +86,10 @@ class Client {
                 if (!response.ok) {
                     throw new Error(`Proxy fetch failed with status ${response.status}`);
                 }
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && !contentType.includes('application/json')) {
+                    throw new Error(`Expected JSON response, got ${contentType}`);
+                }
                 return response
             } catch (error) {
                 console.warn(`CORS proxy attempt ${attempt + 1}/${maxAttempts} failed for ${targetUrl}:`, error.message);
@@ -222,10 +226,10 @@ class Client {
 
     async _regularImageGeneration(params, requestOptions) {
         const response = await fetch(this.imageEndpoint, {
-              method: 'POST',
-              body: JSON.stringify(params),
-              ...requestOptions
-          });
+            method: 'POST',
+            body: JSON.stringify(params),
+            ...requestOptions
+        });
         if (!response.ok) {
             const errorBody = await response.text();
             console.error("Image generation failed. Server response:", errorBody);

@@ -3541,6 +3541,7 @@ async function load_provider_models(provider=null) {
     if (!provider) {
         provider = providerSelect.value;
     }
+    modelProvider.innerHTML = '';
     if (provider == "Live") {
         modelSelect.classList.add("hidden");
         modelProvider.classList.remove("hidden");

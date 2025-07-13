@@ -91,17 +91,15 @@
 <body>
     <img id="image-feed" class="hidden" alt="Image Feed">
     <video id="video-feed" class="hidden" alt="Video Feed" autoplay muted></video>
-    <video id="preload" class="hidden" alt="" autoplay muted></video>
 
     <!-- Gradient Background Circle -->
     <div class="gradient"></div>
     <script>
         (async () => {
-            const videoUrl = "/search/video?skip=";
+            const videoUrl = window.location.origin == "https://g4f.dev" ? "/background/video_{0}.mp4" : (framework.backendUrl + "/search/video?skip={0}");
             const url = "https://image.pollinations.ai/feed";
             const imageFeed = document.getElementById("image-feed");
             const videoFeed = document.getElementById("video-feed");
-            const preload = document.getElementById("preload");
             const gradient = document.querySelector(".gradient");
             const images = [];
             let es = null;
@@ -121,20 +119,18 @@
                     gradient.classList.remove("hidden");
                     return;
                 }
-                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
+                videoFeed.src = videoUrl.replace("{0}", skipVideo);
                 skipVideo++;
             };
             videoFeed.onended = () => {
-                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
-                preload.src = framework.backendUrl + videoUrl + (skipVideo + 1);
+                videoFeed.src = videoUrl.replace("{0}", skipVideo);
                 skipVideo++;
             };
             videoFeed.onclick = () => {
-                videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
+                videoFeed.src = videoUrl.replace("{0}", skipVideo);
                 skipVideo++;
             };
-            videoFeed.src = framework.backendUrl + videoUrl + skipVideo;
-            preload.src = framework.backendUrl + videoUrl + (skipVideo + 1);
+            videoFeed.src = videoUrl.replace("{0}", skipVideo);
             skipVideo++;
             function initES() {
                 if (es == null || es.readyState == EventSource.CLOSED) {

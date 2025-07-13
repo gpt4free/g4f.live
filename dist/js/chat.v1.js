@@ -1126,7 +1126,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 usage = usage_storage[message_id];
             }
             // Calculate usage if we don't have it jet
-            if (countTokensEnabled && document.getElementById("track_usage").checked && !usage.prompt_tokens && window.GPTTokenizer_cl100k_base) {
+            if (countTokensEnabled && !usage.prompt_tokens && window.GPTTokenizer_cl100k_base) {
                 const prompt_token_model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
                 const filtered = messages.filter((item)=>!Array.isArray(item.content) && item.content);
                 const prompt_tokens = GPTTokenizer_cl100k_base?.encodeChat(filtered, prompt_token_model).length;
@@ -1170,7 +1170,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             delete finish_storage[message_id];
             delete usage_storage[message_id];
             // Send usage to the server
-            if (document.getElementById("track_usage").checked) {
+            if (!usage_storage[message_id] || !usage_storage[message_id].prompt_tokens) {
                 usage = {
                     model: message_provider?.model,
                     provider: message_provider?.name,
@@ -2858,10 +2858,7 @@ async function on_api() {
                 <option value="HuggingFace">HuggingFace</option>
                 <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
                 <option value="HuggingSpace">HuggingSpace</option>`;
-            document.getElementById("refine")?.parentElement.classList.add("hidden")
-            const track_usage = document.getElementById("track_usage");
-            track_usage.checked = true;
-            track_usage.disabled = true;
+            document.getElementById("refine")?.parentElement.classList.add("hidden");
             Array.from(modelSelect.querySelectorAll(':not([data-providers])')).forEach((option)=>{
                 if (!option.disabled && option.value) {
                     option.remove();

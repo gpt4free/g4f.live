@@ -113,8 +113,8 @@
         <option value="deepinfra">DeepInfra</option>
         <option value="huggingface">HuggingFace</option>
         <option value="together">Together</option>
-        <option value="puter">Puter</option>
-        <option value="custom">Custom (http://localhost:8080/v1)</option>
+        <option value="puter">Puter.js</option>
+        <option value="azure">Azure (http://g4f.dev/api/Azure)</option>
       </select>
     </label>
   </div>
@@ -174,9 +174,8 @@
       case 'puter':
         ClientClass = Puter;
         break;
-      case 'custom':
+      case 'azure':
         ClientClass = Client;
-        options.baseUrl = 'http://localhost:8080/v1';
         break;
     }
 

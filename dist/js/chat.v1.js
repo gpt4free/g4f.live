@@ -3317,6 +3317,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         return pywebview.api[`get_${ressource}`]();
     }
     let headers = {};
+    let user = appStorage.getItem("user");
+    if (user) {
+        headers['x-user'] = user;
+    }
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {

@@ -1412,12 +1412,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         return generate_text(message, model);
     } 
     try {
-        let apiKey;
-        if (is_demo && !provider) {
-            apiKey = localStorage.getItem("HuggingFace-api_key");
-        } else {
-            apiKey = get_api_key_by_provider(provider);
-        }
+        const apiKey = get_api_key_by_provider(provider);
         const downloadMedia = document.getElementById("download_media")?.checked;
         let apiBase;
         if (provider == "Custom") {
@@ -1429,10 +1424,14 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         const ignored = Array.from(settings.querySelectorAll("input.provider:not(:checked)")).map((el)=>el.value);
         const extraBody = {};
         for (el of document.getElementById(`${provider}-form`)?.querySelectorAll(".saved input, .saved textarea") || []) {
-            let value = el.type == "checkbox" ? el.checked : el.value;
-            try {
-                value = await JSON.parse(value);
-            } catch (e) {
+            let value;
+            if (el.type == "checkbox") {
+                value = el.checked;
+            } else {
+                value = el.value;
+                try {
+                    value = await JSON.parse(value);
+                } catch (e) {}
             }
             extraBody[el.name] = value;
         };
@@ -1478,7 +1477,7 @@ setInterval(() => {
     if (autoScrollEnabled) {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
-}, 1000);
+}, 500);
 
 chatBody.addEventListener('scroll', () => {
     const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10;
@@ -1929,9 +1928,10 @@ async function safe_load_conversation(conversation_id) {
         }
     }
     if (!is_running) {
-        let conversation = await get_conversation(conversation_id);
-        return await load_conversation(conversation);
+        await load_conversation(await get_conversation(conversation_id));
+        return true;
     }
+    return false;
 }
 
 async function get_conversation(conversation_id) {
@@ -2887,7 +2887,7 @@ async function on_api() {
         slide_systemPrompt_icon.classList[checked ? "add": "remove"]("fa-angles-down");
         chatPrompt.classList[checked ? "add": "remove"]("hidden");
     };
-    if (appStorage.getItem("hide_systemPrompt") == "true") {
+    if (appStorage.getItem("hide-systemPrompt") == "true") {
         update_systemPrompt_icon(true);
     }
     slide_systemPrompt_icon.addEventListener("click", ()=>{

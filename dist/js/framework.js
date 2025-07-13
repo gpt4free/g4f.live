@@ -237,6 +237,41 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     }
     return defaultValue;
 }
+async function gen() {
+    const user = userInput.value.trim();
+    if (!user) {
+    showMessage('Please enter a valid user ID.');
+    return;
+    }
+    document.getElementById('generateBtn').disabled = true;
+    document.getElementById('apiBaseUrl').value = framework.backendUrl + "/api/Azure"
+    showMessage('Loading...');
+    if (!localStorage.getItem(userKey)) localStorage.setItem(userKey, user);
+
+    try {
+    const publicKey = await framework.getPublicKey();
+
+    const encrypt = new JSEncrypt();
+    encrypt.setPublicKey(publicKey.public_key);
+
+    const payload = {
+        data: publicKey.data,
+        user,
+        timestamp: Date.now(),
+        user_agent: navigator.userAgent
+    };
+    const payloadStr = JSON.stringify(payload);
+    const encrypted = encrypt.encrypt(payloadStr);
+
+    if(!encrypted) {
+        throw new Error('Encryption failed. Please try again.');
+    }
+
+    showMessage(encrypted);
+    } catch (error) {
+    showMessage('Error generating API key: ' + error.message);
+    }
+}
 async function getPublicKey() {
     const response = await fetch(`${framework.backendUrl}/backend-api/v2/public-key`);
     if (response.ok) {
@@ -277,3 +312,4 @@ framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
+framework.getPublicKey = getPublicKey;

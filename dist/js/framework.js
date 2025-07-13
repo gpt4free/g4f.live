@@ -283,7 +283,7 @@ async function getHeaders() {
     const headers = {}
     const user = localStorage.getItem("user");
     if (user) {
-        headers.x_user = user;
+        headers["x-user"] = user;
     }
     try {
         const encrypt = new JSEncrypt();

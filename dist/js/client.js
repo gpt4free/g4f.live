@@ -46,7 +46,11 @@ class CorsProxyManager {
 class Client {
     constructor(options = {}) {
         if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
-            throw new Error('Client requires at least baseUrl, apiEndpoint, or apiKey to be set.');
+            if (localStorage && localStorage.getItem('g4f.dev-baseUrl')) {
+                options.apiKey = localStorage.getItem("Azure-api_key")
+            } else {
+                throw new Error('Client requires at least baseUrl, apiEndpoint, or apiKey to be set.');
+            }
         }
         this.proxyManager = new CorsProxyManager();
         this.baseUrl = options.baseUrl || 'https://host.g4f.dev/api/Azure';

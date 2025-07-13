@@ -46,7 +46,7 @@ class CorsProxyManager {
 class Client {
     constructor(options = {}) {
         if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
-            if (localStorage && localStorage.getItem('g4f.dev-baseUrl')) {
+            if (localStorage && localStorage.getItem("Azure-api_key")) {
                 options.apiKey = localStorage.getItem("Azure-api_key")
             } else {
                 throw new Error('Client requires at least baseUrl, apiEndpoint, or apiKey to be set.');

@@ -2454,7 +2454,8 @@ function update_message(content_map, message_id, content=null) {
         
         // Use progressive rendering for large content
         if (content.length > 10000) {
-            renderLargeMessage(content_map.inner, content);
+            //renderLargeMessage(content_map.inner, content);
+            content_map.inner.innerHTML = content;
         } else {
             content_map.inner.innerHTML = content;
         }

@@ -115,6 +115,13 @@ async function fetchUsageForDate(date) {
         return { data: [], url };
     }
 }
+function get_total_tokens(row) {
+    console.log(row);
+    if (row.model && row.model.includes("flux")) {
+        return row.completion_tokens || 0;
+    }
+    return (row.total_tokens || 0)
+}
 function userSummary(data) {
     // user => { completions, tokens }
     let summary = new Map();
@@ -124,7 +131,7 @@ function userSummary(data) {
             summary.set(user, { user, completions: 0, tokens: 0 });
         let s = summary.get(user);
         s.completions += 1;
-        s.tokens += (row.total_tokens || 0);
+        s.tokens += get_total_tokens(row);
     }
     return Array.from(summary.values());
 }
@@ -201,7 +208,7 @@ async function fetchAndDisplay() {
     let users = new Set(allData.map(r => (r.user && r.user.trim())).filter(Boolean));
     document.getElementById("userCount").innerText = users.size;
     document.getElementById("totalCompletions").innerText = allData.length;
-    let totalTokens = allData.reduce((s, r) => s + (r.total_tokens || 0), 0);
+    let totalTokens = allData.reduce((s, r) => s + get_total_tokens(r), 0);
     document.getElementById("totalTokens").innerText = totalTokens.toLocaleString();
     // Per day for chart
     let perDay = {};
@@ -209,7 +216,7 @@ async function fetchAndDisplay() {
         let d = r.date;
         if (!perDay[d]) perDay[d] = { count: 0, tokens: 0 };
         perDay[d].count += 1;
-        perDay[d].tokens += (r.total_tokens || 0);
+        perDay[d].tokens += get_total_tokens(r);
     });
     let days = Object.keys(perDay).sort();
     let values = days.map(d => perDay[d].count);

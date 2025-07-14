@@ -152,6 +152,9 @@
   let client = null;
   let messages = [];
 
+  // Set the initial height of the container to fit the viewport
+  document.querySelector(".container").style.maxHeight = window.innerHeight + "px";
+
   async function initClient() {
     const provider = providerSelect.value;
     const apiKey = apiKeyInput.value.trim();
@@ -250,8 +253,20 @@
         });
 
         let fullResponse = '';
+        let isReasoning = false;
         for await (const chunk of stream) {
-          const delta = chunk.choices[0]?.delta?.content || chunk.choices[0]?.delta?.reasoning_content || '';
+          let delta;
+          if (chunk.choices[0]?.delta?.reasoning_content) {
+            delta = chunk.choices[0]?.delta?.reasoning_content;
+            isReasoning = true;
+          } else {
+            delta = chunk.choices[0]?.delta?.content || '';
+            if (isReasoning) {
+              isReasoning = false;
+              delta = '\n\n---\n\n' + delta;
+            }
+          }
+          if (!delta) continue; // Skip empty chunks
           fullResponse += delta;
           assistantEl.innerHTML = marked.parse(fullResponse);
           chat.scrollTop = chat.scrollHeight;

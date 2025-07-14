@@ -3452,6 +3452,9 @@ async function read_response(response, message_id, provider, finish_message) {
 function get_api_key_by_provider(provider) {
     let api_key = null;
     if (provider) {
+        if (provider == "Azure" && framework.backendUrl != window.location.origin) {
+            return api_key;
+        }
         if (provider == "AnyProvider") {
             return {
                 "PollinationsAI": appStorage.getItem("PollinationsAI-api_key"),

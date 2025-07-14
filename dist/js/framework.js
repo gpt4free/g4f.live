@@ -247,7 +247,6 @@ async function gen() {
     showMessage('Please enter a valid user ID.');
     return;
     }
-    document.getElementById('generateBtn').disabled = true;
     document.getElementById('apiBaseUrl').value = framework.backendUrl + "/api/Azure"
     showMessage('Loading...');
     if (!localStorage.getItem(userKey)) localStorage.setItem(userKey, user);
@@ -270,7 +269,7 @@ async function gen() {
     if(!encrypted) {
         throw new Error('Encryption failed. Please try again.');
     }
-
+    localStorage.setItem("Azure-api_key", encrypted);
     showMessage(encrypted);
     } catch (error) {
     showMessage('Error generating API key: ' + error.message);

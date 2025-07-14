@@ -132,9 +132,7 @@ class Client {
         list: async () => {
           const response = await fetch(`${this.baseUrl}/models`, {
             method: 'GET',
-            headers: this.extraHeaders,
-            mode: 'cors',
-            credentials: 'omit'
+            headers: this.extraHeaders
           });
           
           if (!response.ok) {

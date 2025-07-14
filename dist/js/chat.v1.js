@@ -2863,6 +2863,7 @@ async function on_api() {
                 <option value="Together">Together</option>
                 <option value="GeminiPro">Gemini Pro</option>
                 <option value="Video">Video Provider</option>
+                <option value="YouTube">Youtube Provider</option>
                 <option value="HuggingFace">HuggingFace</option>
                 <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
                 <option value="HuggingSpace">HuggingSpace</option>`;

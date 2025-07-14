@@ -102,11 +102,15 @@
         }
         
         h1 {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             margin-bottom: 1rem;
+            font-weight: 800;
             background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
         }
         
         .subtitle {
@@ -241,6 +245,7 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
             outline: none;
+            width: calc(100% - 60px);
         }
         
         .chat-input button {

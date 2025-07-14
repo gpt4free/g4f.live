@@ -114,7 +114,9 @@ class Client {
                 const requestOptions = {
                     method: 'POST',
                     headers: this.extraHeaders,
-                    body: JSON.stringify(params)
+                    body: JSON.stringify(params),
+                    mode: 'cors',
+                    credentials: 'include'
                 };
                 const response = await fetch(this.apiEndpoint, requestOptions);
                 if (params.stream) {
@@ -132,7 +134,9 @@ class Client {
         list: async () => {
           const response = await fetch(`${this.baseUrl}/models`, {
             method: 'GET',
-            headers: this.extraHeaders
+            headers: this.extraHeaders,
+            mode: 'cors',
+            credentials: 'include'
           });
           
           if (!response.ok) {

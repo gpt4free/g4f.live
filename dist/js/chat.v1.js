@@ -71,6 +71,7 @@ framework.init({
 
 let provider_storage = {};
 let message_storage = {};
+let content_alt_storage = {};
 let controller_storage = {};
 let content_storage = {};
 let error_storage = {};
@@ -945,6 +946,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "content") {
         message_storage[message_id] += message.content;
         if (message.urls) {
+            content_alt_storage[message_id] = message.alt;
             const div = document.createElement("div");
             div.innerHTML = framework.markdown(message.content);
             const media = div.querySelector("img, video")
@@ -1128,8 +1130,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             // Calculate usage if we don't have it jet
             if (countTokensEnabled && !usage.prompt_tokens && window.GPTTokenizer_cl100k_base) {
                 const prompt_token_model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
-                const filtered = messages.filter((item)=>!Array.isArray(item.content) && item.content);
-                const prompt_tokens = GPTTokenizer_cl100k_base?.encodeChat(filtered, prompt_token_model).length;
+                if (content_alt_storage[message_id]) {
+                    const prompt_tokens = count_tokens(content_alt_storage[message_id], content_alt_storage[message_id]);
+                } else {
+                    const filtered = messages.filter((item)=>!Array.isArray(item.content) && item.content);
+                    const prompt_tokens = GPTTokenizer_cl100k_base?.encodeChat(filtered, prompt_token_model).length;
+                }
                 const completion_tokens = count_tokens(message_provider?.model, message_storage[message_id])
                     + (reasoning_storage[message_id] ? count_tokens(message_provider?.model, reasoning_storage[message_id].text) : 0);
                 usage = {

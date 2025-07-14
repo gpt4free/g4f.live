@@ -1130,11 +1130,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             // Calculate usage if we don't have it jet
             if (countTokensEnabled && !usage.prompt_tokens && window.GPTTokenizer_cl100k_base) {
                 const prompt_token_model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
+                let prompt_tokens = 0;
                 if (content_alt_storage[message_id]) {
-                    const prompt_tokens = count_tokens(content_alt_storage[message_id], content_alt_storage[message_id]);
+                    prompt_tokens = count_tokens(content_alt_storage[message_id], content_alt_storage[message_id]);
                 } else {
                     const filtered = messages.filter((item)=>!Array.isArray(item.content) && item.content);
-                    const prompt_tokens = GPTTokenizer_cl100k_base?.encodeChat(filtered, prompt_token_model).length;
+                    prompt_tokens = GPTTokenizer_cl100k_base?.encodeChat(filtered, prompt_token_model).length;
                 }
                 const completion_tokens = count_tokens(message_provider?.model, message_storage[message_id])
                     + (reasoning_storage[message_id] ? count_tokens(message_provider?.model, reasoning_storage[message_id].text) : 0);
@@ -2812,7 +2813,7 @@ async function on_api() {
     });
     codeButton.addEventListener("click", async () => {
         clearTimeout(timeoutBlur);
-        userInput.value = userInput.value.trim() ? userInput.value.trim() + "\n```\n" : "```\n";
+        userInput.value = userInput.value.trim() ? userInput.value.trim() + "\n```\n```\n" : "```\n";
         userInput.focus();
     });
     sendButton.addEventListener(`click`, async () => {

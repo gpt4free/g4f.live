@@ -585,7 +585,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
     chatBody.appendChild(message_el);
     highlight(message_el);
     if (do_ask_gpt) {
-        const all_pinned = document.querySelectorAll(".buttons button.pinned")
+        const all_pinned = document.querySelectorAll("#pin_container button.pinned")
         if (all_pinned.length > 0) {
             all_pinned.forEach((el, idx) => ask_gpt(
                 idx == 0 ? message_id : get_message_id(),
@@ -619,7 +619,7 @@ async function safe_remove_cancel_button() {
 regenerate_button.addEventListener("click", async () => {
     regenerate_button.classList.add("regenerate-hidden");
     setTimeout(()=>regenerate_button.classList.remove("regenerate-hidden"), 3000);
-    const all_pinned = document.querySelectorAll(".buttons button.pinned")
+    const all_pinned = document.querySelectorAll("#pin_container button.pinned")
     if (all_pinned.length > 0) {
         all_pinned.forEach((el) => ask_gpt(get_message_id(), -1, true, el.dataset.provider, el.dataset.model, "variant"));
     } else {
@@ -3717,8 +3717,8 @@ function add_pinned(selected_provider, selected_model, save=true) {
     if (save) {
         const all_pinned_saved = JSON.parse(appStorage.getItem("pinned") || "[]");
         appStorage.setItem("pinned", JSON.stringify([{
-            provider: selected_provider?.value,
-            model: selected_model?.value,
+            provider: selected_provider?.value || selected_provider,
+            model: selected_model?.value || selected_model,
         }, ...all_pinned_saved]));
     }
     const pinned = document.createElement("button");

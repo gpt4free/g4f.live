@@ -1208,7 +1208,6 @@ ul {
     .chat-buttons {
         align-items: flex-start;
         flex-wrap: wrap;
-        gap: 8px;
         padding-left: 4px;
     }
 
@@ -2230,7 +2229,6 @@ form textarea {
     .chat-buttons {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 5px;
     }
 
     select, input.model {

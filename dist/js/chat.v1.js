@@ -72,6 +72,7 @@ framework.init({
 let provider_storage = {};
 let message_storage = {};
 let content_alt_storage = {};
+let content_data_storage = {};
 let controller_storage = {};
 let content_storage = {};
 let error_storage = {};
@@ -945,6 +946,9 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         }
     } else if (message.type == "content") {
         message_storage[message_id] += message.content;
+        if (message.data) {
+            content_data_storage[message_id] = message.data;
+        }
         if (message.urls) {
             content_alt_storage[message_id] = message.alt;
             const div = document.createElement("div");
@@ -1035,9 +1039,10 @@ async function play_last_message(response = null) {
                 });
             }
         } else {
-            if (response) {
-                last_media.src = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
+            if (response.choices) {
+                response = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
             }
+            last_media.src = response;
             last_media.play();
         }
     }
@@ -1061,12 +1066,13 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         model = get_selected_model();
         provider = providerSelect.options[providerSelect.selectedIndex]?.value;
     }
+    const is_youtube = provider == "YouTube";
     let conversation = await get_conversation(window.conversation_id);
     if (!conversation) {
         return;
     }
     await requestWakeLock();
-    let messages = prepare_messages(conversation.items, message_index, action=="continue");
+    let messages = prepare_messages(conversation.items, is_youtube ? -1 : message_index, action=="continue" || is_youtube);
     message_storage[message_id] = "";
     stop_generating.classList.remove("stop_generating-hidden");
 
@@ -1163,7 +1169,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 message_provider,
                 message_index,
                 synthesize_storage[message_id],
-                regenerate,
+                regenerate && provider != "YouTube",
                 title_storage[message_id],
                 finish_storage[message_id],
                 usage,
@@ -1197,7 +1203,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         // Reload conversation if no error
         if (!error_storage[message_id]) {
             if(await safe_load_conversation(window.conversation_id)) {
-                play_last_message(); // Play last message async
+                play_last_message(content_data_storage[message_id]); // Play last message async
+                delete content_data_storage[message_id];
                 const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
                 new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
             }
@@ -2750,7 +2757,7 @@ function load_providers(providers, provider_options, providersListContainer) {
             let api_key = appStorage.getItem(`${name}-api_key`);
             option.innerHTML = `
                 <span class="label">Enable ${provider.label}</span>
-                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${provider.active_by_default || api_key ? 'checked="checked"' : ''}/>
+                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${(provider.active_by_default || api_key) ? 'checked="checked"' : ''}/>
                 <label for="Provider${name}" class="toogle" title="Remove provider from dropdown"></label>
             `;
             option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, name));
@@ -2768,7 +2775,7 @@ function load_providers(providers, provider_options, providersListContainer) {
 }
 function load_provider_login_urls(providersListContainer) {
     for (let [name, [label, login_url, childs, auth]] of Object.entries(login_urls_storage)) {
-        if (!login_url && !is_demo) {
+        if (!login_url) {
             continue;
         }
         let providerBox = document.createElement("div");
@@ -2854,30 +2861,7 @@ async function on_api() {
         models.forEach((model) => {
             is_demo = model.demo;
         });
-        if (is_demo) {
-            providerSelect.innerHTML += `
-                <option value="Azure">Azure</option>
-                <option value="DeepSeekAPI">DeepSeek Provider</option>
-                <option value="Cloudflare">Cloudflare</option>
-                <option value="PerplexityLabs">Perplexity Labs</option>
-                <option value="Together">Together</option>
-                <option value="GeminiPro">Gemini Pro</option>
-                <option value="Video">Video Provider</option>
-                <option value="YouTube">Youtube Provider</option>
-                <option value="HuggingFace">HuggingFace</option>
-                <option value="HuggingFaceMedia">HuggingFace (Image/Video Generation)</option>
-                <option value="HuggingSpace">HuggingSpace</option>`;
-            document.getElementById("refine")?.parentElement.classList.add("hidden");
-            Array.from(modelSelect.querySelectorAll(':not([data-providers])')).forEach((option)=>{
-                if (!option.disabled && option.value) {
-                    option.remove();
-                }
-            });
-            load_provider_login_urls(providersListContainer);
-            load_settings(provider_options);
-        } else {
-            api("providers").then((providers) => load_providers(providers, provider_options, providersListContainer));
-        }
+        api("providers").then((providers) => load_providers(providers, provider_options, providersListContainer));
         load_provider_models(appStorage.getItem("provider"));
     }).catch(async (e)=>{
         console.log(e)
@@ -3303,7 +3287,7 @@ chatPrompt?.addEventListener("input", async () => {
 function get_selected_model() {
     let model = null;
     if (custom_model.value) {
-        return custom_model;
+        return custom_model.value;
     } else if (modelProvider.selectedIndex >= 0) {
         model = modelProvider.options[modelProvider.selectedIndex];
     } else if (modelSelect.selectedIndex >= 0) {
@@ -3549,10 +3533,11 @@ async function injectPuter() {
     });
 }
 
-async function load_provider_models(provider=null) {
+async function load_provider_models(provider=null, search=null) {
     if (!provider) {
         provider = providerSelect.value;
     }
+    modelProvider.classList.remove("hidden");
     modelProvider.innerHTML = '';
     if (provider == "Live") {
         modelSelect.classList.add("hidden");
@@ -3596,13 +3581,16 @@ async function load_provider_models(provider=null) {
             modelProvider.classList.remove("hidden");
         }
         let defaultIndex = 0;
-        function add_options(group, models) {
+        function add_options(group, models, search) {
             models.forEach((model, i) => {
                 if (!model.models) {
                     let option = document.createElement('option');
                     option.value = model.model;
                     option.dataset.label = model.model;
                     option.text = model.label + (model.count > 1 ? ` (${model.count}+)` : "") + get_modelTags(model);
+                    if (search && !option.text.includes(search)) {
+                        return;
+                    }
                     if (model.audio) {
                         option.dataset.audio = "true";
                     }
@@ -3613,13 +3601,16 @@ async function load_provider_models(provider=null) {
                 } else {
                     let optgroup = document.createElement('optgroup');
                     optgroup.label = model.group;
-                    add_options(optgroup, model.models);
+                    add_options(optgroup, model.models, search);
+                    if (optgroup.childElementCount == 0) {
+                        return;
+                    }
                     modelProvider.appendChild(optgroup);
                 }
             });
         }
         if (Array.isArray(models)) {
-            add_options(modelProvider, models);
+            add_options(modelProvider, models, search);
             modelProvider.selectedIndex = defaultIndex;
         }
         const optgroup = document.createElement('optgroup');
@@ -3635,10 +3626,15 @@ async function load_provider_models(provider=null) {
                 option.text = value_option.text;
                 option.dataset.audio = value_option.dataset.audio;
             }
-            optgroup.appendChild(option);
-            if (optgroup.childElementCount > 5) {
-                delete selected[optgroup.firstChild.value];
-                optgroup.removeChild(optgroup.firstChild);
+            if (search && !option.text.includes(search)) {
+                return;
+            }
+            if (optgroup.childElementCount > 0) {
+                optgroup.appendChild(option);
+                if (optgroup.childElementCount > 5) {
+                    delete selected[optgroup.firstChild.value];
+                    optgroup.removeChild(optgroup.firstChild);
+                }
             }
         });
         favorites[provider] = selected;
@@ -3685,6 +3681,17 @@ modelProvider.addEventListener("change", () => {
     selected[modelProvider.value] = selected_values;
     favorites[providerSelect.value] = selected;
     appStorage.setItem("favorites", JSON.stringify(favorites));
+});
+document.getElementById("model_edit")?.addEventListener("click", () => {
+    if (modelProvider.classList.contains("hidden")) {
+        custom_model.dataset.value = custom_model.value || custom_model.dataset.value || "";
+        custom_model.value = "";
+        load_provider_models(providerSelect.value, custom_model.dataset.value);
+        return;
+    }
+    modelProvider.classList.add("hidden");
+    custom_model.classList.remove("hidden");
+    custom_model.focus()
 });
 custom_model.addEventListener("change", () => {
     if (!custom_model.value) {

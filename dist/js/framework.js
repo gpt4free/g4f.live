@@ -315,3 +315,4 @@ framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
+framework.getPublicKey = getPublicKey;

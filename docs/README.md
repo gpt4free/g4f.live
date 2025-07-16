@@ -43,7 +43,7 @@ response = client.chat.completions.create(
     messages=[{"role": "user", "content": "Hello"}],
     web_search=False
 )
-print(response.choices.message.content)
+print(response.choices[0].message.content)
 ```
 **Output:**
 ```

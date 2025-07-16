@@ -71,8 +71,11 @@ framework.translateElements = function (elements = null) {
 }
 framework.init = async (options) => {
     if (options.translations) {
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", async () => {
+        framework.translations = true;
+    }
+}
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", async () => {
                 framework.translateElements();
             });
         } else {
@@ -92,8 +95,6 @@ framework.init = async (options) => {
                 }
             }
         });
-    }
-}
 let newTranslations = [];
 framework.translate = (text) => {
     if (text) {

@@ -95,6 +95,7 @@ if (document.readyState === "loading") {
                 }
             }
         });
+}
 let newTranslations = [];
 framework.translate = (text) => {
     if (text) {

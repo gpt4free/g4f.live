@@ -100,7 +100,7 @@ And for image generation:
         model: "flux", // Or "dalle-3", "gpt-image"
         prompt: "a white siamese cat"
     });
-    const imageUrl = response.data.url;
+    const imageUrl = response.data[0].url;
     console.log(`Generated Image URL: ${imageUrl}`);
     // Example: document.body.innerHTML += `<img src="${imageUrl}" />`;
 </script>

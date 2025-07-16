@@ -65,7 +65,7 @@ response = client.images.generate(
     prompt="a white siamese cat",
     response_format="url"
 )
-print(f"Generated image URL: {response.data.url}")
+print(f"Generated image URL: {response.data[0].url}")
 ```
 
 [More Python client info →](client.md) [and Async client →](async_client.md)

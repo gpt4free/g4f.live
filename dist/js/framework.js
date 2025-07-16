@@ -71,11 +71,8 @@ framework.translateElements = function (elements = null) {
 }
 framework.init = async (options) => {
     if (options.translations) {
-        framework.translations = true;
-    }
-}
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", async () => {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", async () => {
                 framework.translateElements();
             });
         } else {
@@ -95,6 +92,7 @@ if (document.readyState === "loading") {
                 }
             }
         });
+    }
 }
 let newTranslations = [];
 framework.translate = (text) => {
@@ -317,4 +315,3 @@ framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
-framework.getPublicKey = getPublicKey;

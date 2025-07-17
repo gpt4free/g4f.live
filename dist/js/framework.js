@@ -69,31 +69,28 @@ framework.translateElements = function (elements = null) {
         }
     });
 }
-framework.init = async (options) => {
-    if (options.translations) {
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", async () => {
-                framework.translateElements();
-            });
-        } else {
-            framework.translateElements();
-        }
-        window.addEventListener('load', async () => {
-            if (!localStorage.getItem(framework.translationKey)) {
-                try {
-                    if (!framework.backendUrl) {
-                        await framework.connectToBackend();
-                    }
-                    if (await framework.translateAll()) {
-                        window.location.reload();
-                    }
-                } catch (e) {
-                    console.debug(e);
-                }
-            }
-        });
-    }
+framework.init = async (options) => {};
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", async () => {
+        framework.translateElements();
+    });
+} else {
+    framework.translateElements();
 }
+window.addEventListener('load', async () => {
+    if (!localStorage.getItem(framework.translationKey)) {
+        try {
+            if (!framework.backendUrl) {
+                await framework.connectToBackend();
+            }
+            if (await framework.translateAll()) {
+                window.location.reload();
+            }
+        } catch (e) {
+            console.debug(e);
+        }
+    }
+});
 let newTranslations = [];
 framework.translate = (text) => {
     if (text) {

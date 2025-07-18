@@ -24,31 +24,31 @@ MAX_RETRIES = 0
 # Clean filename helper
 def clean_filename(name: str) -> str:
     """Remove special characters and format filename"""
-    name = re.sub(r'[^a-zA-Z0-9_\-]', '', name)
+    name = re.sub(r'[^a-zA-Z0-9_\- ]', '', name)
     return name.strip().lower().replace(' ', '_')[:50]
 
 # Enhanced app ideas list
-DEFAULT_APPS = [
-    "Interactive To-Do List with Drag-and-Drop",
-    #"Scientific Calculator with History",
-    #"Split Bill Calculator with Tip Options",
-    #"Universal Unit Converter with Favorites",
-    #"Weather Dashboard with Geolocation",
-    "Daily Motivational Quote Generator",
-    #"Password Strength Analyzer & Generator",
-    "Pomodoro Timer with Productivity Stats",
-    #"BMI Calculator with Health Recommendations",
-    #"Markdown Editor with Live Preview",
-    #"Color Palette Generator & Contrast Checker",
-    #"Real-time Currency Converter",
-    "Image Gallery with EXIF Viewer",
-    "Voice-Controlled Stopwatch",
-    "AI-Powered Drawing Guessing Game",
-    "Personal Expense Tracker with Charts",
-    "Recipe Finder by Ingredients",
-    "Workout Planner with Timer",
-    "Memory Card Matching Challenge",
-    "Interactive Quiz Platform"
+NEW_APPS = [
+    "Dynamic Kanban Board (drag & drop)",
+    "Mini Spotify / Audio Player",
+    "Instagram-like Photo Feed (mock data)",
+    "Real-time Chat (WebSockets placeholder)",
+    "Expense Tracker (localStorage)",
+    "Pac-Man Game (canvas)",
+    "Simon Memory Game",
+    "Maze Generator & Solver",
+    "Typing Speed Test",
+    "File-drop Image Compressor",
+    "URL Shortener (frontend only)",
+    "Tetris",
+    "QR-Code Generator & Reader",
+    "Paint clone",
+    "Snake Game",
+    "Flappy Bird clone",
+    "Unsplash Photo Search",
+    "Markdown Blog Engine (one HTML)",
+    "API Tester (like PostMan-lite)",
+    "2048 Game"
 ]
 
 async def create_app(app_name: str, attempt: int = 1):
@@ -111,5 +111,5 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--apps", nargs="+", help="Custom list of apps to generate")
     args = parser.parse_args()
     
-    selected_apps = args.apps or DEFAULT_APPS
+    selected_apps = args.apps or NEW_APPS
     asyncio.run(main(selected_apps))

@@ -20,7 +20,9 @@ const inputCount        = document.getElementById("input-count").querySelector("
 const providerSelect    = document.getElementById("provider");
 const modelSelect       = document.getElementById("model");
 const modelProvider     = document.getElementById("model2");
-const custom_model      = document.getElementById("model3");
+const modelSearch       = document.getElementById("model-search");
+const modelSelector     = document.querySelector(".model-selector");
+const modelSuggestions  = document.getElementById('model-suggestions');
 const chatPrompt        = document.getElementById("chatPrompt");
 const settings          = document.querySelector(".settings");
 const chat              = document.querySelector(".chat-container");
@@ -94,6 +96,7 @@ let lastUpdated = null;
 let mediaRecorder = null;
 let stopRecognition = ()=>{};
 let providerModelSignal = null;
+let searchModels = {};
 
 // Hotfix for mobile
 document.querySelector(".container").style.maxHeight = window.innerHeight + "px"
@@ -2772,6 +2775,7 @@ function load_providers(providers, provider_options, providersListContainer) {
     });
     load_provider_login_urls(providersListContainer);
     load_settings(provider_options);
+    loadModels(providers);
 }
 function load_provider_login_urls(providersListContainer) {
     for (let [name, [label, login_url, childs, auth]] of Object.entries(login_urls_storage)) {
@@ -3286,8 +3290,8 @@ chatPrompt?.addEventListener("input", async () => {
 
 function get_selected_model() {
     let model = null;
-    if (custom_model.value) {
-        return custom_model.value;
+    if (modelSearch.value) {
+        return modelSearch.value;
     } else if (modelProvider.selectedIndex >= 0) {
         model = modelProvider.options[modelProvider.selectedIndex];
     } else if (modelSelect.selectedIndex >= 0) {
@@ -3545,25 +3549,9 @@ async function load_provider_models(provider=null, search=null) {
         await load_fallback_models();
         return;
     }
-    if (!custom_model.value) {
-        custom_model.classList.add("hidden");
-    }
-    if (provider.startsWith("Custom") || custom_model.value) {
-        modelProvider.classList.add("hidden");
-        modelSelect.classList.add("hidden");
-        custom_model.classList.remove("hidden");
-        return;
-    }
     modelProvider.name = `model[${provider}]`;
     if (!provider) {
         modelProvider.classList.add("hidden");
-        if (custom_model.value) {
-            modelSelect.classList.add("hidden");
-            custom_model.classList.remove("hidden");
-        } else {
-            modelSelect.classList.remove("hidden");
-            custom_model.classList.add("hidden");
-        }
         return;
     }
     if (provider.startsWith("Puter")) {
@@ -3576,10 +3564,6 @@ async function load_provider_models(provider=null, search=null) {
     function set_provider_models(models) {
         modelProvider.innerHTML = '';
         modelSelect.classList.add("hidden");
-        if (!custom_model.value) {
-            custom_model.classList.add("hidden");
-            modelProvider.classList.remove("hidden");
-        }
         let defaultIndex = 0;
         function add_options(group, models, search) {
             models.forEach((model, i) => {
@@ -3651,9 +3635,6 @@ async function load_provider_models(provider=null, search=null) {
     if (models) {
         set_provider_models(models);
         appStorage.setItem(`${provider}:models`, JSON.stringify(models));
-    } else {
-        modelProvider.classList.add("hidden");
-        custom_model.classList.remove("hidden")
     }
 };
 providerSelect.addEventListener("change", () => {
@@ -3683,20 +3664,91 @@ modelProvider.addEventListener("change", () => {
     appStorage.setItem("favorites", JSON.stringify(favorites));
 });
 document.getElementById("model_edit")?.addEventListener("click", () => {
-    if (modelProvider.classList.contains("hidden")) {
-        custom_model.dataset.value = custom_model.value || custom_model.dataset.value || "";
-        custom_model.value = "";
-        load_provider_models(providerSelect.value, custom_model.dataset.value);
+    if (!modelSelector.classList.contains("hidden")) {
+        providerSelect.classList.remove("hidden");
+        modelProvider.classList.remove("hidden");
+        modelSelector.classList.add("hidden");
+        modelSearch.value = "";
         return;
     }
+    providerSelect.classList.add("hidden");
     modelProvider.classList.add("hidden");
-    custom_model.classList.remove("hidden");
-    custom_model.focus()
+    modelSelector.classList.remove("hidden");
+    modelSearch.focus()
 });
-custom_model.addEventListener("change", () => {
-    if (!custom_model.value) {
-        load_provider_models();
+modelSearch.addEventListener('input', function() {
+  const searchTerm = this.value.toLowerCase();
+  modelSuggestions.innerHTML = '';
+
+  if (!searchTerm) return;
+
+  let matches = [];
+  
+  // Search across all models
+  for (const [provider, modelList] of Object.entries(searchModels)) {
+    if (!modelList) continue;
+    modelList.forEach(model => {
+      if (model.models) {
+        model.models.forEach(subModel => {
+          if (subModel.model.toLowerCase().includes(searchTerm)) {
+            matches.push({ provider, model: subModel });
+          }
+        });
+      } else if (model.model.toLowerCase().includes(searchTerm)) {
+        matches.push({ provider, model });
+      }
+    });
+  }
+
+  // Display matches
+  matches.forEach(match => {
+    const div = document.createElement('div');
+    div.className = 'suggestion-item';
+    div.innerHTML = `
+      <strong>${match.model.model}</strong>
+      <span class="provider-tag">${match.provider}</span>
+    `;
+    div.addEventListener('click', async () => {
+      modelSearch.value = "";
+      providerSelect.value = match.provider;
+      await load_provider_models();
+      modelProvider.value = match.model.model;
+      modelSelector.classList.add("hidden");
+      providerSelect.classList.remove("hidden");
+      modelProvider.classList.remove("hidden");
+      modelSuggestions.innerHTML = '';
+      console.log(`Selected model: ${match.model.model}`);
+    });
+    modelSuggestions.appendChild(div);
+  });
+});
+function loadModels(providers) {
+    providers.forEach((provider) => {
+        searchModels[provider.name] = appStorage.getItem(`${provider.name}:models`);
+        if (searchModels[provider.name]) {
+            searchModels[provider.name] = JSON.parse(searchModels[provider.name]);
+        }
+    });
+    const loadNext = async () => {
+        const provider = providers.pop();
+        searchModels[provider.name] = await api('models', provider.name);
+        if (searchModels[provider.name]) {
+            appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
+        }
+        if (providers.length > 0) {
+            setTimeout(() => {
+                loadNext();
+            }, 1000);
+        }
     }
+    setTimeout(loadNext, 1000);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (e.target !== modelSearch) {
+    modelSuggestions.innerHTML = '';
+  }
 });
 
 document.getElementById("pin").addEventListener("click", async () => {

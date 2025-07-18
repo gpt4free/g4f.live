@@ -1,0 +1,516 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Gemini Chat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 800px;
+            height: 90vh; /* Adjust height to fit typical viewports */
+            overflow: hidden;
+            position: relative;
+        }
+        #topbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #topbar .block {
+            flex: 1;
+            min-width: 180px;
+        }
+        #topbar label {
+            font-weight: 600;
+            color: #4a5568;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        #topbar select,
+        #topbar input[type="text"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            font-size: 0.9rem;
+            color: #2d3748;
+            transition: border-color 0.2s;
+        }
+        #topbar select:focus,
+        #topbar input[type="text"]:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        #chat {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            scroll-behavior: smooth;
+        }
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .message.user {
+            background-color: #e0f2fe; /* Light blue */
+            color: #2a4365;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .message.assistant {
+            background-color: #f0f4f8; /* Light gray */
+            color: #2d3748;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        .message img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        #form {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+        }
+        #input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        #input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        #submit, #summarizeBtn {
+            background-color: #6366f1; /* Indigo */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
+            margin-left: 0.5rem; /* Add margin for buttons in topbar */
+        }
+        #submit:hover, #summarizeBtn:hover {
+            background-color: #4f46e5; /* Darker indigo */
+            transform: translateY(-1px);
+        }
+        #submit:active, #summarizeBtn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .loading-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .loading-indicator::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #6366f1;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                height: 95vh;
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            #topbar {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+            #topbar .block {
+                min-width: unset;
+                width: 100%;
+            }
+            #chat {
+                padding: 1rem;
+            }
+            .message {
+                max-width: 95%;
+            }
+            #form {
+                padding: 0.75rem;
+            }
+            #summarizeBtn {
+                margin-left: 0; /* Remove left margin on small screens */
+                width: 100%; /* Full width on small screens */
+            }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.block{display:block}</style></head>
+<body>
+<div class="container">
+    <div id="topbar">
+        <div class="block">
+            <label>Provider:
+                <select id="provider">
+                    <option value="gemini">Gemini</option>
+                    <option value="pollinations">Pollinations.AI</option>
+                    <option value="deepinfra">DeepInfra</option>
+                    <option value="huggingface">HuggingFace</option>
+                    <option value="together">Together</option>
+                    <option value="puter">Puter.js</option>
+                    <option value="azure">Azure (http://g4f.dev/api/Azure)</option>
+                </select>
+            </label>
+        </div>
+        <div class="block">
+            <label>Model:
+                <select id="modelSelect"><option value="gemini-2.5-flash" selected="">gemini-2.5-flash</option></select>
+            </label>
+        </div>
+        <div class="block">
+            <label>API Key: <input type="text" id="apiKey" placeholder="Optional" disabled=""></label>
+        </div>
+        <div class="block">
+            <button id="summarizeBtn" style="opacity: 1; cursor: pointer;">Summarize Chat ✨</button>
+        </div>
+    </div>
+
+    <div id="chat"><div class="message assistant"><p>Hello! How can I help you today?</p>
+</div></div>
+
+    <form id="form">
+        <input type="text" id="input" placeholder="Ask something..." autocomplete="off">
+        <button id="submit">Send</button>
+    </form>
+</div>
+
+<script type="module">
+    // Import necessary client libraries for other providers.
+    import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
+    // Import marked for Markdown parsing.
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
+    // Get DOM elements
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const providerSelect = document.getElementById('provider');
+    const apiKeyInput = document.getElementById('apiKey');
+    const modelSelect = document.getElementById('modelSelect');
+    const summarizeBtn = document.getElementById('summarizeBtn');
+
+    let client = null; // Client for g4f.dev providers
+    // Stores chat history in Gemini-compatible format: [{ role: "user", parts: [{ text: "..." }] }, { role: "model", parts: [{ text: "..." }] }]
+    let messages = [];
+
+    /**
+     * Initializes the client based on the selected provider.
+     * For Gemini, it sets up the model dropdown directly.
+     * For other providers, it uses the g4f.dev client library.
+     */
+    async function initClient() {
+        const provider = providerSelect.value;
+        const apiKey = apiKeyInput.value.trim();
+        const options = apiKey ? { apiKey } : {};
+
+        // Reset messages and clear chat history when provider changes
+        messages = [];
+        chat.innerHTML = '';
+
+        if (provider === 'gemini') {
+            // For Gemini, we don't use the g4f.dev client.
+            // Hardcode Gemini model and disable API key for now (as it's handled internally by Canvas).
+            modelSelect.innerHTML = '<option value="gemini-2.5-flash" selected>gemini-2.5-flash</option>';
+            client = null; // Ensure g4f.dev client is not used for Gemini
+        } else {
+            apiKeyInput.disabled = false; // Enable API key for other providers
+            let ClientClass;
+            switch (provider) {
+                case 'pollinations':
+                    ClientClass = PollinationsAI;
+                    break;
+                case 'deepinfra':
+                    ClientClass = DeepInfra;
+                    break;
+                case 'huggingface':
+                    ClientClass = HuggingFace;
+                    break;
+                case 'together':
+                    ClientClass = Together;
+                    break;
+                case 'puter':
+                    ClientClass = Puter;
+                    break;
+                case 'azure':
+                    ClientClass = Client; // Generic client for Azure
+                    break;
+                default:
+                    console.error("Unknown provider:", provider);
+                    return;
+            }
+            client = new ClientClass(options);
+            await loadModels(); // Load models for g4f.dev providers
+        }
+    }
+
+    /**
+     * Loads models for g4f.dev providers.
+     * This function is not used when 'gemini' is selected.
+     */
+    async function loadModels() {
+        modelSelect.innerHTML = '<option disabled selected>Loading...</option>';
+        try {
+            const models = await client.models.list();
+            modelSelect.innerHTML = '';
+            models.forEach(model => {
+                const opt = document.createElement('option');
+                opt.value = model.id;
+                opt.textContent = model.id + (model.type === "image" ? " 🎨" : "");
+                if (model.type) {
+                    opt.dataset.type = model.type;
+                }
+                if (model.id === client.defaultModel) opt.selected = true;
+                modelSelect.appendChild(opt);
+            });
+        } catch (err) {
+            console.error('Model load failed:', err);
+            modelSelect.innerHTML = '<option disabled selected>Error loading models</option>';
+        }
+    }
+
+    // Event listeners for provider and API key changes
+    providerSelect.addEventListener('change', ()=>{
+        apiKeyInput.value = ''; // Clear API key when provider changes
+        initClient();
+    });
+    apiKeyInput.addEventListener('change', initClient);
+
+    /**
+     * Handles the form submission for sending messages.
+     * Differentiates between Gemini and other providers.
+     */
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        const provider = providerSelect.value;
+        const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+        const selectedModel = selectedOption ? selectedOption.value : null;
+        const modelType = selectedOption ? selectedOption.dataset.type || 'chat' : 'chat';
+
+        // Add user message to display and to messages array
+        addMessageToDisplay('user', text);
+        messages.push({ role: "user", parts: [{ text: text }] });
+        input.value = ''; // Clear input immediately
+
+        const assistantEl = document.createElement('div');
+        assistantEl.className = 'message assistant';
+        assistantEl.innerHTML = `<div class="loading-indicator"></div><em>Generating...</em>`;
+        chat.appendChild(assistantEl);
+        chat.scrollTop = chat.scrollHeight;
+
+        try {
+            if (provider === 'gemini') {
+                // Gemini API call logic
+                const payload = { contents: messages };
+                const apiKey = apiKeyInput.value || localStorage.getItem("GeminiPro-api_key"); // API key is provided by Canvas runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const fullResponse = result.candidates[0].content.parts[0].text;
+                    assistantEl.innerHTML = marked.parse(fullResponse);
+                    messages.push({ role: 'model', parts: [{ text: fullResponse }] }); // Store Gemini response
+                } else {
+                    assistantEl.innerHTML = '<strong>Error:</strong> No valid response from Gemini.';
+                    console.error("Gemini API response structure unexpected:", result);
+                }
+
+            } else {
+                // Logic for other providers using g4f.dev client
+                // Map messages to g4f.dev format: [{ role: 'user', content: "..." }, { role: 'assistant', content: "..." }]
+                const g4fMessages = messages.map(msg => ({
+                    role: msg.role === 'model' ? 'assistant' : msg.role,
+                    content: msg.parts[0].text
+                }));
+
+                if (modelType === 'image') {
+                    // Handle image generation
+                    const response = await client.images.generate({
+                        model: selectedModel,
+                        prompt: text,
+                    });
+
+                    const imageUrl = response.data[0].url;
+                    assistantEl.innerHTML = `<img src="${imageUrl}" alt="${text}" />`;
+                    messages.push({ role: 'model', parts: [{ text: `Image generated: ${imageUrl}` }] }); // Store as Gemini-compatible
+                } else {
+                    // Handle chat completion
+                    const stream = await client.chat.completions.create({
+                        model: selectedModel,
+                        messages: g4fMessages,
+                        stream: true
+                    });
+
+                    let fullResponse = '';
+                    let isReasoning = false;
+                    for await (const chunk of stream) {
+                        let delta;
+                        if (chunk.choices[0]?.delta?.reasoning_content) {
+                            delta = chunk.choices[0]?.delta?.reasoning_content;
+                            isReasoning = true;
+                        } else {
+                            delta = chunk.choices[0]?.delta?.content || '';
+                            if (isReasoning) {
+                                isReasoning = false;
+                                delta = '\n\n---\n\n' + delta;
+                            }
+                        }
+                        if (!delta) continue;
+                        fullResponse += delta;
+                        assistantEl.innerHTML = marked.parse(fullResponse);
+                        chat.scrollTop = chat.scrollHeight;
+                    }
+                    messages.push({ role: 'model', parts: [{ text: fullResponse }] }); // Store as Gemini-compatible
+                }
+            }
+        } catch (err) {
+            assistantEl.innerHTML = '<strong>Error:</strong> ' + err.message;
+            console.error(err);
+        } finally {
+            chat.scrollTop = chat.scrollHeight; // Ensure scroll to bottom after response
+        }
+    });
+
+    /**
+     * Adds a message to the chat display.
+     * @param {string} role - The role of the message sender ('user' or 'assistant').
+     * @param {string} content - The content of the message.
+     */
+    function addMessageToDisplay(role, content) {
+        const el = document.createElement('div');
+        el.className = 'message ' + role;
+        // For user messages, just display the text. For assistant, parse Markdown.
+        el.innerHTML = role === 'user' ? `<div class="user-content">${content}</div>` : marked.parse(content);
+        chat.appendChild(el);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    /**
+     * Handles the summarization feature using Gemini API.
+     */
+    summarizeBtn.addEventListener('click', async () => {
+        if (messages.length === 0) {
+            addMessageToDisplay('assistant', 'No conversation to summarize yet. Start chatting!');
+            return;
+        }
+
+        // Create a prompt for summarization based on current messages
+        const summaryPrompt = "Please provide a concise summary of the following conversation:\n\n" +
+                             messages.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.parts[0].text}`).join('\n');
+
+        addMessageToDisplay('user', 'Summarizing chat...'); // Indicate that summarization is in progress
+
+        const assistantEl = document.createElement('div');
+        assistantEl.className = 'message assistant';
+        assistantEl.innerHTML = `<div class="loading-indicator"></div><em>Generating summary...</em>`;
+        chat.appendChild(assistantEl);
+        chat.scrollTop = chat.scrollHeight;
+
+        try {
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: summaryPrompt }] }]
+            };
+            const apiKey = apiKeyInput.value || localStorage.getItem("GeminiPro-api_key"); // API key is provided by Canvas runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const summary = result.candidates[0].content.parts[0].text;
+                assistantEl.innerHTML = marked.parse(`**Chat Summary:**\n\n${summary}`);
+                // Do not add summary to main chat history to avoid recursive summarization issues
+            } else {
+                assistantEl.innerHTML = '<strong>Error:</strong> Could not generate summary from Gemini.';
+                console.error("Gemini API summary response structure unexpected:", result);
+            }
+        } catch (err) {
+            assistantEl.innerHTML = '<strong>Error generating summary:</strong> ' + err.message;
+            console.error(err);
+        } finally {
+            chat.scrollTop = chat.scrollHeight;
+        }
+    });
+
+
+    // Initialize the client on page load
+    initClient();
+</script>
+
+
+
+</body></html>

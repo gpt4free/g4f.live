@@ -344,7 +344,15 @@
                             <option value="" selected="selected">Model: Default</option>
                         </select>
                         <select name="model2" id="model2" class="hidden model"></select>
-                        <input type="text" id="model3" value="" class="hidden model" placeholder="Model:"/>
+                        <div class="model-selector hidden">
+                        <div id="model-suggestions" class="suggestions-dropdown"></div>
+                        <input 
+                            type="text" 
+                            id="model-search" 
+                            placeholder="Search models (e.g. 'gpt-4', 'claude')..."
+                            autocomplete="off"
+                        >
+                        </div>
                     </div>
                     <div class="field">
                         <button id="model_edit" class="">

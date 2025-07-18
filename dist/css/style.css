@@ -832,7 +832,7 @@ form input:checked+label:after {
     color: var(--colour-3);
 }
 
-select, input.model {
+select, #model-search {
     border-radius: 8px;
     backdrop-filter: blur(20px);
     cursor: pointer;
@@ -908,7 +908,7 @@ button.options_button {
 }
 
 select:hover,
-input.model:hover
+#model-search:hover
 .chat-buttons button:hover,
 .stop_generating button:hover,
 .chat-toolbar .regenerate button:hover {
@@ -997,7 +997,7 @@ input.model:hover
 }
 
 @media only screen and (min-width: 40em) {
-    select, input.model {
+    select, #model-search {
         width: 200px;
     }
     .field {
@@ -2231,7 +2231,7 @@ form textarea {
         justify-content: center;
     }
 
-    select, input.model {
+    select, #model-search {
         width: 120px;
     }
     
@@ -2308,4 +2308,39 @@ form textarea {
         transform: translateX(0);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     }
+}
+
+.model-selector {
+  position: relative;
+  width: 300px;
+}
+
+#model-search {
+  width: 100%;
+}
+
+.suggestions-dropdown {
+  max-height: 300px;
+  overflow: scroll;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.suggestion-item:hover {
+  background-color: var(--media-select);
+  color: var(--button-hover);
+}
+
+.provider-tag {
+  color: #666;
+  font-size: 0.8em;
+  background: var(--media-select);
+  padding: 2px 6px;
+  border-radius: 10px;
 }

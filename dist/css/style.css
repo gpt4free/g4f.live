@@ -2321,7 +2321,7 @@ form textarea {
 
 .suggestions-dropdown {
   max-height: 300px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .suggestion-item {

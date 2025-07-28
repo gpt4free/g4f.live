@@ -42,7 +42,18 @@ framework.connectToBackend = async (connectStatus) => {
         }
     }
 };
-
+let newTranslations = [];
+framework.translate = (text) => {
+    if (text) {
+        const endWithSpace = text.endsWith(" ");
+        strip_text = text.trim();
+        if (strip_text in framework.translations && framework.translations[strip_text]) {
+            return framework.translations[strip_text] + (endWithSpace ? " " : "");
+        }
+        strip_text && !newTranslations.includes(strip_text) ? newTranslations.push(strip_text) : null;
+    }
+    return text;
+};
 framework.translationKey = "translations" + document.location.pathname;
 framework.translations = JSON.parse(localStorage.getItem(framework.translationKey) || "{}");
 framework.translateElements = function (elements = null) {
@@ -69,7 +80,6 @@ framework.translateElements = function (elements = null) {
         }
     });
 }
-framework.init = async (options) => {};
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", async () => {
         framework.translateElements();
@@ -91,18 +101,6 @@ window.addEventListener('load', async () => {
         }
     }
 });
-let newTranslations = [];
-framework.translate = (text) => {
-    if (text) {
-        const endWithSpace = text.endsWith(" ");
-        strip_text = text.trim();
-        if (strip_text in framework.translations && framework.translations[strip_text]) {
-            return framework.translations[strip_text] + (endWithSpace ? " " : "");
-        }
-        strip_text && !newTranslations.includes(strip_text) ? newTranslations.push(strip_text) : null;
-    }
-    return text;
-};
 framework.translateAll = async () =>{
     let allTranslations = {...framework.translations};
     for (const text of newTranslations) {

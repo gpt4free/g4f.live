@@ -295,7 +295,10 @@ async function getHeaders() {
     }
     return headers;
 }
-async function includeAdsense(params) {
+async function includeAdsense() {
+    if (window.location.pathname === "/chat/") {
+        return;
+    }
     const script = document.createElement("script");
     script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5896143631849307";
     script.async = true;

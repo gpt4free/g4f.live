@@ -67,10 +67,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     translationSnipptes.forEach((text) => framework.translate(text));
 });
 
-framework.init({
-    translations: true
-});
-
 let provider_storage = {};
 let message_storage = {};
 let content_alt_storage = {};

@@ -180,9 +180,6 @@
     <script>
         const streamWidget = document.querySelector('.stream-widget');
         (async () => {
-            framework.init({
-                translations: true
-            });
             await framework.connectToBackend();
             const randIdx = Math.floor(Math.random() * 12)
             if (randIdx < 3) {

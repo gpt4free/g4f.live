@@ -3682,7 +3682,7 @@ modelSearch.addEventListener('input', function() {
   
   // Search across all models
   for (const [provider, modelList] of Object.entries(searchModels)) {
-    if (!modelList) continue;
+    if (!Array.isArray(modelList)) continue;
     modelList.forEach(model => {
       if (model.models) {
         model.models.forEach(subModel => {

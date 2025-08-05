@@ -190,7 +190,11 @@ class Client {
             if (!part.trim() || part === 'data: [DONE]') continue;
             try {
               if (part.startsWith('data: ')) {
-                yield JSON.parse(part.slice(6));
+                const data = JSON.parse(part.slice(6));
+                if (data.choices && data.choices[0]?.delta?.reasoning) {
+                    data.choices[0].delta.reasoning_content = data.choices[0].delta.reasoning;
+                }
+                yield data;
               }
             } catch (err) {
               console.error('Error parsing chunk:', part, err);

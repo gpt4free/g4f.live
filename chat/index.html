@@ -23,6 +23,16 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
     <script src="../dist/js/sanitize-html.js" async></script>
+    <script type="module" async>
+      import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from "../dist/js/client.js";
+      window.providers = {
+        PollinationsAI,
+        DeepInfra,
+        Together,
+        Puter,
+        HuggingFace
+      };
+    </script>
     <link rel="stylesheet" href="../dist/css/dracula.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe/dist/photoswipe.css">
     <script>
@@ -362,10 +372,6 @@
                    <div class="field">
                       <select name="provider" id="provider">
                          <option value="AnyProvider">Provider: Auto</option>
-                         <option value="PollinationsAI" selected>Pollinations AI</option>
-                         <option value="Live">Pollinations AI (live)</option>
-                         <option value="Puter">Puter.js (live)</option>
-                         <option disabled="disabled">----</option>
                         </select>
                     </div>
                     <div class="field">

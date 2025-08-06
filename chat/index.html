@@ -24,8 +24,10 @@
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
     <script src="../dist/js/sanitize-html.js" async></script>
     <script type="module" async>
-      import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from "../dist/js/client.js";
+      import { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from "../dist/js/client.js";
       window.providers = {
+        Azure: Client,
+        Custom,
         PollinationsAI,
         DeepInfra,
         Together,

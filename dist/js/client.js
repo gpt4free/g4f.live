@@ -249,9 +249,10 @@ class PollinationsAI extends Client {
             baseUrl: 'https://text.pollinations.ai',
             apiEndpoint: 'https://text.pollinations.ai/openai',
             imageEndpoint: 'https://image.pollinations.ai/prompt/{prompt}',
-            defaultModel: 'gpt-4o-mini',
+            defaultModel: 'gpt-oss',
             referrer: 'https://g4f.dev',
             modelAliases: {
+                "gpt-oss-120b": "gpt-oss",
                 "gpt-4o-mini": "openai",
                 "gpt-4.1-nano": "openai-fast",
                 "gpt-4.1": "openai-large",

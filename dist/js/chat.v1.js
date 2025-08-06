@@ -1261,7 +1261,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     if (messages.length > 0) {
         last_message = messages[messages.length-1];
         last_message.content = media.length > 0 ? [
-            ...last_message.content,
+            ...(Array.isArray(last_message.content) ? last_message.content : [{type: "text", text: last_message.content}]),
             ...media
         ] : last_message.content;
     } else {
@@ -1338,7 +1338,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         } catch (err) {
             safe_remove_cancel_button();
             console.error(err);
-            error_storage[message_id] = `${framework.translate('**An error occured:**')} ${err?.error?.message || err}`;
+            error_storage[message_id] = `${err?.error?.message || err}`;
+            content_map.inner.innerHTML += framework.markdown(`${framework.translate('**An error occured:**')} ${error_storage[message_id]}`);
             await finish_message();
         }
         return;
@@ -2849,7 +2850,7 @@ function renderMediaSelect() {
         const img = document.createElement("img");
         img.src = object_url;
         img.onclick = async () => {
-            img.remove();
+            link.remove();
             delete image_storage[object_url];
             await framework.delete(item.bucket_id);
         }
@@ -2874,11 +2875,13 @@ function renderMediaSelect() {
                 const media = [];
                 result.media.forEach((part)=> {
                     part = part.name ? part : {name: part};
-                    const url = `${framework.backendUrl ? framework.backendUrl : window.location.origin}/files/${bucket_id}/media/${part.name}`;
-                    image_storage[url.replaceAll("/media/", "/thumbnail/")] = {bucket_id: bucket_id, url: url, ...part};
+                    let url = framework.backendUrl ? framework.backendUrl : window.location.origin;
+                    url = `${url}/files/${bucket_id}/media/${part.name}`;
+                    delete image_storage[object_url];
+                    object_url = url.replaceAll("/media/", "/thumbnail/");
+                    image_storage[object_url] = {bucket_id: bucket_id, url: url, ...part};
                 });
             }
-            delete image_storage[object_url];
         }
     });
 }
@@ -2999,7 +3002,10 @@ audioButton.addEventListener('click', async (event) => {
 linkButton.addEventListener('click', async (event) => {
     const i = audioButton.querySelector("i");
     const link = prompt("Please enter a link");
-    if (!link || link.startsWith("http") === false) {
+    if (!link) {
+        return;
+    }
+    if (link.startsWith("http") === false) {
         inputCount.innerText = framework.translate("Invalid link");
         return;
     }

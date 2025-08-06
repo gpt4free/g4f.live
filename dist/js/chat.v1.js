@@ -43,7 +43,7 @@ const translationSnipptes = [
     "{0} Conversations/Settings were imported successfully",
     "No content found", "Files are loaded successfully",
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
-    "Get API key", "Uploading files...", "Invalid link"
+    "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers"
 ];
 
 let login_urls_storage = {
@@ -83,7 +83,6 @@ let continue_storage = {};
 let reasoning_storage = {};
 let title_ids_storage = {};
 let image_storage = {};
-let is_demo = false;
 let wakeLock = null;
 let countTokensEnabled = true;
 let privateConversation = null;
@@ -93,6 +92,7 @@ let mediaRecorder = null;
 let stopRecognition = ()=>{};
 let providerModelSignal = null;
 let searchModels = {};
+let client = null;
 
 // Hotfix for mobile
 document.querySelector(".container").style.maxHeight = window.innerHeight + "px"
@@ -514,16 +514,22 @@ const register_message_buttons = async () => {
 }
 
 const delete_conversations = async () => {
-    const remove_keys = [];
-    for (let i = 0; i < appStorage.length; i++){
-        let key = appStorage.key(i);
-        if (key.startsWith("conversation:")) {
-            remove_keys.push(key);
-        }
-    }
-    remove_keys.forEach((key)=>appStorage.removeItem(key));
+    // Delete all conversations
+    const { store, done } = await withStore('readwrite');
+    store.clear();
+    
+    // const remove_keys = [];
+    // for (let i = 0; i < appStorage.length; i++){
+    //     let key = appStorage.key(i);
+    //     if (key.startsWith("conversation:")) {
+    //         remove_keys.push(key);
+    //     }
+    // }
+    // remove_keys.forEach((key)=>appStorage.removeItem(key));
+
     hide_sidebar();
     await new_conversation();
+    return done;
 };
 
 const handle_ask = async (do_ask_gpt = true, message = null) => {
@@ -895,7 +901,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         for (const [key, value] of Object.entries(message.conversation)) {
             conversation.data[key] = value;
         }
-        await save_conversation(conversation_id, get_conversation_data(conversation));
+        await save_conversation(update_conversation(conversation));
     } else if (message.type == "auth") {
         error_storage[message_id] = message.message
         content_map.inner.innerHTML += framework.markdown(`${framework.translate('**An error occured:**')} ${message.message}`);
@@ -1160,6 +1166,9 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             const final_message = message_storage[message_id]
                                 + (error_storage[message_id] ? " [error]" : "")
                                 + (stop_generating.classList.contains('stop_generating-hidden') ? " [aborted]" : "")
+            if (reasoning_storage[message_id] && !reasoning_storage[message_id].status) {
+                reasoning_storage[message_id].status = "";
+            }
             // Save message in local storage
             message_index = await add_message(
                 window.conversation_id,
@@ -1227,7 +1236,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             }
         });
     }
-    if (provider == "Puter" || provider == "Live") {
+    if (client) {
         for (const file of Object.values(image_storage)) {
             media.push({
                 "type": "image_url",
@@ -1264,24 +1273,24 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     if (!message) {
         message = last_message?.content;
     }
-    if (provider == "Puter") {
-        if (model == "dall-e-3" || model.includes("FLUX")) {
-            puter.ai.txt2img(message, false).then(async (image)=>{
-                let dirName = puter.randName();
-                let fileName = sanitize(message, " ") + ".png";
-                await puter.fs.mkdir(dirName);
-                let site;
-                try {
-                    site = await puter.hosting.create(dirName, dirName);
-                } catch {
-                    site = await puter.hosting.get(dirName);
-                }
-                await puter.fs.write(`${dirName}/${fileName}`, await fetch(image.src).then((response) => response.blob()));
-                const url = `https://${site.subdomain}.puter.site/${encodeURIComponent(fileName)}`;
+    if (client) {
+        const selectedOption = modelProvider.options[modelProvider.selectedIndex];
+        const selectedModel = selectedOption.value || client.defaultModel;
+        const modelType = selectedOption.dataset.type || 'chat';
+        try {
+            // Conditionally call the correct client method based on model type.
+            if (modelType === 'image') {
+                // Handle image generation
+                const response = await client.images.generate({
+                    model: selectedModel,
+                    prompt: message,
+                    seed: regenerate ? Math.floor(Date.now() / 1000) : null
+                });
+                const imageUrl = response.data[0].url;
                 await add_message(
                     window.conversation_id,
                     "assistant",
-                    `[![${sanitize(message, ' ')}](${url})](${url})`,
+                    `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl})`,
                     null,
                     message_index,
                 );
@@ -1289,142 +1298,51 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 safe_remove_cancel_button();
                 load_conversations();
                 hide_sidebar();
-            }).catch((error) => {
-                safe_remove_cancel_button();
-                console.error("Error on generate image:", error);
-            });
-            return;
-        }
-        puter.ai.chat(messages=messages, options={"model": model}, testMode=false)
-            .then(async (response) => {
-                await add_message(
-                    window.conversation_id,
-                    "assistant",
-                    response.message.content,
-                    null,
-                    message_index,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    response.message.reasoning_content ? {text: response.message.reasoning_content, status: ""} : null
-                );
-                await load_conversation(await get_conversation(conversation_id));
-                safe_remove_cancel_button();
-                load_conversations();
-                hide_sidebar();             
-            })
-            .catch((error) => {
-                safe_remove_cancel_button();
-                console.error("Error on generate text:", error);
-            });
-        return;
-    } else if (provider == "Live") {
-        async function generate_text(prompt, model) {
-            const apiKey = localStorage.getItem("PollinationsAI-api_key");
-            let headers = apiKey ? {"Authorization": apiKey} : {};
-            headers = {"Content-Type": "application/json", ...headers};
-            let seed = regenerate ? Math.floor(Date.now() / 1000) : "";
-            if (prompt == "hello") {
-                seed = "";
-            }
-            let textUrl = `https://text.pollinations.ai/openai`;
-            let method = "POST";
-            let body = {
-                messages: messages,
-                model: model,
-                seed: seed
-            };
-            if (model == "openai-audio") {
-                body.audio = {voice: "alloy", format: "mp3"};
-                body.modalities = ["text", "audio"];
-            }
-            await fetch(textUrl, {method: method, body: JSON.stringify(body), headers: headers})
-                .then(async (response) => {
-                    if (!response.ok) {
-                        content_map.inner.innerHTML = framework.markdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
-                        safe_remove_cancel_button();
-                        return;
+            } else {
+                // if (model == "openai-audio") {
+                //     body.audio = {voice: "alloy", format: "mp3"};
+                //     body.modalities = ["text", "audio"];
+                // }
+                // Handle chat completion (existing logic)
+                const stream = await client.chat.completions.create({
+                    model: selectedModel,
+                    messages,
+                    stream: true
+                });
+
+                let isReasoning = false;
+                let hasModel = false;
+                for await (const chunk of stream) {
+                    let delta;
+                    if (chunk.usage) {
+                        add_message_chunk({type: "usage", usage: chunk.usage}, message_id);
                     }
-                    const mimeType = response.headers.get("Content-Type");
-                    let result;
-                    if (mimeType && mimeType.startsWith("text/")) {
-                        content = await response.text();
-                    } else if (mimeType && mimeType.startsWith("audio/")) {
-                        content = `<audio controls src="${textUrl}"></audio>`
-                    } else if (mimeType && mimeType.startsWith("application/json")) {
-                        result = await response.json();
-                        if (result.choices[0].message.audio) {
-                            content = `<audio controls></audio>`;
-                            content = `${content}\n\n${result.choices[0].message.audio.transcript}`
-                        } else {
-                            content = result.choices[0].message.content;
-                        }
+                    if (chunk.model && !hasModel) {
+                        hasModel = true;
+                        add_message_chunk({type: "provider", provider: {name: provider, model: chunk.model}}, message_id);
+                    }
+                    if (chunk.choices[0]?.delta?.reasoning_content) {
+                        delta = chunk.choices[0]?.delta?.reasoning_content;
+                        isReasoning = true;
+                        add_message_chunk({type: "reasoning", token: delta}, message_id);
                     } else {
-                        content = `<iframe src="${textUrl}"></iframe>`;
+                        delta = chunk.choices[0]?.delta?.content || '';
+                        if (isReasoning) {
+                            isReasoning = false;
+                        }
+                        add_message_chunk({type: "content", content: delta}, message_id);
                     }
-                    await add_message(
-                        window.conversation_id,
-                        "assistant",
-                        content,
-                        {name: providerSelect.options[providerSelect.selectedIndex]?.text, model: result?.model || model},
-                        message_index,
-                        null,
-                        regenerate,
-                        null,
-                        null,
-                        result?.usage || null,
-                        result?.choices[0].message.reasoning_content ? {text: result.choices[0].message.reasoning_content, status: ""} : null
-                    );
-                    await load_conversation(await get_conversation(conversation_id));
-                    safe_remove_cancel_button();
-                    play_last_message(result);
-                    load_conversations();
-                    hide_sidebar();
-                })
-                .catch((error) => {
-                    safe_remove_cancel_button();
-                    console.error("Error on generate text:", error);
-                });
-            return;
-        }
-        async function generate_image(prompt, model) {
-            let seed = Math.floor(Date.now() / 1000);
-            seed = `&seed=${seed}`;
-            if (prompt == "hello") {
-                seed = "";
+                }
+                await finish_message();
             }
-            const image = `https://image.pollinations.ai/prompt/${encodeURI(prompt)}?model=${encodeURIComponent(model)}${seed}&nologo=true`;
-            await fetch(image)
-                .then(async (response) => {
-                    if (!response.ok) {
-                        content_map.inner.innerHTML = framework.markdown(`${framework.translate('**An error occured:**')} ${await response.text()}`);
-                        safe_remove_cancel_button();
-                        return;
-                    }
-                    await add_message(
-                        window.conversation_id,
-                        "assistant",
-                        `[![${sanitize(message, ' ')}](${image})](${image})`,
-                        null,
-                        message_index,
-                    );
-                    await load_conversation(await get_conversation(conversation_id));
-                    safe_remove_cancel_button();
-                    load_conversations();
-                    hide_sidebar();                
-                })
-                .catch((error) => {
-                    console.error("Error on generate image:", error);
-                    safe_remove_cancel_button();
-                });
+        } catch (err) {
+            safe_remove_cancel_button();
+            console.error(err);
+            error_storage[message_id] = `${framework.translate('**An error occured:**')} ${err?.error?.message || err}`;
+            await finish_message();
         }
-        if (modelProvider.options[modelProvider.selectedIndex]?.dataset.image) {
-            return generate_image(message, model);
-        }
-        return generate_text(message, model);
-    } 
+        return;
+    }
     try {
         const apiKey = get_api_key_by_provider(provider);
         const downloadMedia = document.getElementById("download_media")?.checked;
@@ -1542,7 +1460,9 @@ async function set_conversation_title(conversation_id, title) {
     conversation.new_title = title;
     delete conversation.share;
     const new_id = sanitize(title, " ");
-    if (new_id && !appStorage.getItem(`conversation:${new_id}`)) {
+    const new_conv = await get_conversation(new_id);
+    if (new_id && !new_conv) {
+        await delet
         appStorage.removeItem(`conversation:${conversation.id}`);
         title_ids_storage[conversation_id] = new_id;
         conversation.backup = conversation.backup || conversation.id;
@@ -1613,13 +1533,15 @@ const delete_conversation = async (conversation_id) => {
     if (conversation.share) {
         await framework.delete(conversation.id);
     }
-    appStorage.removeItem(`conversation:${conversation_id}`);
 
+    const { store, done } = await withStore('readwrite');
+    store.delete(id);
     if (window.conversation_id == conversation_id) {
         await new_conversation();
     }
 
     await load_conversations();
+    return done;
 };
 
 const set_conversation = async (conversation_id) => {
@@ -1948,30 +1870,9 @@ async function safe_load_conversation(conversation_id) {
     return false;
 }
 
-async function get_conversation(conversation_id) {
-    if (!conversation_id) {
-        return privateConversation;
-    }
-    let conversation = await JSON.parse(
-        appStorage.getItem(`conversation:${conversation_id}`)
-    );
-    return conversation;
-}
-
-function get_conversation_data(conversation) {
+function update_conversation(conversation) {
     conversation.updated = Date.now();
     return conversation;
-}
-
-async function save_conversation(conversation_id, conversation) {
-    if (!conversation_id) {
-        privateConversation = conversation;
-        return;
-    }
-    appStorage.setItem(
-        `conversation:${conversation_id}`,
-        JSON.stringify(conversation)
-    );
 }
 
 async function get_messages(conversation_id) {
@@ -1990,8 +1891,8 @@ async function add_conversation(conversation_id) {
         }
         return;
     }
-    if (appStorage.getItem(`conversation:${conversation_id}`) == null) {
-        await save_conversation(conversation_id, get_conversation_data({
+    if (!await get_conversation(conversation_id)) {
+        await save_conversation(update_conversation({
             id: conversation_id,
             title: "",
             added: Date.now(),
@@ -2009,7 +1910,7 @@ async function save_system_message() {
     const conversation = await get_conversation(window.conversation_id);
     if (conversation) {
         conversation.system = chatPrompt?.value;
-        await save_conversation(window.conversation_id, get_conversation_data(conversation));
+        await save_conversation(update_conversation(conversation));
     }
 }
 
@@ -2028,8 +1929,8 @@ const remove_message = async (conversation_id, index) => {
         }
     }
     conversation.items = new_items;
-    const data = get_conversation_data(conversation);
-    await save_conversation(conversation_id, data);
+    const data = update_conversation(conversation);
+    await save_conversation(data);
     if (conversation.share) {
         const url = `${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`;
         await fetch(url, {
@@ -2112,8 +2013,8 @@ const add_message = async (
         });
         conversation.items = new_messages;
     }
-    data = get_conversation_data(conversation);
-    await save_conversation(conversation_id, data);
+    data = update_conversation(conversation);
+    await save_conversation(data);
     if (conversation.share) {
         const url = `${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`;
         fetch(url, {
@@ -2135,13 +2036,7 @@ const toLocaleDateString = (date) => {
 }
 
 const load_conversations = async () => {
-    let conversations = [];
-    for (let i = 0; i < appStorage.length; i++) {
-        if (appStorage.key(i).startsWith("conversation:")) {
-            let conversation = appStorage.getItem(appStorage.key(i));
-            conversations.push(JSON.parse(conversation));
-        }
-    }
+    let conversations = await list_conversations();
     conversations.sort((a, b) => (b.updated||0)-(a.updated||0));
     await clear_conversations();
     conversations.forEach((conversation) => {
@@ -2571,7 +2466,7 @@ window.addEventListener('load', async function() {
     }
     conversation = await response.json();
     if (conversation.id == window.conversation_id) {
-        await save_conversation(conversation.id, conversation);
+        await save_conversation(conversation);
         await load_conversations();
     }
     await load_conversation(window.conversation_id);
@@ -2613,7 +2508,7 @@ setInterval(async () => {
         const new_conversation = await response.json();
         if (conversation.id == window.conversation_id && new_conversation.updated != conversation.updated) {
             conversation = new_conversation;
-            await save_conversation(conversation.id, conversation);
+            await save_conversation(conversation);
         }
     }
     if (lastUpdated != conversation.updated) {
@@ -2705,7 +2600,7 @@ function get_modelTags(model, add_vision = true) {
     return parts.join("");
 }
 
-function load_providers(providers, provider_options, providersListContainer) {
+async function load_providers(providers, provider_options, providersListContainer) {
     providers.sort((a, b) => a.label.localeCompare(b.label));
     providers.forEach((provider) => {
         let option = document.createElement("option");
@@ -2770,7 +2665,7 @@ function load_providers(providers, provider_options, providersListContainer) {
         providersContainer.querySelector(".collapsible-header").classList.toggle('active');
     });
     load_provider_login_urls(providersListContainer);
-    load_settings(provider_options);
+    await load_settings(provider_options);
     loadModels(providers);
 }
 function load_provider_login_urls(providersListContainer) {
@@ -2856,19 +2751,24 @@ async function on_api() {
         providersListContainer.querySelector(".collapsible-header").classList.toggle('active');
     });
 
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = framework.translate('Live Providers');
+    Object.entries(window.providers).forEach(([name, _]) => {
+        let option = document.createElement("option");
+        option.value = name;
+        option.dataset.live = "true";
+        option.text = name;
+        optgroup.appendChild(option);
+    });
+    providerSelect.appendChild(optgroup);
+
     let provider_options = [];
-    api("models").then((models)=>{
-        models.forEach((model) => {
-            is_demo = model.demo;
-        });
-        api("providers").then((providers) => load_providers(providers, provider_options, providersListContainer));
+    api("providers").then(async (providers) => {
+        await load_providers(providers, provider_options, providersListContainer);
         load_provider_models(appStorage.getItem("provider"));
     }).catch(async (e)=>{
         console.log(e)
-        const providerValue = appStorage.getItem("provider") || "Live";
-        providerSelect.innerHTML = `<option value="Live" ${providerValue == "Live" ? "selected" : ""}>Pollinations AI (live)</option>
-            <option value="Puter" ${providerValue == "Puter" ? "selected" : ""}>Puter.js AI (live)</option>`;
-        await load_provider_models(providerSelect.value);
+        await load_provider_models(appStorage.getItem("provider"));
         await load_provider_login_urls(providersListContainer);
         await load_settings(provider_options);
     });
@@ -3236,7 +3136,7 @@ fileInput.addEventListener('change', async (event) => {
                 const data = JSON.parse(event.target.result);
                 if (data.options && "g4f" in data.options) {
                     let count = 0;
-                    Object.keys(data).forEach(key => {
+                    Object.keys(data).forEach(async key => {
                         if (key == "options") {
                             Object.keys(data[key]).forEach(keyOption => {
                                 appStorage.setItem(keyOption, data[key][keyOption]);
@@ -3244,7 +3144,7 @@ fileInput.addEventListener('change', async (event) => {
                             });
                         } else if (!localStorage.getItem(key)) {
                             if (key.startsWith("conversation:")) {
-                                appStorage.setItem(key, JSON.stringify(data[key]));
+                                await save_conversation(data[key]);
                                 count += 1;
                             } else {
                                 appStorage.setItem(key, data[key]);
@@ -3317,10 +3217,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
-        if (providerModelSignal) {
-            providerModelSignal.abort();
-        }
-        providerModelSignal = new AbortController();
+        // if (providerModelSignal) {
+        //     providerModelSignal.abort();
+        // }
+        // providerModelSignal = new AbortController();
         api_key = get_api_key_by_provider(args);
         if (api_key) {
             headers.x_api_key = api_key;
@@ -3338,7 +3238,7 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         response = await fetch(url, {
             method: 'GET',
             headers: headers,
-            signal: providerModelSignal.signal,
+            //signal: providerModelSignal.signal,
         });
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);
@@ -3382,12 +3282,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
                 if (continue_storage[message_id]) {
                     delete continue_storage[message_id];
                     await api("conversation", args, files, message_id, finish_message)
-                    await read_response(response, message_id, args.provider || null, finish_message);
                 }
             }
             if (response.status == 524) {
                 await api("conversation", args, files, message_id, finish_message)
-                await read_response(response, message_id, args.provider || null, finish_message);
             }
             await finish_message();
             return;
@@ -3469,93 +3367,21 @@ function get_api_key_by_provider(provider) {
     return api_key;
 }
 
-function load_fallback_models() {
-    modelSelect.classList.add("hidden");
-    modelProvider.classList.remove("hidden");
-    modelProvider.name = `model[Live]`;
-    modelProvider.innerHTML = '';
-    fetch("https://text.pollinations.ai/models").then(async (response) => {
-        models = await response.json();
-        models.forEach((model) => {
-            let option = document.createElement("option");
-            option.value = model.name;
-            option.text = `${model.name} ${get_modelTags(model)}`;
-            if (model.audio) {
-                option.dataset.audio = "true";
-            }
-            modelProvider.appendChild(option);
-        });
-        const imageResponse = await fetch("https://image.pollinations.ai/models");
-        const imageModels = await imageResponse.json();
-        imageModels.forEach((model) => {
-            let option = document.createElement("option");
-            option.value = model;
-            option.text = `${model} (${modelTags.image})`;
-            option.dataset.image = "true";
-            modelProvider.appendChild(option);
-        });
-    });
-}
-
-async function load_puter_models() {
-    modelSelect.classList.add("hidden");
-    modelProvider.classList.remove("hidden");
-    modelProvider.name = `model[Puter]`;
-    const response = await fetch("https://api.puter.com/puterai/chat/models/");
-    let models = await response.json();
-    models = models.models;
-    models.push("dall-e-3");
-    models = models.filter((model) => !model.includes("/") && !["abuse", "costly", "fake", "model-fallback-test-1"].includes(model));
-    modelProvider.innerHTML = models.map((model)=>`<option value="${model}">${model + get_modelTags({
-        image: model.includes('FLUX') || model.includes('dall-e-3'),
-        vision: ['gpt', 'o1', 'o3', 'o4'].includes(model.split('-')[0]) || model.includes('vision'),
-    })}</option>`).join("");
-}
-
-async function injectPuter() {
-    return new Promise((resolve, reject) => {
-        if (window.puter) {
-            resolve(puter)
-        }
-        var tag = document.createElement('script');
-        tag.src = "https://js.puter.com/v2/";
-        tag.onload = () => {
-            resolve(puter);
-            if (!localStorage.getItem("puter.auth.token")) {
-                puter.auth.signIn().then((res) => {
-                    debug.log('Signed in:',  res);
-                });
-            }
-        }
-        tag.onerror = reject;
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    });
-}
 
 async function load_provider_models(provider=null, search=null) {
     if (!provider) {
         provider = providerSelect.value;
     }
+    modelSelect.classList.add("hidden");
     modelProvider.classList.remove("hidden");
     modelProvider.innerHTML = '';
-    if (provider == "Live") {
-        modelSelect.classList.add("hidden");
-        modelProvider.classList.remove("hidden");
-        await load_fallback_models();
-        return;
-    }
     modelProvider.name = `model[${provider}]`;
     if (!provider) {
         modelProvider.classList.add("hidden");
         return;
     }
-    if (provider.startsWith("Puter")) {
-        await injectPuter();
-        if (provider == "Puter") {
-            await load_puter_models();
-            return;
-        }
+    if (await initClient()) {
+        return;
     }
     function set_provider_models(models) {
         modelProvider.innerHTML = '';
@@ -3633,9 +3459,7 @@ async function load_provider_models(provider=null, search=null) {
         appStorage.setItem(`${provider}:models`, JSON.stringify(models));
     }
 };
-providerSelect.addEventListener("change", () => {
-    load_provider_models()
-});
+providerSelect.addEventListener("change", () => load_provider_models());
 modelProvider.addEventListener("change", () => {
     const favorites = appStorage.getItem("favorites") ? JSON.parse(appStorage.getItem("favorites")) : {};
     const selected = favorites[providerSelect.value] || {};
@@ -3804,9 +3628,15 @@ searchButton.addEventListener("click", async () => {
     switchInput.click();
 });
 
-function save_storage(settings=false) {
+async function save_storage(settings=false) {
     let filename = `${settings ? 'settings' : 'chat'} ${new Date().toLocaleString()}.json`.replaceAll(":", "-");
     let data = {"options": {"g4f": ""}};
+    if (!settings) {
+        const conversations = await list_conversations();
+        conversations.forEach((conversation) => {
+            data[`conversation:${conversation.id}`] = conversation;
+        });
+    }
     for (let i = 0; i < appStorage.length; i++) {
         let key = appStorage.key(i);
         let item = appStorage.getItem(key);
@@ -3830,48 +3660,6 @@ function save_storage(settings=false) {
     document.body.appendChild(elem);
     elem.click();        
     document.body.removeChild(elem);
-}
-
-function import_memory() {
-    if (!appStorage.getItem("mem0-api_key")) {
-        return;
-    }
-    hide_sidebar();
-
-    let count = 0;
-    let user_id = appStorage.getItem("user") || appStorage.getItem("mem0-user_id");
-    if (!user_id) {
-        user_id = generateUUID();
-        appStorage.setItem("mem0-user_id", user_id);
-    }
-    inputCount.innerText = framework.translate("Importing conversations...");
-    let conversations = [];
-    for (let i = 0; i < appStorage.length; i++) {
-        if (appStorage.key(i).startsWith("conversation:")) {
-            let conversation = appStorage.getItem(appStorage.key(i));
-            conversations.push(JSON.parse(conversation));
-        }
-    }
-    conversations.sort((a, b) => (a.updated||0)-(b.updated||0));
-    async function add_conversation_to_memory(i) {
-        if (i > conversations.length - 1) {
-            return;
-        }
-        let body = JSON.stringify(conversations[i]);
-        response = await fetch(`${framework.backendUrl}/backend-api/v2/memory/${user_id}`, {
-            method: 'POST',
-            body: body,
-            headers: {
-                "content-type": "application/json",
-                "x_api_key": appStorage.getItem("mem0-api_key")
-            }
-        });
-        const result = await response.json();
-        count += result.count;
-        inputCount.innerText = framework.translate('{0} Messages were imported').replace("{0}", count);
-        add_conversation_to_memory(i + 1);
-    }
-    add_conversation_to_memory(0)
 }
 
 async function get_recognition_language() {
@@ -4526,3 +4314,149 @@ function enhanceFileUpload() {
 }
 
 enhanceFileUpload();
+
+function isLive() {
+    return providerSelect.options[providerSelect.selectedIndex]?.dataset?.live;
+}
+
+async function initClient() {
+    if (!isLive()) {
+        client = null;
+        return;
+    }
+    const provider = providerSelect.value;
+    const apiKey = get_api_key_by_provider(provider);
+    const options = apiKey ? { apiKey } : {};
+
+    if (!window.providers[provider]) {
+        console.error(`No client class found for provider: ${provider}`);
+        return;
+    }
+
+    client = new window.providers[provider](options);
+    await loadClientModels();
+    return true;
+}
+
+async function loadClientModels() {
+    modelProvider.innerHTML = `<option disabled selected>${framework.translate("Loading...")}</option>`;
+    try {
+        const models = await client.models.list();
+        console.log('Loaded models:', models);
+        modelProvider.innerHTML = '';
+        models.forEach(model => {
+            const opt = document.createElement('option');
+            opt.value = model.id;
+            opt.textContent = model.id + (model.type == "image" ? " 🎨" : "");
+            // Store the model type (e.g., 'chat' or 'image') in a data attribute.
+            if (model.type) {
+                opt.dataset.type = model.type;
+            }
+            if (model.id === client.defaultModel) opt.selected = true;
+            modelProvider.appendChild(opt);
+        });
+    } catch (err) {
+        console.error('Model load failed:', err);
+        modelProvider.innerHTML = "";
+    }
+}
+
+const DB_NAME = 'chat-db';
+const STORE_NAME = 'conversations';
+const VERSION = 1;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+  });
+}
+
+function withStore(mode) {
+  return openDB().then(db => {
+    const tx = db.transaction(STORE_NAME, mode);
+    return {
+      store: tx.objectStore(STORE_NAME),
+      done: new Promise((res, rej) => {
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      }),
+    };
+  });
+}
+
+// Get one conversation by id
+async function get_conversation(id) {
+    if (!id) {
+        return privateConversation;
+    }
+    const { store } = await withStore('readonly');
+    return new Promise((resolve, reject) => {
+        const request = store.get(id);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Save conversation (insert or update)
+async function save_conversation(conv) {
+    if (!conv.id) {
+        privateConversation = conv;
+        return true;
+    }
+    const { store, done } = await withStore('readwrite');
+    store.put(conv);
+    return done;
+}
+
+// List all conversations
+async function list_conversations() {
+  const { store } = await withStore('readonly');
+  return new Promise((resolve, reject) => {
+    const conversations = [];
+    const request = store.openCursor();
+
+    request.onsuccess = event => {
+      const cursor = event.target.result;
+      if (cursor) {
+        conversations.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(conversations);
+      }
+    };
+
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Import old conversations from localStorage into IndexedDB
+async function import_from_localStorage() {
+  const prefix = 'conversation:';
+  const keys = Object.keys(localStorage).filter(k => k.startsWith(prefix));
+
+  for (const key of keys) {
+    try {
+      const json = localStorage.getItem(key);
+      if (!json) continue;
+      const conv = JSON.parse(json);
+      // Use the id from conversation, if missing fallback to key after prefix
+      conv.id = conv.id || key.substring(prefix.length);
+      conv.updated = conv.updated || Date.now();
+      await save_conversation(conv);
+      localStorage.removeItem(key); // Optionally clear old storage
+    } catch (e) {
+      console.warn(`Skipping localStorage item ${key} due to error`, e);
+    }
+  }
+}
+
+import_from_localStorage();

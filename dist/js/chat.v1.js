@@ -55,13 +55,11 @@ let login_urls_storage = {
 };
 
 const modelTags = {
-    image: "📸 Image Generation",
-    vision: "👓 Image Upload",
-    audio: "🎧 Audio Generation",
-    video: "🎥 Video Generation"
+    image: "🎨",
+    vision: "👓",
+    audio: "🎧",
+    video: "🎥"
 }
-
-translationSnipptes.push.apply(translationSnipptes, Object.values(modelTags));
 
 document.addEventListener("DOMContentLoaded", (event) => {
     translationSnipptes.forEach((text) => framework.translate(text));
@@ -2595,7 +2593,7 @@ function get_modelTags(model, add_vision = true) {
     const parts = []
     for (let [name, text] of Object.entries(modelTags)) {
         if (name != "vision" || add_vision) {
-            parts.push(model[name] ? ` (${framework.translate(text)})` : "")
+            parts.push(model[name] ? ` ${text}` : "")
         }
     }
     return parts.join("");
@@ -2609,9 +2607,9 @@ async function load_providers(providers, provider_options, providersListContaine
         option.dataset.label = provider.label;
         option.text = provider.label
             + get_modelTags(provider)
-            + (provider.nodriver ? " (Browser)" : "")
-            + (provider.hf_space ? " (HuggingSpace)" : "")
-            + (!provider.nodriver && provider.auth ? " (Auth)" : "");
+            + (provider.hf_space ? " 🤗" : "")
+            + (provider.nodriver ? " 🌐" : "")
+            + (!provider.nodriver && provider.auth ? " 🔑" : "");
         if (provider.parent)
             option.dataset.parent = provider.parent;
         providerSelect.appendChild(option);

@@ -1,43 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GPT4Free Image Editing Variation Documentation | g4f.dev</title>
-    
-    <meta name="description" content="Learn how to generate image variations using GPT4Free's image editing variation feature. Supports multiple providers, local file uploads, and includes code examples." />
-    <meta name="keywords" content="GPT4Free, image editing, image variations, AI image generation, g4f.dev, OpenAI, PollinationsAI, Together, Copilot, image upload, AI image APIs" />
-    <meta name="author" content="GPT4Free" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="GPT4Free Image Editing Variation Documentation" />
-    <meta property="og:description" content="Learn how to generate image variations using GPT4Free's image editing variation feature with multiple providers and local file uploads." />
-    <meta property="og:url" content="https://g4f.dev/docs/image_editing.html" />
-    <meta property="og:site_name" content="GPT4Free (g4f.dev)" />
-    <meta property="og:image" content="https://g4f.dev/docs/images/strawberry.jpg" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="GPT4Free Image Editing Variation Documentation" />
-    <meta name="twitter:description" content="Detailed guide on GPT4Free image variation generation feature using various AI providers and local uploads." />
-    <meta name="twitter:image" content="https://g4f.dev/docs/images/strawberry.jpg" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://g4f.dev/docs/image_editing.html" />
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/dist/img/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/dist/img/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/dist/img/favicon-16x16.png" />
-    <link rel="manifest" href="/dist/img/site.webmanifest" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT4Free Image Editing Variation Documentation</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/dist/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/dist/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/dist/img/favicon-16x16.png">
+    <link rel="manifest" href="/dist/img/site.webmanifest">
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/light-74231a1f3bbb.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/dark-8a995f0bacd4.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-primitives-225433424a87.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-b8b91660c29d.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/global-205098e9fedd.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/code-177d21388df8.css" />
-
     <style>
         :root {
             --colour-1: #000000;
@@ -77,118 +53,77 @@
             }
         }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5896143631849307"
-     crossorigin="anonymous"></script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "TechArticle",
-      "headline": "GPT4Free Image Editing Variation Documentation",
-      "description": "Learn how to generate image variations using GPT4Free's image editing variation feature, including multiple AI providers, local file uploads, and code samples.",
-      "image": "https://g4f.dev/docs/images/strawberry.jpg",
-      "author": {
-        "@type": "Organization",
-        "name": "GPT4Free"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "GPT4Free",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://g4f.dev/dist/img/favicon-32x32.png"
-        }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://g4f.dev/docs/image_editing.html"
-      },
-      "datePublished": "2025-07-01",
-      "dateModified": "2025-07-28"
-    }
-    </script>
 </head>
 <body>
-    <article class="markdown-body entry-content container-lg" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
-        <h1 itemprop="headline">GPT4Free Image Editing Variation Documentation</h1>
-        <p itemprop="description">
-          This guide explains how to use the image editing variation feature in <strong>GPT4Free (g4f.dev)</strong>. It covers generating variations of images using different AI providers, handling local file uploads, and showcasing example results.
-        </p>
-
-        <hr />
-        
-        <nav aria-label="Table of Contents">
-          <h2>Table of Contents</h2>
-          <ol>
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#providers-and-models">Providers and Models</a></li>
-            <li><a href="#using-local-file-uploads">Using Local File Uploads</a></li>
-            <li><a href="#example-results">Example Results</a></li>
-            <li><a href="#code-examples">Code Examples</a></li>
-            <li><a href="#troubleshooting">Troubleshooting</a></li>
-            <li><a href="#conclusion">Conclusion</a></li>
-          </ol>
-        </nav>
-
-        <hr />
-        
-        <section id="overview">
-          <h2>Overview</h2>
-          <p>The <code class="notranslate" itemprop="softwareVersion">g4f</code> library allows you to generate variations of an input image based on a textual prompt. You can use any of the following input types:</p>
-          <ul>
-            <li>A URL to a remote image</li>
-            <li>A local file path</li>
-            <li>Uploaded files from your local server</li>
-          </ul>
-          <p>The library supports multiple providers, including those that require local file access.</p>
-        </section>
-
-        <hr />
-
-        <section id="providers-and-models">
-          <h2>Providers and Models</h2>
-          <table role="table" aria-describedby="providers-and-models-desc">
-            <caption id="providers-and-models-desc" class="sr-only">
-              List of AI providers supported by GPT4Free, input types, and special notes.
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">Provider</th>
-                <th scope="col">Input Type</th>
-                <th scope="col">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>PollinationsAI</strong></td>
-                <td>URL</td>
-                <td>Supports transparent background with <code class="notranslate">transparent=True</code>.<br /> Has <code class="notranslate">gpt-image</code> and <code class="notranslate">flux-kontext</code> models.</td>
-              </tr>
-              <tr>
-                <td><strong>Together</strong></td>
-                <td>URL</td>
-                <td>Uses <code class="notranslate">flux-kontext-pro</code> model.</td>
-              </tr>
-              <tr>
-                <td><strong>OpenaiAccount</strong></td>
-                <td>Local file</td>
-                <td>Requires authentication.</td>
-              </tr>
-              <tr>
-                <td><strong>CopilotAccount</strong></td>
-                <td>Local file</td>
-                <td>Requires authentication.</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <hr />
-
-        <section id="using-local-file-uploads">
-          <h2>Using Local File Uploads</h2>
-          <p>GPT4Free allows you to upload image files to your local server. These uploaded files can be used with all providers, including those that normally require local files.</p>
-
-          <h3>JavaScript Upload Example:</h3>
+    <article class="markdown-body entry-content container-lg" itemprop="text"><h2>GPT4Free Image Editing Variation Documentation</h2>
+<p>This guide explains how to use the image editing variation feature in <strong>GPT4Free (g4f.dev)</strong>. It covers generating variations of images using different providers, handling local file uploads, and showcasing example results.</p>
+<hr>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#providers-and-models">Providers and Models</a></li>
+<li><a href="#using-local-file-uploads">Using Local File Uploads</a></li>
+<li><a href="#example-results">Example Results</a></li>
+<li><a href="#code-examples">Code Examples</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+<hr>
+<h2>Overview</h2>
+<p>The <code class="notranslate">g4f</code> library allows you to generate variations of an input image based on a textual prompt. You can use either:</p>
+<ul>
+<li>A URL to a remote image</li>
+<li>A local file path</li>
+<li>Uploaded files from your local server</li>
+</ul>
+<p>The library supports multiple providers, including those that require local file access.</p>
+<hr>
+<h2>Providers and Models</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Provider</th>
+<th>Input Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PollinationsAI</strong></td>
+<td>URL</td>
+<td>Uses <code class="notranslate">flux-kontext</code> model</td>
+</tr>
+<tr>
+<td><strong>Together</strong></td>
+<td>URL</td>
+<td>Uses <code class="notranslate">flux-kontext-pro</code> model</td>
+</tr>
+<tr>
+<td><strong>HuggingSpace</strong></td>
+<td>Local file</td>
+<td>Uses <code class="notranslate">flux-kontext-dev</code> model</td>
+</tr>
+<tr>
+<td><strong>Azure</strong></td>
+<td>Local file</td>
+<td>Requires authentication</td>
+</tr>
+<tr>
+<td><strong>OpenaiAccount</strong></td>
+<td>Local file</td>
+<td>Requires authentication</td>
+</tr>
+<tr>
+<td><strong>CopilotAccount</strong></td>
+<td>Local file</td>
+<td>Requires authentication</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>Using Local File Uploads</h2>
+<p>GPT4Free allows you to upload image files to your local server. These uploaded files can be used with all providers, including those that normally require local files.</p>
+<h3>JavaScript Upload Example:</h3>
 <div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">async</span> <span class="pl-k">function</span> <span class="pl-en">upload_files</span><span class="pl-kos">(</span><span class="pl-s1">fileInput</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
     <span class="pl-k">const</span> <span class="pl-s1">bucket_id</span> <span class="pl-c1">=</span> <span class="pl-en">generateUUID</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
     
@@ -215,90 +150,76 @@
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span></pre></div>
 <hr>
-          <h2>Example Results</h2>
-
-          <table role="table" aria-describedby="original-image-desc">
-            <caption id="original-image-desc" class="sr-only">
-              Original image used to generate variants.
-            </caption>
-            <tbody>
-              <tr>
-                <td>
-                  <a href="images/strawberry.jpg" target="_blank" rel="noopener noreferrer nofollow">
-                    <img src="images/strawberry.jpg" alt="Original image of strawberry used for variations" height="160" style="max-width: 100%; height: auto; max-height: 160px;" />
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table role="table" aria-describedby="variant-images-desc">
-            <caption id="variant-images-desc" class="sr-only">
-              Image variants of strawberry created by OpenAI and Together providers.
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">OpenAI Variant</th>
-                <th scope="col">Together Variant</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <a href="images/strawberry_openai.png" target="_blank" rel="noopener noreferrer nofollow">
-                    <img src="images/strawberry_openai.png" alt="OpenAI generated strawberry variant" height="160" style="max-width: 100%; height: auto; max-height: 160px;" />
-                  </a>
-                </td>
-                <td>
-                  <a href="images/strawberry_copilot.png" target="_blank" rel="noopener noreferrer nofollow">
-                    <img src="images/strawberry_copilot.png" alt="Together provider strawberry variant" height="160" style="max-width: 100%; height: auto; max-height: 160px;" />
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td><em>Prompt: "Change to green"</em></td>
-                <td><em>Prompt: "Generate a variant"</em></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <table role="table" aria-describedby="pollinations-copilot-images-desc">
-            <caption id="pollinations-copilot-images-desc" class="sr-only">
-              Image variants generated by Pollinations.AI and Microsoft Copilot providers.
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">Pollinations.AI Variant</th>
-                <th scope="col">Microsoft Copilot Variant</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <a href="images/strawberry_pollinations.png" target="_blank" rel="noopener noreferrer nofollow">
-                    <img src="images/strawberry_pollinations.png" alt="Pollinations.AI generated strawberry variant" height="160" style="max-width: 100%; height: auto; max-height: 160px;" />
-                  </a>
-                </td>
-                <td>
-                  <a href="images/strawberry_together.jpg" target="_blank" rel="noopener noreferrer nofollow">
-                    <img src="images/strawberry_together.jpg" alt="Microsoft Copilot strawberry variant" height="160" style="max-width: 100%; height: auto; max-height: 160px;" />
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td><em>Prompt: "Remove background"</em></td>
-                <td><em>Prompt: "Add nature background"</em></td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <hr />
-
-        <section id="code-examples">
-          <h2>Code Examples</h2>
-
-          <h3>Basic Usage with Local File</h3>
+<h2>Example Results</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Original Image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry.jpg"><img src="images/strawberry.jpg" alt="Original" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>OpenAI Variant</th>
+<th>Together Variant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_openai.png"><img src="images/strawberry_openai.png" alt="OpenAI" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_copilot.png"><img src="images/strawberry_copilot.png" alt="Together" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+</tr>
+<tr>
+<td><em>Prompt: "Change to green"</em></td>
+<td><em>Prompt: "Generate a variant"</em></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Pollinations.AI Variant</th>
+<th>Microsoft Copilot Variant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_pollinations.png"><img src="images/strawberry_pollinations.png" alt="Pollinations.AI" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_together.jpg"><img src="images/strawberry_together.jpg" alt="Copilot" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+</tr>
+<tr>
+<td><em>Prompt: "Remove background"</em></td>
+<td><em>Prompt: "Add nature background"</em></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Azure Variant</th>
+<th>HuggingSpace Variant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_azure.png"><img src="images/strawberry_azure.png" alt="Azure" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+<td><a target="_blank" rel="noopener noreferrer" href="images/strawberry_hugging_space.webp"><img src="images/strawberry_hugging_space.webp" alt="HuggingSpace" height="160" style="max-width: 100%; height: auto; max-height: 160px;"></a></td>
+</tr>
+<tr>
+<td><em>Prompt: "Add text 'Hello World'"</em></td>
+<td><em>Prompt: "Change color to black &amp; white"</em></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>Code Examples</h2>
+<h3>Basic Usage with Local File</h3>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">pathlib</span> <span class="pl-k">import</span> <span class="pl-v">Path</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
@@ -325,7 +246,40 @@
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>)
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main_with_openai</span>())</pre></div>
-          <h3>URL-based Providers</h3>
+<h3>Exmaples with Azure and HuggingSpace provider</h3>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
+<span class="pl-k">from</span> <span class="pl-s1">pathlib</span> <span class="pl-k">import</span> <span class="pl-v">Path</span>
+<span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
+<span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">HuggingSpace</span>, <span class="pl-v">Azure</span>
+<span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">cookies</span> <span class="pl-k">import</span> <span class="pl-s1">read_cookie_files</span>
+
+<span class="pl-c"># Read cookies and environment variables</span>
+<span class="pl-en">read_cookie_files</span>()
+
+<span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">AsyncClient</span>()
+
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main_with_hugging_space</span>():
+    <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">images</span>.<span class="pl-c1">create_variation</span>(
+        <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-en">Path</span>(<span class="pl-s">"g4f.dev/docs/images/strawberry.jpg"</span>),
+        <span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-v">HuggingSpace</span>,
+        <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"flux-kontext-dev"</span>,
+        <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"Change color to black and white"</span>,
+        <span class="pl-s1">response_format</span><span class="pl-c1">=</span><span class="pl-s">"url"</span>
+    )
+    <span class="pl-en">print</span>(<span class="pl-s1">result</span>)
+
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">main_with_azure</span>():
+    <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span>.<span class="pl-c1">images</span>.<span class="pl-c1">create_variation</span>(
+        <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-en">Path</span>(<span class="pl-s">"g4f.dev/docs/images/strawberry.jpg"</span>),
+        <span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-v">Azure</span>,
+        <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"flux-kontext"</span>,
+        <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"Add text 'Hello World' in the center"</span>,
+        <span class="pl-s1">response_format</span><span class="pl-c1">=</span><span class="pl-s">"url"</span>
+    )
+    <span class="pl-en">print</span>(<span class="pl-s1">result</span>)
+
+<span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main_with_azure</span>())</pre></div>
+<h3>URL-based Providers</h3>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">asyncio</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-s1">client</span> <span class="pl-k">import</span> <span class="pl-v">AsyncClient</span>
 <span class="pl-k">from</span> <span class="pl-s1">g4f</span>.<span class="pl-v">Provider</span> <span class="pl-k">import</span> <span class="pl-v">PollinationsAI</span>, <span class="pl-v">Together</span>
@@ -337,9 +291,8 @@
         <span class="pl-s1">image</span><span class="pl-c1">=</span><span class="pl-s">"https://g4f.dev/docs/images/strawberry.jpg"</span>,
         <span class="pl-s1">provider</span><span class="pl-c1">=</span><span class="pl-v">PollinationsAI</span>,
         <span class="pl-s1">prompt</span><span class="pl-c1">=</span><span class="pl-s">"Remove background"</span>,
-        <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gpt-image"</span>,
-        <span class="pl-s1">response_format</span><span class="pl-c1">=</span><span class="pl-s">"url"</span>,
-        <span class="pl-s1">transparent</span><span class="pl-c1">=</span><span class="pl-c1">True</span>
+        <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"kontext"</span>,
+        <span class="pl-s1">response_format</span><span class="pl-c1">=</span><span class="pl-s">"url"</span>
     )
     <span class="pl-en">print</span>(<span class="pl-s1">result</span>)
 
@@ -355,27 +308,21 @@
 
 <span class="pl-s1">asyncio</span>.<span class="pl-c1">run</span>(<span class="pl-en">main_with_together</span>())</pre></div>
 <hr>
-          <h2>Troubleshooting</h2>
-          <ul>
-            <li><strong>File Not Found</strong>: Verify file paths exist.</li>
-            <li><strong>Authentication Errors</strong>: Check provider credentials.</li>
-            <li><strong>Provider Limits</strong>: Some providers have rate limits.</li>
-            <li><strong>Model Compatibility</strong>: Not all models support all features.</li>
-          </ul>
-        </section>
-
-        <hr />
-
-        <section id="conclusion">
-          <h2>Conclusion</h2>
-          <p>GPT4Free offers flexible image variation generation through multiple AI providers. Key features include:</p>
-          <ul>
-            <li>Support for both local and remote images.</li>
-            <li>Automatic handling of file uploads.</li>
-            <li>Multiple provider options with different capabilities.</li>
-          </ul>
-          <p><a href="/docs/" rel="noopener">Return to Documentation</a></p>
-        </section>
-    </article>
+<h2>Troubleshooting</h2>
+<ul>
+<li><strong>File Not Found</strong>: Verify file paths exist</li>
+<li><strong>Authentication Errors</strong>: Check provider credentials</li>
+<li><strong>Provider Limits</strong>: Some providers have rate limits</li>
+<li><strong>Model Compatibility</strong>: Not all models support all features</li>
+</ul>
+<hr>
+<h2>Conclusion</h2>
+<p>GPT4Free offers flexible image variation generation through multiple providers. Key features include:</p>
+<ul>
+<li>Support for both local and remote images</li>
+<li>Automatic handling of file uploads</li>
+<li>Multiple provider options with different capabilities</li>
+</ul>
+<p><a href="/docs/">Return to Documentation</a></p></article>
 </body>
 </html>

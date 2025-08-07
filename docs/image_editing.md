@@ -130,7 +130,7 @@ async def main_with_copilot():
 asyncio.run(main_with_openai())
 ```
 
-### Exmaples with Azure and HuggingSpace provider
+### Examples with Azure and HuggingSpace provider
 ```python
 import asyncio
 from pathlib import Path

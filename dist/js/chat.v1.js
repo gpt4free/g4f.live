@@ -83,7 +83,6 @@ let title_ids_storage = {};
 let image_storage = {};
 let wakeLock = null;
 let countTokensEnabled = true;
-let privateConversation = null;
 let suggestions = null;
 let lastUpdated = null;
 let mediaRecorder = null;
@@ -1461,17 +1460,13 @@ async function set_conversation_title(conversation_id, title) {
     const new_id = sanitize(title, " ");
     const new_conv = await get_conversation(new_id);
     if (new_id && !new_conv) {
-        await delet
-        appStorage.removeItem(`conversation:${conversation.id}`);
+        await delete_conversation(conversation_id);
         title_ids_storage[conversation_id] = new_id;
         conversation.backup = conversation.backup || conversation.id;
         conversation.id = new_id;
         add_url_to_history(`#${new_id}`);
     }
-    appStorage.setItem(
-        `conversation:${conversation.id}`,
-        JSON.stringify(conversation)
-    );
+    await save_conversation(conversation);
 }
 
 const show_option = async (conversation_id) => {
@@ -1518,7 +1513,7 @@ const hide_option = async (conversation_id) => {
     }
 };
 
-const delete_conversation = async (conversation_id) => {
+const on_delete_conversation = async (conversation_id) => {
     const conversation = await get_conversation(conversation_id);
     for (const message of conversation.items)  {
         if (Array.isArray(message.content)) {
@@ -2060,7 +2055,7 @@ const load_conversations = async () => {
             </div>
             <i onclick="show_option('${conversation.id}')" class="fa-solid fa-ellipsis-vertical" id="conv-${conversation.id}"></i>
             <div id="cho-${conversation.id}" class="choise" style="display:none;">
-                <i onclick="delete_conversation('${conversation.id}')" class="fa-solid fa-trash"></i>
+                <i onclick="on_delete_conversation('${conversation.id}')" class="fa-solid fa-trash"></i>
                 <i onclick="hide_option('${conversation.id}')" class="fa-regular fa-x"></i>
             </div>
         `;
@@ -4363,83 +4358,6 @@ async function loadClientModels() {
         console.error('Model load failed:', err);
         modelProvider.innerHTML = "";
     }
-}
-
-const DB_NAME = 'chat-db';
-const STORE_NAME = 'conversations';
-const VERSION = 1;
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, VERSION);
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-      }
-    };
-  });
-}
-
-function withStore(mode) {
-  return openDB().then(db => {
-    const tx = db.transaction(STORE_NAME, mode);
-    return {
-      store: tx.objectStore(STORE_NAME),
-      done: new Promise((res, rej) => {
-        tx.oncomplete = () => res();
-        tx.onerror = () => rej(tx.error);
-      }),
-    };
-  });
-}
-
-// Get one conversation by id
-async function get_conversation(id) {
-    if (!id) {
-        return privateConversation;
-    }
-    const { store } = await withStore('readonly');
-    return new Promise((resolve, reject) => {
-        const request = store.get(id);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-    });
-}
-
-// Save conversation (insert or update)
-async function save_conversation(conv) {
-    if (!conv.id) {
-        privateConversation = conv;
-        return true;
-    }
-    const { store, done } = await withStore('readwrite');
-    store.put(conv);
-    return done;
-}
-
-// List all conversations
-async function list_conversations() {
-  const { store } = await withStore('readonly');
-  return new Promise((resolve, reject) => {
-    const conversations = [];
-    const request = store.openCursor();
-
-    request.onsuccess = event => {
-      const cursor = event.target.result;
-      if (cursor) {
-        conversations.push(cursor.value);
-        cursor.continue();
-      } else {
-        resolve(conversations);
-      }
-    };
-
-    request.onerror = () => reject(request.error);
-  });
 }
 
 // Import old conversations from localStorage into IndexedDB

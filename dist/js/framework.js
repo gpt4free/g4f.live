@@ -266,7 +266,9 @@ async function genAK(_0x3d01f3){
 (async ()=>{
     const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
     const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
-    await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+    if (window.location.pathname == "/chat/") {
+        await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+    }
 })();
 async function gen() {
     const user = userInput.value.trim();
@@ -285,24 +287,7 @@ async function gen() {
         showMessage('Error generating API key: ' + error.message);
     }
 }
-async function getHeaders() {
-    const headers = {}
-    const user = localStorage.getItem("user");
-    if (user) {
-        headers["x-user"] = user;
-    }
-    try {
-        const encrypt = new JSEncrypt();
-        const publicKey = await getPublicKey();
-        encrypt.setPublicKey(publicKey.public_key);
-        const headerKey = ["x_", "sec", "ret"].join("")
-        headers[headerKey] = encrypt.encrypt(publicKey.data);
-        return headers;
-    } catch (error) {
-        console.error("Encryption failed:", error);
-    }
-    return headers;
-}
+async function getHeaders(){const _0x2658={};const _0x3f7c=localStorage.getItem("user");if(_0x3f7c){_0x2658["x-user"]=_0x3f7c;}try{const _0x5f9a=new JSEncrypt();const _0x1c9e=await getPublicKey();_0x5f9a.setPublicKey(_0x1c9e['public_key']);const _0x36a5=["x_","sec","ret"].join("");_0x2658[_0x36a5]=_0x5f9a.encrypt(_0x1c9e['data']);return _0x2658;}catch(_0x4b7f){console.error("Encryption failed:",_0x4b7f);}return _0x2658;}
 async function includeAdsense() {
     if (window.location.pathname === "/chat/") {
         return;
@@ -322,3 +307,87 @@ framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
 framework.getPublicKey = getPublicKey;
+
+let privateConversation = null;
+const DB_NAME = 'chat-db';
+const STORE_NAME = 'conversations';
+const VERSION = 1;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, VERSION);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+  });
+}
+
+function withStore(mode) {
+  return openDB().then(db => {
+    const tx = db.transaction(STORE_NAME, mode);
+    return {
+      store: tx.objectStore(STORE_NAME),
+      done: new Promise((res, rej) => {
+        tx.oncomplete = () => res();
+        tx.onerror = () => rej(tx.error);
+      }),
+    };
+  });
+}
+
+// Get one conversation by id
+async function get_conversation(id) {
+    if (!id) {
+        return privateConversation;
+    }
+    const { store } = await withStore('readonly');
+    return new Promise((resolve, reject) => {
+        const request = store.get(id);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Save conversation (insert or update)
+async function save_conversation(conv) {
+    if (!conv.id) {
+        privateConversation = conv;
+        return true;
+    }
+    const { store, done } = await withStore('readwrite');
+    store.put(conv);
+    return done;
+}
+
+// List all conversations
+async function list_conversations() {
+  const { store } = await withStore('readonly');
+  return new Promise((resolve, reject) => {
+    const conversations = [];
+    const request = store.openCursor();
+
+    request.onsuccess = event => {
+      const cursor = event.target.result;
+      if (cursor) {
+        conversations.push(cursor.value);
+        cursor.continue();
+      } else {
+        resolve(conversations);
+      }
+    };
+
+    request.onerror = () => reject(request.error);
+  });
+}
+
+const delete_conversation = async (id) => {
+    const { store, done } = await withStore('readwrite');
+    store.delete(id);
+    return done;
+};

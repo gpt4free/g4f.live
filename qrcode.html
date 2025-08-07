@@ -227,7 +227,7 @@
             document.getElementById('deleteQRCode').setAttribute('disabled', 'disabled');
             document.getElementById('qrcode-status').innerText = '';
             if (share_id) {
-                localStorage.removeItem(`conversation:${share_id}`);
+                await delete_conversation(share_id);
                 const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
                 await fetch(delete_url, {
                     method: 'DELETE'
@@ -260,19 +260,19 @@
         }
         document.getElementById('generateQRCode').addEventListener('click', async () => {
             if (share_id) {
-                localStorage.removeItem(`conversation:${share_id}`);
+                await delete_conversation(share_id);
                 const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(share_id)}`;
                 await fetch(delete_url, {
                     method: 'DELETE'
                 });
             }
-            let conversation = JSON.parse(localStorage.getItem(`conversation:${conversation_id}`));
+            let conversation = await get_conversation(conversation_id);
             if (!conversation.share) {
                 conversation.share = conversation.id;
                 share_id = crypto.randomUUID();
                 conversation.id = share_id;
                 conversation.updated = Date.now();
-                localStorage.setItem(`conversation:${share_id}`, JSON.stringify(conversation));
+                await save_conversation(conversation);
             }
             const url = `${framework.backendUrl}/backend-api/v2/chat/${encodeURIComponent(conversation.id)}`;
             const response = await fetch(url, {

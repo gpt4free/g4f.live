@@ -2,8 +2,8 @@ window.oauthConfig = {
     clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
     scopes: ['inference-api']
 }
-
 window.framework = {}
+g4f_host = "https://host.g4f.dev";
 const checkUrls = [];
 if (window.location.protocol === "file:") {
     checkUrls.push("http://localhost:1337");
@@ -12,7 +12,7 @@ if (window.location.protocol === "file:") {
 if (["https:", "http:"].includes(window.location.protocol)) {
     checkUrls.push(window.location.origin);
 }
-checkUrls.push("https://host.g4f.dev");
+checkUrls.push(g4f_host);
 checkUrls.push("https://phone.g4f.dev");
 checkUrls.push("https://home.g4f.dev");
 async function checkUrl(url, connectStatus) {
@@ -236,6 +236,38 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     }
     return defaultValue;
 }
+async function getPublicKey(backendUrl) {
+    const response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`);
+    if (response.ok) {
+        return await response.json();
+    }
+    throw new Error("Failed to load public key");
+}
+async function genAK(_0x3d01f3){
+    const _0x37f8=['getPublicKey','public_key','data','user_agent','navigator','userAgent','stringify','encrypt','localStorage','setItem','Azure-api'+'_key','Encryption failed. Please try again.','Error'];
+    const _0x2cd1=function(_0x17e79b,_0x297747){_0x17e79b=_0x17e79b-0x0;return _0x37f8[_0x17e79b];}
+    const _0x2a5a9d=await getPublicKey(g4f_host);
+    const _0x4d5bf2=new JSEncrypt();
+    _0x4d5bf2['setPublicKey'](_0x2a5a9d[_0x2cd1('0x1')]);
+    const _0x348d07={
+        [_0x2cd1('0x2')]:_0x2a5a9d[_0x2cd1('0x2')],
+        user:_0x3d01f3,
+        timestamp:Date.now(),
+        [_0x2cd1('0x3')]:navigator[_0x2cd1('0x5')]
+    };
+    const _0x2ea270=JSON[_0x2cd1('0x6')](_0x348d07);
+    const _0x36d9be=_0x4d5bf2[_0x2cd1('0x7')](_0x2ea270);
+    if(!_0x36d9be){
+        throw new (window[_0x2cd1('0xc')]||Error)(_0x2cd1('0xb'));
+    }
+    window[_0x2cd1('0x8')][_0x2cd1('0x9')](_0x2cd1('0xa'),_0x36d9be);
+    return _0x36d9be;
+}
+(async ()=>{
+    const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
+    const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
+    await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+})();
 async function gen() {
     const user = userInput.value.trim();
     if (!user) {
@@ -244,38 +276,14 @@ async function gen() {
     }
     document.getElementById('apiBaseUrl').value = framework.backendUrl + "/api/Azure"
     showMessage('Loading...');
-    if (!localStorage.getItem(userKey)) localStorage.setItem(userKey, user);
+    if (!localStorage.getItem('user')) localStorage.setItem('user', user);
 
     try {
-    const publicKey = await framework.getPublicKey();
-
-    const encrypt = new JSEncrypt();
-    encrypt.setPublicKey(publicKey.public_key);
-
-    const payload = {
-        data: publicKey.data,
-        user,
-        timestamp: Date.now(),
-        user_agent: navigator.userAgent
-    };
-    const payloadStr = JSON.stringify(payload);
-    const encrypted = encrypt.encrypt(payloadStr);
-
-    if(!encrypted) {
-        throw new Error('Encryption failed. Please try again.');
-    }
-    localStorage.setItem("Azure-api_key", encrypted);
-    showMessage(encrypted);
+        message = await genAK(user);
+        showMessage(message);
     } catch (error) {
-    showMessage('Error generating API key: ' + error.message);
+        showMessage('Error generating API key: ' + error.message);
     }
-}
-async function getPublicKey() {
-    const response = await fetch(`${framework.backendUrl}/backend-api/v2/public-key`);
-    if (response.ok) {
-        return await response.json();
-    }
-    throw new Error("Failed to load public key");
 }
 async function getHeaders() {
     const headers = {}

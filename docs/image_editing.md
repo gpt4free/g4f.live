@@ -31,8 +31,10 @@ The library supports multiple providers, including those that require local file
 
 | Provider | Input Type | Notes |
 |----------|------------|-------|
-| **PollinationsAI** | URL | Supports transparent background with `transparent=True`.<br> Has `gpt-image` and `flux-kontext` model |
+| **PollinationsAI** | URL | Uses `flux-kontext` model |
 | **Together** | URL | Uses `flux-kontext-pro` model |
+| **HuggingSpace** | Local file | Uses `flux-kontext-dev` model |
+| **Azure** | Local file | Requires authentication |
 | **OpenaiAccount** | Local file | Requires authentication |
 | **CopilotAccount** | Local file | Requires authentication |
 
@@ -89,6 +91,11 @@ async function upload_files(fileInput) {
 | <img src="images/strawberry_pollinations.png" alt="Pollinations.AI" height="160"> | <img src="images/strawberry_together.jpg" alt="Copilot" height="160"> |
 | *Prompt: "Remove background"* | *Prompt: "Add nature background"* |
 
+| Azure Variant | HuggingSpace Variant |
+|----------------|------------------|
+| <img src="images/strawberry_azure.png" alt="Azure" height="160"> | <img src="images/strawberry_hugging_space.webp" alt="HuggingSpace" height="160"> |
+ | *Prompt: "Add text 'Hello World'"* | *Prompt: "Change to black & white"* |
+
 ---
 
 ## Code Examples
@@ -123,6 +130,42 @@ async def main_with_copilot():
 asyncio.run(main_with_openai())
 ```
 
+### Exmaples with Azure and HuggingSpace provider
+```python
+import asyncio
+from pathlib import Path
+from g4f.client import AsyncClient
+from g4f.Provider import HuggingSpace, Azure
+from g4f.cookies import read_cookie_files
+
+# Read cookies and environment variables
+read_cookie_files()
+
+client = AsyncClient()
+
+async def main_with_hugging_space():
+    result = await client.images.create_variation(
+        image=Path("g4f.dev/docs/images/strawberry.jpg"),
+        provider=HuggingSpace,
+        model="flux-kontext-dev",
+        prompt="Change color to black and white",
+        response_format="url"
+    )
+    print(result)
+
+async def main_with_azure():
+    result = await client.images.create_variation(
+        image=Path("g4f.dev/docs/images/strawberry.jpg"),
+        provider=Azure,
+        model="flux-kontext",
+        prompt="Add text 'Hello World' in the center",
+        response_format="url"
+    )
+    print(result)
+
+asyncio.run(main_with_azure())
+```
+
 ### URL-based Providers
 ```python
 import asyncio
@@ -136,9 +179,8 @@ async def main_pollinations():
         image="https://g4f.dev/docs/images/strawberry.jpg",
         provider=PollinationsAI,
         prompt="Remove background",
-        model="gpt-image",
-        response_format="url",
-        transparent=True
+        model="kontext",
+        response_format="url"
     )
     print(result)
 

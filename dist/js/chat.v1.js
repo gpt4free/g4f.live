@@ -3350,6 +3350,7 @@ function get_api_key_by_provider(provider) {
                 "DeepInfra": appStorage.getItem("DeepInfra-api_key"),
                 "Replicate": appStorage.getItem("Replicate-api_key"),
                 "PuterJS": appStorage.getItem("puter.auth.token"),
+                "Azure": appStorage.getItem("Azure-api_key"),
             }
         }
         api_key = document.querySelector(`.${provider}-api_key`)?.id || null;

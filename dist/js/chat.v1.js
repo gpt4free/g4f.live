@@ -1259,11 +1259,15 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     }
     let last_message;
     if (messages.length > 0) {
-        last_message = messages[messages.length-1];
-        last_message.content = media.length > 0 ? [
-            ...(Array.isArray(last_message.content) ? last_message.content : [{type: "text", text: last_message.content}]),
-            ...media
-        ] : last_message.content;
+        last_message = messages[messages.length - 1];
+        if (last_message.content && media.length > 0) {
+            last_message.content = [
+                ...(Array.isArray(last_message.content) ? last_message.content : [{type: "text", text: last_message.content}]),
+                ...media
+            ];
+        } else {
+            last_message.content = media.length > 0 ? media : last_message.content;
+        }
     } else {
         messages = [{
             role: "user",
@@ -1321,8 +1325,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         hasModel = true;
                         add_message_chunk({type: "provider", provider: {name: provider, model: chunk.model}}, message_id);
                     }
+                    if (chunk.error) {
+                        add_message_chunk({type: "error", ...chunk.error}, message_id);
+                        return;
+                    }
                     if (chunk.choices[0]?.delta?.reasoning_content) {
-                        delta = chunk.choices[0]?.delta?.reasoning_content;
+                        delta = chunk.choices[0].delta.reasoning_content;
                         isReasoning = true;
                         add_message_chunk({type: "reasoning", token: delta}, message_id);
                     } else {
@@ -2588,6 +2596,9 @@ const load_provider_option = (input, provider_name) => {
 };
 
 function get_modelTags(model, add_vision = true) {
+    if (model.type == "image") {
+        model.image = true;
+    }
     const parts = []
     for (let [name, text] of Object.entries(modelTags)) {
         if (name != "vision" || add_vision) {
@@ -4357,10 +4368,13 @@ async function loadClientModels() {
         models.forEach(model => {
             const opt = document.createElement('option');
             opt.value = model.id;
-            opt.textContent = model.id + (model.type == "image" ? " 🎨" : "");
+            opt.textContent = model.id + get_modelTags(model);
             // Store the model type (e.g., 'chat' or 'image') in a data attribute.
             if (model.type) {
                 opt.dataset.type = model.type;
+            }
+            if (model.audio) {
+                opt.dataset.audio = model.audio;
             }
             if (model.id === client.defaultModel) opt.selected = true;
             modelProvider.appendChild(opt);

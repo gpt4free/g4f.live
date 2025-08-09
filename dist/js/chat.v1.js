@@ -2710,8 +2710,7 @@ async function on_api() {
     });
     codeButton.addEventListener("click", async () => {
         clearTimeout(timeoutBlur);
-        userInput.value = userInput.value.trim() ? userInput.value.trim() + "\n```\n```\n" : "```\n";
-        userInput.focus();
+        insertBackticksInTextarea(userInput);
     });
     sendButton.addEventListener(`click`, async () => {
         console.log("clicked send");
@@ -3551,9 +3550,11 @@ function loadModels(providers) {
     });
     const loadNext = async () => {
         const provider = providers.pop();
-        searchModels[provider.name] = await api('models', provider.name);
-        if (searchModels[provider.name]) {
-            appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
+        if (!provider.hf_space) {
+            searchModels[provider.name] = await api('models', provider.name);
+            if (searchModels[provider.name]) {
+                appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
+            }
         }
         if (providers.length > 0) {
             setTimeout(() => {
@@ -4383,3 +4384,50 @@ async function import_from_localStorage() {
 }
 
 import_from_localStorage();
+
+/**
+ * Insert or wrap text with Markdown triple back‑ticks (```).
+ *
+ * @param {HTMLTextAreaElement|HTMLInputElement} el   – The <textarea> (or <input type="text">).
+ */
+function insertBackticksInTextarea(el) {
+  // Modern browsers expose selectionStart / selectionEnd.
+  const start = el.selectionStart;
+  const end   = el.selectionEnd;
+  const value = el.value;
+
+  // ---------- CASE 1: a range is selected → wrap it ----------
+  if (start !== end) {
+    const selected = value.slice(start, end);
+    const before   = value.slice(0, start);
+    const after    = value.slice(end);
+
+    // Wrap the selected text: ```selected```
+    const newText = `${before}\`\`\`\n${selected}\n\`\`\`${after}`;
+
+    // Replace and bring focus back to the textarea
+    el.value = newText;
+    // Keep the wrapped text selected (optional)
+    el.setSelectionRange(start, start + newText.length - after.length);
+    el.focus();
+    return;
+  }
+
+  // ---------- CASE 2: nothing selected → insert empty block ----------
+  // Insert a block like:
+  // ```
+  // |
+  // ```
+  // where | is the new caret position.
+  const fence = "```\n\n```";
+  const before = value.slice(0, start);
+  const after  = value.slice(start);
+
+  const newValue = before + fence + after;
+  el.value = newValue;
+
+  // Put caret between the two newline characters (i.e. inside the empty block)
+  const caretPos = start + 4; // after the opening ```\n
+  el.setSelectionRange(caretPos, caretPos);
+  el.focus();
+}

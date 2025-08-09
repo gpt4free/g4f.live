@@ -338,6 +338,13 @@ class DeepInfra extends Client {
 
 class Together extends Client {
     constructor(options = {}) {
+        if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
+            if (localStorage && localStorage.getItem("Together-api_key")) {
+                options.apiKey = localStorage.getItem("Together-api_key");
+            } else {
+                throw new Error('Together requires a "apiKey" to be set.');
+            }
+        }
         super({
             baseUrl: 'https://api.together.xyz/v1',
             defaultModel: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -410,38 +417,9 @@ class Together extends Client {
             ...options
         });
         
-        this.activationEndpoint = "https://www.codegeneration.ai/activate-v2";
         this.modelsEndpoint = "https://api.together.xyz/v1/models";
         this._modelConfigs = {};
         this._cachedModels = [];
-    }
-
-    async getApiKey() {
-        if (this.apiKey) {
-            return this.apiKey;
-        }
-        
-        if (typeof process !== 'undefined' && process.env.TOGETHER_API_KEY) {
-            this.apiKey = process.env.TOGETHER_API_KEY;
-            return this.apiKey;
-        }
-        
-        try {
-            console.log('Fetching Together API key via CORS proxy...');
-            const response = await this._fetchWithProxyRotation('https://www.codegeneration.ai/activate-v2');
-            const data = await response.json();
-            if (data?.openAIParams?.apiKey) {
-                this.apiKey = data.openAIParams.apiKey;
-                this.extraHeaders['Authorization'] = `Bearer ${this.apiKey}`;
-                console.log('Successfully obtained Together API key via proxy');
-                return this.apiKey;
-            } else {
-                throw new Error('No API key found in response');
-            }
-        } catch (error) {
-            console.error('Failed to get Together API key via proxy:', error);
-            throw new Error(`Failed to obtain Together API key: ${error.message}`);
-        }
     }
 
     _getModel(model, defaultModel) {
@@ -477,9 +455,7 @@ class Together extends Client {
             
             const response = await fetch(this.modelsEndpoint, {
                 method: 'GET',
-                headers: this.extraHeaders,
-                mode: 'cors',
-                credentials: 'omit'
+                headers: this.extraHeaders
             });
             
             if (!response.ok) {
@@ -534,10 +510,6 @@ class Together extends Client {
         return {
             completions: {
                 create: async (params) => {
-                    if (!this.apiKey) {
-                        await this.getApiKey();
-                    }
-                    
                     if (!this._cachedModels.length < 1) {
                         await this._loadModels();
                     }
@@ -571,9 +543,6 @@ class Together extends Client {
     get images() {
         return {
             generate: async (params) => {
-                if (!this.apiKey) {
-                    await this.getApiKey();
-                }
                 if (this._cachedModels.length < 1) {
                     await this.loadModels();
                 }

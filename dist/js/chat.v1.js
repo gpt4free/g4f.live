@@ -1540,7 +1540,7 @@ const on_delete_conversation = async (conversation_id) => {
     }
 
     const { store, done } = await withStore('readwrite');
-    store.delete(id);
+    store.delete(conversation.id);
     if (window.conversation_id == conversation_id) {
         await new_conversation();
     }

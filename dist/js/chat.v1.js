@@ -1314,7 +1314,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     stream: true
                 });
 
-                let isReasoning = false;
+                const baseUrl = client.baseUrl.split("/api/")[0];
                 let hasModel = false;
                 for await (const chunk of stream) {
                     let delta;
@@ -1331,13 +1331,11 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     }
                     if (chunk.choices[0]?.delta?.reasoning_content) {
                         delta = chunk.choices[0].delta.reasoning_content;
-                        isReasoning = true;
                         add_message_chunk({type: "reasoning", token: delta}, message_id);
                     } else {
                         delta = chunk.choices[0]?.delta?.content || '';
-                        if (isReasoning) {
-                            isReasoning = false;
-                        }
+                        delta = delta.replaceAll("/media/", baseUrl + "/media/");
+                        delta = delta.replaceAll("/thumbnail/", baseUrl + "/thumbnail/");
                         add_message_chunk({type: "content", content: delta}, message_id);
                     }
                 }

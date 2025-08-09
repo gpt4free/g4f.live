@@ -266,7 +266,7 @@ async function genAK(_0x3d01f3){
 (async ()=>{
     const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
     const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
-    if (window.location.pathname == "/chat/") {
+    if (window.location.pathname.startsWith("/chat/")) {
         await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
     }
 })();

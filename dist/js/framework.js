@@ -237,7 +237,9 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     return defaultValue;
 }
 async function getPublicKey(backendUrl) {
-    const response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`);
+    const response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`, {
+        credentials: 'include'
+    });
     if (response.ok) {
         return await response.json();
     }

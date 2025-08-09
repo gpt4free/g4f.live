@@ -971,7 +971,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "title") {
         title_storage[message_id] = message.title;
     } else if (message.type == "login") {
-        update_message(content_map, message_id, framework.markdown(message.login), scroll);
+        update_message(content_map, message_id, framework.markdown(message.login));
     } else if (message.type == "finish") {
         finish_storage[message_id] = message.finish;
     } else if (message.type == "continue") {
@@ -1041,10 +1041,12 @@ async function play_last_message(response = null) {
                 });
             }
         } else {
-            if (response.choices) {
-                response = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
+            if (response) {
+                if (response.choices) {
+                    response = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
+                }
+                last_media.src = response;
             }
-            last_media.src = response;
             last_media.play();
         }
     }
@@ -1210,8 +1212,9 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             if(await safe_load_conversation(window.conversation_id)) {
                 play_last_message(content_data_storage[message_id]); // Play last message async
                 delete content_data_storage[message_id];
-                const new_message = chatBody.querySelector(`[data-index="${message_index}"]`)
-                new_message ? new_message.scrollIntoView({behavior: "smooth", block: "end"}) : null;
+                if (message_index == -1) {
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
             }
         }
         let cursorDiv = message_el.querySelector(".cursor");

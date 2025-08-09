@@ -1,4 +1,4 @@
-# Polinations.AI / GPT4Free.js Client Documentation
+# GPT4Free.js Client Documentation
 
 ## Overview
 
@@ -48,7 +48,7 @@ const client = new DeepInfra({ apiKey: 'optional' });
 const client = new HuggingFace({ apiKey: 'required' });
 
 // Together.AI
-const client = new Together({ apiKey: 'optional' });
+const client = new Together({ apiKey: 'required' });
 
 // Puter
 const client = new Puter();

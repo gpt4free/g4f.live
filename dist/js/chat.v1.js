@@ -1314,7 +1314,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     stream: true
                 });
 
-                const baseUrl = client.baseUrl.split("/api/")[0];
+                const baseUrl = client.baseUrl ? client.baseUrl.split("/api/")[0] : "";
                 let hasModel = false;
                 for await (const chunk of stream) {
                     let delta;

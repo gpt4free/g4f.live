@@ -4347,6 +4347,10 @@ async function initClient() {
     const apiKey = get_api_key_by_provider(provider);
     const options = apiKey ? { apiKey } : {};
 
+    if (provider == "ApiAirforce") {
+        options.baseUrl = "https://api.airforce/v1";
+    }
+
     if (!window.providers[provider]) {
         console.error(`No client class found for provider: ${provider}`);
         return;

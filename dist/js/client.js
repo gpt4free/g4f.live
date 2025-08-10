@@ -140,7 +140,15 @@ class Client {
           }
 
           let data = await response.json();
-          return data.data || data;
+          data = data.data || data;
+          data.forEach(model => {
+            if (model.supports_chat) {
+              model.type = 'chat';
+            } else if (model.supports_image) {
+              model.type = 'image';
+            }
+          });
+          return data;
         }
       };
     }

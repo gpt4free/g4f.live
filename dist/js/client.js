@@ -670,7 +670,6 @@ class HuggingFace extends Client {
         }
         super({
             baseUrl: 'https://api-inference.huggingface.co/v1',
-            defaultModel: 'meta-llama/Meta-Llama-3-8B-Instruct',
             modelAliases: {
                 // Chat //
                 "llama-3": "meta-llama/Llama-3.3-70B-Instruct",

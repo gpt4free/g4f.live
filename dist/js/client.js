@@ -53,10 +53,10 @@ class Client {
             }
         }
         this.proxyManager = new CorsProxyManager();
-        this.baseUrl = options.baseUrl || (framework?.backendUrl ? framework.backendUrl + "/api/Azure" : null || 'https://host.g4f.dev/api/Azure');
+        this.baseUrl = options.baseUrl || ((window?.framework?.backendUrl || "") + "/api/Azure");
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
-        this.defaultModel = options.defaultModel || null;
+        this.defaultModel = options.defaultModel || 'openai/gpt-oss-120b';
         this.defaulImageModel = options.defaultImageModel || 'flux';
         this.apiKey = options.apiKey;
         this.referrer = options.referrer;
@@ -266,7 +266,7 @@ class PollinationsAI extends Client {
             baseUrl: 'https://text.pollinations.ai',
             apiEndpoint: 'https://text.pollinations.ai/openai',
             imageEndpoint: 'https://image.pollinations.ai/prompt/{prompt}',
-            defaultModel: 'gpt-oss',
+            defaultModel: 'gpt-5-nano',
             referrer: 'https://g4f.dev',
             modelAliases: {
                 "gpt-oss-120b": "gpt-oss",
@@ -347,7 +347,6 @@ class DeepInfra extends Client {
     constructor(options = {}) {
         super({
             baseUrl: 'https://api.deepinfra.com/v1/openai',
-            defaultModel: 'deepseek-ai/DeepSeek-V3-0324',
             ...options
         });
     }
@@ -364,7 +363,6 @@ class Together extends Client {
         }
         super({
             baseUrl: 'https://api.together.xyz/v1',
-            defaultModel: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
             defaulImageModel: 'black-forest-labs/FLUX.1.1-pro',
             modelAliases: {
                 // Models Chat/Language
@@ -573,7 +571,7 @@ class Together extends Client {
 
 class Puter {
     constructor(options = {}) {
-        this.defaultModel = options.defaultModel || 'gpt-4.1';
+        this.defaultModel = options.defaultModel || 'gpt-5';
         this.puter = options.puter || this._injectPuter();
     }
 

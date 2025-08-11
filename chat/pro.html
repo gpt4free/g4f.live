@@ -132,7 +132,8 @@
   <button id="submit">Send</button>
 </form>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
+<script src="../dist/js/framework.js"></script>
 <script type="module">
   //import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
   import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from "../dist/js/client.js";
@@ -176,6 +177,11 @@
         break;
       case 'azure':
         ClientClass = Client;
+        break;
+      case 'airforce':
+        ClientClass = Client;
+        options.baseUrl = 'https://api.airforce/v1';
+        options.apiKey = localStorage.getItem('ApiAirforce-api_key');
         break;
     }
 

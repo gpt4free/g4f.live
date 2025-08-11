@@ -141,11 +141,16 @@ class Client {
 
           let data = await response.json();
           data = data.data || data;
-          data.forEach(model => {
-            if (model.supports_chat) {
-              model.type = 'chat';
-            } else if (model.supports_image) {
-              model.type = 'image';
+          data = data.map((model) => {
+            if (!model.type) {
+              if (model.supports_chat) {
+                model.type = 'chat';
+              } else if (model.supports_images) {
+                model.type = 'image';
+              } else if (model.image) {
+                model.type = 'image';
+              }
+              return model;
             }
           });
           return data;
@@ -247,7 +252,11 @@ class Client {
             console.error("Image generation failed. Server response:", errorBody);
             throw new Error(`Image generation request failed with status ${response.status}`);
         }
-        return await response.json();
+        data = await response.json();
+        if (data?.error?.message) {
+            throw new Error(`Image generation failed: ${data.error.message}`);
+        }
+        return data;
     }
 }
 

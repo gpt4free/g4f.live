@@ -4365,7 +4365,6 @@ async function loadClientModels() {
     modelProvider.innerHTML = `<option disabled selected>${framework.translate("Loading...")}</option>`;
     try {
         const models = await client.models.list();
-        console.log('Loaded models:', models);
         modelProvider.innerHTML = '';
         models.forEach(model => {
             const opt = document.createElement('option');

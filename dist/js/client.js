@@ -150,8 +150,8 @@ class Client {
               } else if (model.image) {
                 model.type = 'image';
               }
-              return model;
             }
+            return model;
           });
           return data;
         }

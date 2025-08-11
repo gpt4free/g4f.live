@@ -53,7 +53,7 @@ class Client {
             }
         }
         this.proxyManager = new CorsProxyManager();
-        this.baseUrl = options.baseUrl || framework?.backendUrl || 'https://host.g4f.dev/api/Azure';
+        this.baseUrl = options.baseUrl || (framework?.backendUrl ? framework.backendUrl + "/api/Azure" : null || 'https://host.g4f.dev/api/Azure');
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel || null;

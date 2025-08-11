@@ -18,7 +18,7 @@ checkUrls.push("https://home.g4f.dev");
 async function checkUrl(url, connectStatus) {
     let response;
     try {
-        response = await fetch(`${url}/backend-api/v2/version?cache=true`);
+        response = await fetch(`${url}/backend-api/v2/version?cache=true`, {signal: AbortSignal.timeout(3000)});
     } catch (error) {
         console.debug("Error check url: ", url);
         return false;

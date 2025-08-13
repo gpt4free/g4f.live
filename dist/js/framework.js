@@ -246,7 +246,7 @@ async function getPublicKey(backendUrl) {
 async function genAK(_0x3d01f3){
     const _0x37f8=['getPublicKey','public_key','data','user_agent','navigator','userAgent','stringify','encrypt','localStorage','setItem','Azure-api'+'_key','Encryption failed. Please try again.','Error'];
     const _0x2cd1=function(_0x17e79b,_0x297747){_0x17e79b=_0x17e79b-0x0;return _0x37f8[_0x17e79b];}
-    const _0x2a5a9d=await getPublicKey();
+    const _0x2a5a9d=await getPublicKey(g4f_host);
     const _0x4d5bf2=new JSEncrypt();
     _0x4d5bf2['setPublicKey'](_0x2a5a9d[_0x2cd1('0x1')]);
     const _0x348d07={

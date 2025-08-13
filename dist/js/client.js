@@ -189,6 +189,14 @@ class Client {
       if (!response.body) {
         throw new Error('Streaming not supported in this environment');
       }
+      if (response.headers.get('Content-Type') === 'application/json') {
+            const data = await response.json();
+            if (data.choices && data.choices[0]?.message) {
+                data.choices[0].delta = data.choices[0].message;
+            }
+            yield data;
+            return;
+      }
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';

@@ -4349,6 +4349,8 @@ async function initClient() {
 
     if (provider == "ApiAirforce") {
         options.baseUrl = "https://api.airforce/v1";
+    } else if (provider == "AnonDrop") {
+        options.baseUrl = "https://anondrop.net/v1";
     }
 
     if (!window.providers[provider]) {

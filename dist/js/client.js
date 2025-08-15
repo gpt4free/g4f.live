@@ -53,7 +53,7 @@ class Client {
             }
         }
         this.proxyManager = new CorsProxyManager();
-        this.baseUrl = options.baseUrl || ((window?.framework?.backendUrl || "") + "/api/Azure");
+        this.baseUrl = options.baseUrl || ((g4f_host || "") + "/api/Azure");
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel || 'openai/gpt-oss-120b';

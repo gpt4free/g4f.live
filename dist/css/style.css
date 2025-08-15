@@ -2338,7 +2338,7 @@ form textarea {
 }
 
 .provider-tag {
-  color: #666;
+  color: var(--button-hover);
   font-size: 0.8em;
   background: var(--media-select);
   padding: 2px 6px;

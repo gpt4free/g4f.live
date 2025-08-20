@@ -289,7 +289,7 @@ async function gen() {
 }
 async function getHeaders(){const _0x2658={};const _0x3f7c=localStorage.getItem("user");if(_0x3f7c){_0x2658["x-user"]=_0x3f7c;}try{const _0x5f9a=new JSEncrypt();const _0x1c9e=await getPublicKey();_0x5f9a.setPublicKey(_0x1c9e['public_key']);const _0x36a5=["x_","sec","ret"].join("");_0x2658[_0x36a5]=_0x5f9a.encrypt(_0x1c9e['data']);return _0x2658;}catch(_0x4b7f){console.error("Encryption failed:",_0x4b7f);}return _0x2658;}
 async function includeAdsense() {
-    if (window.location.pathname === "/chat/") {
+    if (window.location.pathname.startsWith("/chat/")) {
         return;
     }
     const script = document.createElement("script");

@@ -243,6 +243,10 @@
                     <a href="" onclick="return false;">Translate UI</a>
                     <i class="fas fa-spinner fa-spin hidden"></i>
                 </button>
+                <button onclick="localStorage.getItem(framework.translationKey) ? (localStorage.removeItem(framework.translationKey) || window.location.reload()) : null">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Delete Translations</span>
+                </button>
                 <button id="showLog">
                     <i class="fa-solid fa-terminal"></i>
                     <a href="" onclick="return false;">Show log</a>

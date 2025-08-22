@@ -3,7 +3,7 @@ window.oauthConfig = {
     scopes: ['inference-api']
 }
 window.framework = {}
-g4f_host = "https://host.g4f.dev";
+const g4f_host = "https://host.g4f.dev";
 const checkUrls = [];
 if (window.location.protocol === "file:") {
     checkUrls.push("http://localhost:1337");
@@ -57,7 +57,7 @@ framework.translate = (text) => {
 framework.translationKey = "translations" + document.location.pathname;
 framework.translations = JSON.parse(localStorage.getItem(framework.translationKey) || "{}");
 framework.translateElements = function (elements = null) {
-    if (!framework.translations && !document.body.classList.contains("translate")) {
+    if (!framework.translations) {
         return;
     }
     elements = elements || document.querySelectorAll("p:not(:has(*)), a:not(:has(*)), h1, h2, h3, h4, h5, h6, button:not(:has(*)), title, span:not(:has(*)), strong, a:not(:has(*)), [data-translate], input, textarea, label:not(:has(*)), i, option[value='']");
@@ -88,6 +88,9 @@ if (document.readyState === "loading") {
     framework.translateElements();
 }
 window.addEventListener('load', async () => {
+    if (!document.body.classList.contains("translate")) {
+        return;
+    }
     if (!localStorage.getItem(framework.translationKey)) {
         try {
             if (!framework.backendUrl) {

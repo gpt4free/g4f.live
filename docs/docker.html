@@ -39,14 +39,6 @@
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/global-205098e9fedd.css" />
     <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/code-177d21388df8.css" />
 
-    <!-- Highlight.js for enhanced JavaScript syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
     
     <style>
         :root {
@@ -71,8 +63,8 @@
 
         .container {
             display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
             padding: 2rem;
             gap: 3rem;
             min-height: calc(100vh - 4rem);
@@ -170,7 +162,7 @@
         .markdown-body pre code {
             background: transparent;
             padding: 0;
-            color: inherit;
+            color: var(--background);
         }
 
         /* Table styling */
@@ -198,6 +190,10 @@
 
         .markdown-body table tr:nth-child(even) {
             background: rgba(139, 61, 255, 0.05);
+        }
+
+        .markdown-body table tr {
+            background-color: transparent;
         }
 
         /* List styling */
@@ -523,36 +519,10 @@ interference<br>
         // Enhanced syntax highlighting with error handling
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                // Initialize highlight.js
-                hljs.configure({
-                    languages: ['javascript', 'python', 'bash', 'json', 'typescript', 'html', 'css'],
-                    ignoreUnescapedHTML: true
-                });
-
-                // Add loading class to pre elements
-                document.querySelectorAll('pre code').forEach(function(block) {
-                    block.closest('pre').classList.add('highlight-loading');
-                });
-
-                // Highlight all code blocks
-                hljs.highlightAll();
-
-                // Remove loading class after highlighting
-                setTimeout(function() {
-                    document.querySelectorAll('.highlight-loading').forEach(function(pre) {
-                        pre.classList.remove('highlight-loading');
-                    });
-                }, 100);
-
                 // Generate table of contents
                 generateTableOfContents();
-                
             } catch (error) {
-                console.warn('Syntax highlighting failed:', error);
-                // Remove loading indicators on error
-                document.querySelectorAll('.highlight-loading').forEach(function(pre) {
-                    pre.classList.remove('highlight-loading');
-                });
+                console.error('Error generating table of contents:', error);
             }
         });
 
@@ -601,7 +571,7 @@ interference<br>
         });
 
         // Add copy button to code blocks
-        document.querySelectorAll('pre code').forEach(function(block) {
+        document.querySelectorAll('pre code, .highlight pre').forEach(function(block) {
             const button = document.createElement('button');
             button.textContent = 'Copy';
             button.className = 'copy-button';
@@ -620,7 +590,7 @@ interference<br>
                 transition: opacity 0.3s ease;
             `;
             
-            const pre = block.closest('pre');
+            const pre = block.parentElement;
             pre.style.position = 'relative';
             pre.appendChild(button);
             

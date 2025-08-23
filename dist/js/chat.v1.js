@@ -2539,7 +2539,7 @@ async function on_load() {
         window.conversation_id = generateUUID();
     }
     chatPrompt.value = document.getElementById("systemPrompt")?.value || "";
-    let chat_params = new URLSearchParams(window.location.query);
+    let chat_params = new URLSearchParams(window.location.search);
     if (chat_params.get("prompt")) {
         userInput.value = chat_params.get("prompt");
         userInput.style.height = "100%";

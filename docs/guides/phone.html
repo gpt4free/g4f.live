@@ -162,7 +162,7 @@
         .markdown-body pre code {
             background: transparent;
             padding: 0;
-            color: var(--background);
+            color: var(--fgColor-default, var(--color-fg-default))
         }
 
         /* Table styling */
@@ -361,6 +361,23 @@
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.6);
         }
+
+        /* Translate Button Style */
+        #translate-toggle {
+            display: block;
+            background: var(--accent);
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+        }
+        #google_translate_element {
+            margin-bottom: 1rem;
+        }
     </style>
 
     <script type="application/ld+json">
@@ -399,6 +416,9 @@
 <body>
     <div class="container">
         <nav id="toc" aria-label="Table of contents" role="navigation">
+            <!-- Translation Button -->
+            <button id="translate-toggle">🌐 Translate Page</button>
+            <div id="google_translate_element" style="display:none;"></div>
             <h2>Contents</h2>
             <ul id="toc-list">
                 <!-- Table of contents will be generated here -->
@@ -482,6 +502,23 @@ Replace <code class="notranslate">"cookie value"</code> with your actual cookie 
 <p><a href="/docs/">Return to Documentation</a></p>
 </main>
     </div>
+
+    
+    <script>
+        // Toggle Translation Widget
+        document.getElementById("translate-toggle").addEventListener("click", function() {
+            const el = document.getElementById("google_translate_element");
+            el.style.display = (el.style.display === "none") ? "block" : "none";
+        });
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         // Enhanced syntax highlighting with error handling

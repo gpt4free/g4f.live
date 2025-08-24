@@ -162,9 +162,8 @@
         .markdown-body pre code {
             background: transparent;
             padding: 0;
-            color: var(--background);
+            color: var(--fgColor-default, var(--color-fg-default))
         }
-
         /* Table styling */
         .markdown-body table {
             border-collapse: collapse;
@@ -361,6 +360,23 @@
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.6);
         }
+
+        /* Translate Button Style */
+        #translate-toggle {
+            display: block;
+            background: var(--accent);
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+        }
+        #google_translate_element {
+            margin-bottom: 1rem;
+        }
     </style>
 
     <script type="application/ld+json">
@@ -399,10 +415,12 @@
 <body>
     <div class="container">
         <nav id="toc" aria-label="Table of contents" role="navigation">
+            <!-- Translation Button -->
+            <button id="translate-toggle">🌐 Translate Page</button>
+            <div id="google_translate_element" style="display:none;"></div>
+
             <h2>Contents</h2>
-            <ul id="toc-list">
-                <!-- Table of contents will be generated here -->
-            </ul>
+            <ul id="toc-list"></ul>
             <hr style="margin: 1.5rem 0; opacity: 0.3;">
             <ul>
                 <li><a href="/docs/" aria-label="Return to documentation home">📚 Documentation Hub</a></li>
@@ -411,7 +429,7 @@
         </nav>
 
         <main role="main" class="markdown-body entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
-<h2>GPT4Free Documentation Hub</h2>
+            <h2>GPT4Free Documentation Hub</h2>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ad724ce7d838a68ab12ca199497a7268e59b8adce01edccf7036265ac90593b5/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652532426125324242616e6e65722532427769746825324274686525324262697264253242616e642532427468652532427465787425324225323247505434467265652532323f77696474683d343830266865696768743d383332266d6f64656c3d6b6f6e74657874266e6f6c6f676f3d7472756526707269766174653d66616c736526656e68616e63653d66616c736526736166653d66616c73652672656665727265723d68747470732533412f2f6734662e6465762f26696d6167653d68747470732533412f2f686f73742e6734662e6465762f66696c65732f66613031396539642d363761622d343731632d623063312d3466653138396631353763642f6d656469612f313030303034303030352e6a706726736565643d32333737343537383936"><img src="https://camo.githubusercontent.com/ad724ce7d838a68ab12ca199497a7268e59b8adce01edccf7036265ac90593b5/68747470733a2f2f696d6167652e706f6c6c696e6174696f6e732e61692f70726f6d70742f4372656174652532426125324242616e6e65722532427769746825324274686525324262697264253242616e642532427468652532427465787425324225323247505434467265652532323f77696474683d343830266865696768743d383332266d6f64656c3d6b6f6e74657874266e6f6c6f676f3d7472756526707269766174653d66616c736526656e68616e63653d66616c736526736166653d66616c73652672656665727265723d68747470732533412f2f6734662e6465762f26696d6167653d68747470732533412f2f686f73742e6734662e6465762f66696c65732f66613031396539642d363761622d343731632d623063312d3466653138396631353763642f6d656469612f313030303034303030352e6a706726736565643d32333737343537383936" height="300" data-canonical-src="https://image.pollinations.ai/prompt/Create%2Ba%2BBanner%2Bwith%2Bthe%2Bbird%2Band%2Bthe%2Btext%2B%22GPT4Free%22?width=480&amp;height=832&amp;model=kontext&amp;nologo=true&amp;private=false&amp;enhance=false&amp;safe=false&amp;referrer=https%3A//g4f.dev/&amp;image=https%3A//host.g4f.dev/files/fa019e9d-67ab-471c-b0c1-4fe189f157cd/media/1000040005.jpg&amp;seed=2377457896" style="max-width: 100%; height: auto; max-height: 300px;"></a></p>
 <p>Welcome to the official docs for <strong>GPT4Free</strong> – free and convenient AI endpoints you can use directly in your apps, scripts, and even right in your browser.</p>
 <p>Here you’ll find a clear overview, quick examples, and entry points to deeper docs for every major feature.</p>
@@ -539,6 +557,22 @@
     </div>
 
     <script>
+        // Toggle Translation Widget
+        document.getElementById("translate-toggle").addEventListener("click", function() {
+            const el = document.getElementById("google_translate_element");
+            el.style.display = (el.style.display === "none") ? "block" : "none";
+        });
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
         // Enhanced syntax highlighting with error handling
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -576,7 +610,7 @@
                 
                 li.appendChild(a);
                 tocList.appendChild(li);
-            });
+        });
         }
 
         // Smooth scrolling for anchor links

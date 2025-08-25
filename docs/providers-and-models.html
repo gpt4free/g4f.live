@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>G4F - Providers and Models</title>
 
-    <meta name="description" content="GPT4Free documentation for G4F - Providers and Models. Complete guides, examples, and API reference for free AI endpoints, code generation, and AI model integration." />
+    <meta name="description" content="GPT4Free documentation for Providers and Models. Complete guides, examples, and API reference for free AI endpoints, code generation, and AI model integration." />
     <meta name="keywords" content="GPT4Free, G4F, AI documentation, free AI API, OpenAI alternative, JavaScript AI client, Python AI library, AI integration, code generation, G4F - Providers and Models" />
     <meta name="author" content="GPT4Free Team" />
 
@@ -395,7 +395,7 @@
         "@id": "https://g4f.dev/docs/providers-and-models.html"
       },
       "datePublished": "2024-01-01T00:00:00Z",
-      "dateModified": "2024-01-01T00:00:00Z",
+      "dateModified": "2025-08-25T00:00:00Z",
       "inLanguage": "en",
       "isAccessibleForFree": true,
       "keywords": "GPT4Free, AI documentation, free AI API, code generation",
@@ -421,2143 +421,2646 @@
         </nav>
 
         <main role="main" class="markdown-body entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
-<h2>G4F - Providers and Models</h2>
-<p><strong>Last updated:</strong> May 30, 2025</p>
-<p>This document provides an overview of various AI providers and models, including text generation, image generation, and vision capabilities. It aims to help users navigate the diverse landscape of AI services and choose the most suitable option for their needs.</p>
-<blockquote>
-<p><strong>Note</strong>: See our <a href="authentication.html">Authentication Guide</a> for authentication instructions for the provider.</p>
-</blockquote>
-<h2>Table of Contents</h2>
+<h1>G4F - Providers and Models</h1>
+<p><strong>Last updated:</strong> Aug 25, 2025</p>
+<h2>Overview</h2>
+<p>This document compiles an exhaustive catalog of providers and models across text generation, image generation, and vision capabilities. Data is sourced from the two endpoints above and organized to help you browse, compare, and decide on the right combination of provider and model for your use case. Authentication requirements, available model variants, and modality support are captured to guide implementation and integration.</p>
+<hr>
 <ul>
-<li><a href="#providers">Providers</a>
+<li>
+<p><strong>1. Providers</strong> (exhaustive list with key attributes)</p>
+</li>
+<li>
+<p><strong>2. Models</strong> (exhaustive text and image generation models, per provider, drawn from the same data)</p>
+</li>
+</ul>
+<hr>
+<h3>1. Providers (Exhaustive)</h3>
 <ul>
-<li><a href="#providers-not-needs-auth">No auth required</a></li>
-<li><a href="#providers-huggingface">HuggingFace</a></li>
-<li><a href="#providers-huggingspace">HuggingSpace</a></li>
-<li><a href="#providers-local">Local</a></li>
-<li><a href="#providers-minimax">MiniMax</a></li>
-<li><a href="#providers-needs-auth">Needs auth</a></li>
+<li>
+<p>Anthropic</p>
+<ul>
+<li>Name: Anthropic</li>
+<li>Label: Anthropic API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://console.anthropic.com/settings/keys" rel="nofollow">https://console.anthropic.com/settings/keys</a></li>
+<li>Parent: null</li>
+<li>Notes: Claude family, text-focused</li>
 </ul>
 </li>
-<li><a href="#models">Models</a>
+<li>
+<p>ApiAirforce</p>
 <ul>
-<li><a href="#text-generation-models">Text generation models</a></li>
-<li><a href="#image-generation-models">Image generation models</a></li>
+<li>Name: ApiAirforce</li>
+<li>Label: Api.Airforce</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 6</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://panel.api.airforce/dashboard" rel="nofollow">https://panel.api.airforce/dashboard</a></li>
+<li>Parent: null</li>
+<li>Notes: broad mix; public-facing API access</li>
 </ul>
 </li>
-<li><a href="#conclusion-and-usage-tips">Conclusion and Usage Tips</a></li>
-</ul>
-<hr>
-<h2>Providers</h2>
-<p><strong>Authentication types:</strong></p>
+<li>
+<p>Azure</p>
 <ul>
-<li><strong>Get API key</strong> - Requires an API key for authentication. You need to obtain an API key from the provider's website to use their services.</li>
-<li><strong>Cookies</strong> - Requires browser cookies for authentication. You need to extract cookies from your browser session while logged in to the provider's website.</li>
-<li><strong>No auth required</strong> - No authentication needed. The service is publicly available without any credentials.</li>
-<li><strong>HAR file</strong> - Requires HAR (HTTP Archive) file for authentication. You need to capture network traffic while using the provider's website and export it as a HAR file.</li>
-<li><strong>Nodriver</strong> - Uses automated browser control for authentication. The provider automatically handles login and session management using browser automation (no manual setup required).</li>
+<li>Name: Azure</li>
+<li>Label: Azure ☁️</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://discord.gg/qXA4Wf4Fsm" rel="nofollow">https://discord.gg/qXA4Wf4Fsm</a></li>
+<li>Parent: null</li>
 </ul>
-<p><strong>Symbols:</strong></p>
+</li>
+<li>
+<p>BingCreateImages</p>
 <ul>
-<li>✔ - Feature is supported</li>
-<li>❌ - Feature is not supported</li>
-<li>✔ <em><strong>(n+)</strong></em> - Number of additional models supported by the provider but not publicly listed</li>
+<li>Name: BingCreateImages</li>
+<li>Label: Microsoft Designer in Bing</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>BlackForestLabs_Flux1Dev</p>
+<ul>
+<li>Name: BlackForestLabs_Flux1Dev</li>
+<li>Label: BlackForestLabs Flux-1-Dev</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 2</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>BlackForestLabs_Flux1KontextDev</p>
+<ul>
+<li>Name: BlackForestLabs_Flux1KontextDev</li>
+<li>Label: BlackForestLabs Flux-1-Kontext-Dev</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 1</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Blackbox</p>
+<ul>
+<li>Name: Blackbox</li>
+<li>Label: Blackbox AI</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>BlackboxPro</p>
+<ul>
+<li>Name: BlackboxPro</li>
+<li>Label: Blackbox AI Pro</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 1</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Cerebras</p>
+<ul>
+<li>Name: Cerebras</li>
+<li>Label: Cerebras Inference</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://cloud.cerebras.ai" rel="nofollow">https://cloud.cerebras.ai</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Chatai</p>
+<ul>
+<li>Name: Chatai</li>
+<li>Label: Chatai</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Cloudflare</p>
+<ul>
+<li>Name: Cloudflare</li>
+<li>Label: Cloudflare AI</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: runner with focus on tooling; Nodriver: true</li>
+</ul>
+</li>
+<li>
+<p>CohereForAI_C4AI_Command</p>
+<ul>
+<li>Name: CohereForAI_C4AI_Command</li>
+<li>Label: CohereForAI C4AI Command</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Copilot</p>
+<ul>
+<li>Name: Copilot</li>
+<li>Label: Microsoft Copilot</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>CopilotAccount</p>
+<ul>
+<li>Name: CopilotAccount</li>
+<li>Label: Microsoft Copilot</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: Copilot</li>
+</ul>
+</li>
+<li>
+<p>Custom</p>
+<ul>
+<li>Name: Custom</li>
+<li>Label: Custom Provider</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>DeepInfra</p>
+<ul>
+<li>Name: DeepInfra</li>
+<li>Label: DeepInfra</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://deepinfra.com/dash/api_keys" rel="nofollow">https://deepinfra.com/dash/api_keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>DeepInfraChat</p>
+<ul>
+<li>Name: DeepInfraChat</li>
+<li>Label: DeepInfraChat</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://deepinfra.com/dash/api_keys" rel="nofollow">https://deepinfra.com/dash/api_keys</a></li>
+<li>Parent: DeepInfra</li>
+</ul>
+</li>
+<li>
+<p>DeepSeek</p>
+<ul>
+<li>Name: DeepSeek</li>
+<li>Label: DeepSeek API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://platform.deepseek.com/api_keys" rel="nofollow">https://platform.deepseek.com/api_keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>DeepseekAI_JanusPro7b</p>
+<ul>
+<li>Name: DeepseekAI_JanusPro7b</li>
+<li>Label: DeepseekAI Janus-Pro-7B</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>EasyChat</p>
+<ul>
+<li>Name: EasyChat</li>
+<li>Label: EasyChat</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>FenayAI</p>
+<ul>
+<li>Name: FenayAI</li>
+<li>Label: FenayAI</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://fenayai.com/dashboard" rel="nofollow">https://fenayai.com/dashboard</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GLM</p>
+<ul>
+<li>Name: GLM</li>
+<li>Label: GLM</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Gemini</p>
+<ul>
+<li>Name: Gemini</li>
+<li>Label: Google Gemini</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GeminiCLI</p>
+<ul>
+<li>Name: GeminiCLI</li>
+<li>Label: Google Gemini CLI</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://github.com/GewoonJaap/gemini-cli-openai">https://github.com/GewoonJaap/gemini-cli-openai</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GeminiPro</p>
+<ul>
+<li>Name: GeminiPro</li>
+<li>Label: Google Gemini API</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://aistudio.google.com/u/0/apikey" rel="nofollow">https://aistudio.google.com/u/0/apikey</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GigaChat</p>
+<ul>
+<li>Name: GigaChat</li>
+<li>Label: GigaChat</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GithubCopilot</p>
+<ul>
+<li>Name: GithubCopilot</li>
+<li>Label: GitHub Copilot</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GithubCopilotAPI</p>
+<ul>
+<li>Name: GithubCopilotAPI</li>
+<li>Label: GitHub Copilot API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://aider.chat/docs/llms/github.html" rel="nofollow">https://aider.chat/docs/llms/github.html</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>GlhfChat</p>
+<ul>
+<li>Name: GlhfChat</li>
+<li>Label: GlhfChat</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://glhf.chat/user-settings/api" rel="nofollow">https://glhf.chat/user-settings/api</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Grok</p>
+<ul>
+<li>Name: Grok</li>
+<li>Label: Grok AI</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Groq</p>
+<ul>
+<li>Name: Groq</li>
+<li>Label: Groq</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://console.groq.com/keys" rel="nofollow">https://console.groq.com/keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Hailuo AI</p>
+<ul>
+<li>Name: HailuoAI</li>
+<li>Label: Hailuo AI</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: single entry (no auth space)</li>
+</ul>
+</li>
+<li>
+<p>HuggingFace</p>
+<ul>
+<li>Name: HuggingFace</li>
+<li>Label: HuggingFace</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 12</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://huggingface.co/settings/tokens" rel="nofollow">https://huggingface.co/settings/tokens</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>HuggingFaceAPI</p>
+<ul>
+<li>Name: HuggingFaceAPI</li>
+<li>Label: HuggingFace (Text Generation)</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingFace</li>
+</ul>
+</li>
+<li>
+<p>HuggingFaceMedia</p>
+<ul>
+<li>Name: HuggingFaceMedia</li>
+<li>Label: HuggingFace</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 161</li>
+<li>Audio: 0</li>
+<li>Video: 9</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingFace</li>
+</ul>
+</li>
+<li>
+<p>HuggingSpace</p>
+<ul>
+<li>Name: HuggingSpace</li>
+<li>Label: HuggingSpace</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 5</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: Spaces-based access; supports vision</li>
+</ul>
+</li>
+<li>
+<p>ImageLabs</p>
+<ul>
+<li>Name: ImageLabs</li>
+<li>Label: ImageLabs</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Kimi</p>
+<ul>
+<li>Name: Kimi</li>
+<li>Label: Kimi</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>LMArenaBeta</p>
+<ul>
+<li>Name: LMArenaBeta</li>
+<li>Label: LMArena (New)</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 22</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>LambdaChat</p>
+<ul>
+<li>Name: LambdaChat</li>
+<li>Label: Lambda Chat</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>MarkItDown</p>
+<ul>
+<li>Name: MarkItDown</li>
+<li>Label: MarkItDown</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>MetaAI</p>
+<ul>
+<li>Name: MetaAI</li>
+<li>Label: Meta AI</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>MetaAIAccount</p>
+<ul>
+<li>Name: MetaAIAccount</li>
+<li>Label: Meta AI</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 1</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: MetaAI</li>
+</ul>
+</li>
+<li>
+<p>MicrosoftDesigner</p>
+<ul>
+<li>Name: MicrosoftDesigner</li>
+<li>Label: Microsoft Designer</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Microsoft_Phi_4_Multimodal</p>
+<ul>
+<li>Name: Microsoft_Phi_4_Multimodal</li>
+<li>Label: Microsoft Phi-4</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>MiniMax</p>
+<ul>
+<li>Name: MiniMax</li>
+<li>Label: MiniMax API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://intl.minimaxi.com/user-center/basic-information/interface-key" rel="nofollow">https://intl.minimaxi.com/user-center/basic-information/interface-key</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Nvidia</p>
+<ul>
+<li>Name: Nvidia</li>
+<li>Label: Nvidia</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://google.com" rel="nofollow">https://google.com</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OIVSCodeSer0501</p>
+<ul>
+<li>Name: OIVSCodeSer0501</li>
+<li>Label: OI VSCode Server 0501</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OIVSCodeSer2</p>
+<ul>
+<li>Name: OIVSCodeSer2</li>
+<li>Label: OI VSCode Server 2</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Ollama</p>
+<ul>
+<li>Name: Ollama</li>
+<li>Label: Ollama 🦙</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://ollama.com/settings/keys" rel="nofollow">https://ollama.com/settings/keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OpenAIFM</p>
+<ul>
+<li>Name: OpenAIFM</li>
+<li>Label: OpenAI.fm</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OpenRouter</p>
+<ul>
+<li>Name: OpenRouter</li>
+<li>Label: OpenRouter</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://openrouter.ai/settings/keys" rel="nofollow">https://openrouter.ai/settings/keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OpenRouterFree</p>
+<ul>
+<li>Name: OpenRouterFree</li>
+<li>Label: OpenRouter (free)</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://openrouter.ai/settings/keys" rel="nofollow">https://openrouter.ai/settings/keys</a></li>
+<li>Parent: OpenRouter</li>
+</ul>
+</li>
+<li>
+<p>OpenAI API</p>
+<ul>
+<li>Name: OpenaiAPI</li>
+<li>Label: OpenAI API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://platform.openai.com/settings/organization/api-keys" rel="nofollow">https://platform.openai.com/settings/organization/api-keys</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>OpenAI ChatGPT</p>
+<ul>
+<li>Name: OpenaiAccount</li>
+<li>Label: OpenAI ChatGPT</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: OpenaiChat</li>
+</ul>
+</li>
+<li>
+<p>OpenaiChat</p>
+<ul>
+<li>Name: OpenaiChat</li>
+<li>Label: OpenAI ChatGPT</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: chat interface; multiple variants</li>
+</ul>
+</li>
+<li>
+<p>OperaAria</p>
+<ul>
+<li>Name: OperaAria</li>
+<li>Label: Opera Aria</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>PerplexityApi</p>
+<ul>
+<li>Name: PerplexityApi</li>
+<li>Label: Perplexity API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://www.perplexity.ai/settings/api" rel="nofollow">https://www.perplexity.ai/settings/api</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>PerplexityLabs</p>
+<ul>
+<li>Name: PerplexityLabs</li>
+<li>Label: Perplexity Labs</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Pi</p>
+<ul>
+<li>Name: Pi</li>
+<li>Label: Pi</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>PollinationsAI</p>
+<ul>
+<li>Name: PollinationsAI</li>
+<li>Label: Pollinations AI 🌸</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 3</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://auth.pollinations.ai" rel="nofollow">https://auth.pollinations.ai</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>PollinationsImage</p>
+<ul>
+<li>Name: PollinationsImage</li>
+<li>Label: PollinationsImage</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 3</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://auth.pollinations.ai" rel="nofollow">https://auth.pollinations.ai</a></li>
+<li>Parent: PollinationsAI</li>
+</ul>
+</li>
+<li>
+<p>PuterJS</p>
+<ul>
+<li>Name: PuterJS</li>
+<li>Label: Puter.js</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://github.com/HeyPuter/puter-cli">https://github.com/HeyPuter/puter-cli</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Qwen</p>
+<ul>
+<li>Name: Qwen</li>
+<li>Label: Qwen</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Qwen_Qwen_2_5</p>
+<ul>
+<li>Name: Qwen_Qwen_2_5</li>
+<li>Label: Qwen Qwen-2.5</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Qwen_Qwen_2_5M</p>
+<ul>
+<li>Name: Qwen_Qwen_2_5M</li>
+<li>Label: Qwen Qwen-2.5M</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Qwen_Qwen_2_5_Max</p>
+<ul>
+<li>Name: Qwen_Qwen_2_5_Max</li>
+<li>Label: Qwen Qwen-2.5-Max</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Qwen_Qwen_2_72B</p>
+<ul>
+<li>Name: Qwen_Qwen_2_72B</li>
+<li>Label: Qwen Qwen-2.72B</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Qwen_Qwen_3</p>
+<ul>
+<li>Name: Qwen_Qwen_3</li>
+<li>Label: Qwen Qwen-3</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>Replicate</p>
+<ul>
+<li>Name: Replicate</li>
+<li>Label: Replicate</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://replicate.com/account/api-tokens" rel="nofollow">https://replicate.com/account/api-tokens</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>StabilityAI_SD35Large</p>
+<ul>
+<li>Name: StabilityAI_SD35Large</li>
+<li>Label: StabilityAI SD-3.5-Large</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: true</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>TeachAnything</p>
+<ul>
+<li>Name: TeachAnything</li>
+<li>Label: TeachAnything</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>ThebApi</p>
+<ul>
+<li>Name: ThebApi</li>
+<li>Label: TheB.AI API</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://beta.theb.ai/home" rel="nofollow">https://beta.theb.ai/home</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Together</p>
+<ul>
+<li>Name: Together</li>
+<li>Label: Together</li>
+<li>Active by default: true</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): true</li>
+<li>Login URL: <a href="https://api.together.ai/" rel="nofollow">https://api.together.ai/</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Video</p>
+<ul>
+<li>Name: Video</li>
+<li>Label: Video</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 2</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: covers video tasks; multiple variants</li>
+</ul>
+</li>
+<li>
+<p>WeWordle</p>
+<ul>
+<li>Name: WeWordle</li>
+<li>Label: WeWordle</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>WhiteRabbitNeo</p>
+<ul>
+<li>Name: WhiteRabbitNeo</li>
+<li>Label: WhiteRabbitNeo</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>YouTube</p>
+<ul>
+<li>Name: YouTube</li>
+<li>Label: YouTube</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>Yqcloud</p>
+<ul>
+<li>Name: Yqcloud</li>
+<li>Label: Yqcloud</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>StabilityAI_SD35Large (second entry)</p>
+<ul>
+<li>Name: StabilityAI_SD35Large</li>
+<li>Label: StabilityAI SD-3.5-Large</li>
+<li>Active by default: false</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: HuggingSpace</li>
+</ul>
+</li>
+<li>
+<p>xAI</p>
+<ul>
+<li>Name: xAI</li>
+<li>Label: xAI</li>
+<li>Active by default: false</li>
+<li>Auth: true</li>
+<li>HF Space: false</li>
+<li>Image slots: 0</li>
+<li>Audio: 0</li>
+<li>Video: 0</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: <a href="https://console.x.ai" rel="nofollow">https://console.x.ai</a></li>
+<li>Parent: null</li>
+</ul>
+</li>
+<li>
+<p>AnyProvider</p>
+<ul>
+<li>Name: AnyProvider</li>
+<li>Label: AnyProvider</li>
+<li>Active by default: true</li>
+<li>Auth: false</li>
+<li>HF Space: false</li>
+<li>Image slots: 355</li>
+<li>Audio: 0</li>
+<li>Video: 17</li>
+<li>Vision (Image Upload): false</li>
+<li>Login URL: null</li>
+<li>Parent: null</li>
+<li>Notes: aggregates many separate models; acts as a mega-provider</li>
+</ul>
+</li>
+</ul>
+<h3>2. Models (Exhaustive)</h3>
+<p>A. Text generation models</p>
+<ul>
+<li>
+<p>Anthropic</p>
+<ul>
+<li>claude-3-5-sonnet-latest</li>
+<li>claude-3-5-sonnet-20241022</li>
+<li>claude-3-5-haiku-latest</li>
+<li>claude-3-5-haiku-20241022</li>
+<li>claude-3-opus-latest</li>
+<li>claude-3-opus-20240229</li>
+<li>claude-3-sonnet-20240229</li>
+<li>claude-3-haiku-20240307</li>
+</ul>
+</li>
+<li>
+<p>ApiAirforce</p>
+<ul>
+<li>claude-sonnet-4</li>
+<li>command-r</li>
+<li>deepseek-r1</li>
+<li>deepseek-v3</li>
+<li>flux-dev</li>
+<li>flux-krea-dev</li>
+<li>flux-schnell</li>
+<li>gemini-2.5-flash</li>
+<li>gemini-2.5-pro</li>
+<li>glm-4.5</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.1-nano</li>
+<li>gpt-4o-mini</li>
+<li>gpt-5-chat</li>
+<li>gpt-5-mini</li>
+<li>gpt-5-nano</li>
+<li>gpt-oss-120b</li>
+<li>gpt-oss-20b</li>
+<li>grok-4</li>
+<li>jamba-mini-1.7</li>
+<li>kimi-k2</li>
+<li>llama-3.3</li>
+<li>llama-4-maverick</li>
+<li>llama-4-scout</li>
+<li>mistral-large</li>
+<li>mistral-medium</li>
+<li>mistral-small</li>
+<li>openchat-3.5</li>
+<li>pixtral</li>
+<li>qwen3-235b</li>
+<li>qwen3-coder</li>
+<li>sdxl</li>
+<li>sonar-reasoning</li>
+</ul>
+</li>
+<li>
+<p>Azure</p>
+<ul>
+<li>gpt-oss-120b</li>
+<li>deepseek-r1</li>
+<li>gpt-4.1</li>
+<li>gpt-4o-mini-audio-preview</li>
+</ul>
+</li>
+<li>
+<p>BingCreateImages</p>
+<ul>
+<li>(no text generation models listed here; image generation only)</li>
+</ul>
+</li>
+<li>
+<p>BlackForestLabs_Flux1Dev</p>
+<ul>
+<li>flux-dev</li>
+<li>flux</li>
+</ul>
+</li>
+<li>
+<p>BlackForestLabs_Flux1KontextDev</p>
+<ul>
+<li>flux-kontext-dev</li>
+</ul>
+</li>
+<li>
+<p>Blackbox</p>
+<ul>
+<li>(large list; example entries)</li>
+<li>blackboxai</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.1-nano</li>
+<li>gpt-4</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>Python Agent</li>
+<li>HTML Agent</li>
+<li>Builder Agent</li>
+<li>Java Agent</li>
+<li>JavaScript Agent</li>
+<li>React Agent</li>
+<li>Android Agent</li>
+<li>Flutter Agent</li>
+<li>Next.js Agent</li>
+<li>etc. (many)</li>
+</ul>
+</li>
+<li>
+<p>BlackboxPro</p>
+<ul>
+<li>(large list; includes many model names and variants)</li>
+<li>blackboxai</li>
+<li>gpt-4o-mini</li>
+<li>DeepSeek-V3</li>
+<li>DeepSeek-R1</li>
+<li>Meta-Llama-3.3-70B-Instruct-Turbo</li>
+<li>Mistral-Small-24B-Instruct-2501</li>
+<li>DeepSeek-LLM-Chat-(67B)</li>
+<li>Qwen-QwQ-32B-Preview</li>
+<li>Deepcoder 14B Preview</li>
+<li>DeepHermes 3 Llama 3 8B Preview</li>
+<li>DeepSeek R1 Zero</li>
+<li>DeepSeek V3</li>
+<li>etc. (many)</li>
+</ul>
+</li>
+<li>
+<p>Cerebras</p>
+<ul>
+<li>llama3.1-70b</li>
+<li>llama3.1-8b</li>
+<li>llama-3.3-70b</li>
+<li>deepseek-r1-distill-llama-70b</li>
+</ul>
+</li>
+<li>
+<p>Chatai</p>
+<ul>
+<li>gpt-4o-mini</li>
+</ul>
+</li>
+<li>
+<p>Cloudflare</p>
+<ul>
+<li>deepseek-coder-6.7b-base</li>
+<li>deepseek-coder-6.7b</li>
+<li>deepseek-math-7b</li>
+<li>deepseek-distill-qwen-32b</li>
+<li>discolm-german-7b-v1</li>
+<li>falcon-7b</li>
+<li>gemma-3-12b</li>
+<li>gemma-7b</li>
+<li>hermes-2-pro-mistral-7b</li>
+<li>llama-2-13b</li>
+<li>llama-2-7b-fp16</li>
+<li>llama-2-7b</li>
+<li>llama-3-8b</li>
+<li>llama-3.1-8b</li>
+<li>llama-3.2-11b-vision-instruct</li>
+<li>llama-3.2-1b</li>
+<li>llama-3.2-3b</li>
+<li>llama-3.3-70b</li>
+<li>llama-4-scout</li>
+<li>llama-guard-3-8b</li>
+<li>llamaguard-7b</li>
+<li>mistral-7b-v0.1</li>
+<li>mistral-7b-v0.2</li>
+<li>mistral-small-3.1-24b</li>
+<li>neural-7b-v3-1</li>
+<li>openchat-3.5-0106</li>
+<li>openhermes-2.5-mistral-7b</li>
+<li>phi-2</li>
+<li>qwen1.5-0.5b</li>
+<li>qwen-1.5-1.8b</li>
+<li>qwen-1.5-14b</li>
+<li>qwen-1.5-7b</li>
+<li>qwen-2.5-coder-32b</li>
+<li>qwq-32b</li>
+<li>sqlcoder-7b-2</li>
+<li>starling-lm-7b-beta</li>
+<li>tinyllama-1.1b-v1.0</li>
+<li>una-cybertron-7b-v2-bf16</li>
+<li>zephyr-7b-beta</li>
+</ul>
+</li>
+<li>
+<p>CohereForAI_C4AI_Command</p>
+<ul>
+<li>command-a-03-2025</li>
+<li>command-r-plus-08-2024</li>
+<li>command-r-08-2024</li>
+<li>command-r-plus</li>
+<li>command-r</li>
+<li>command-r7b-12-2024</li>
+<li>command-r7b-arabic-02-2025</li>
+</ul>
+</li>
+<li>
+<p>Copilot</p>
+<ul>
+<li>Copilot</li>
+<li>Think Deeper</li>
+<li>Smart (GPT-5)</li>
+</ul>
+</li>
+<li>
+<p>CopilotAccount</p>
+<ul>
+<li>Copilot</li>
+<li>Think Deeper</li>
+<li>Smart (GPT-5)</li>
+</ul>
+</li>
+<li>
+<p>Custom</p>
+<ul>
+<li>(no models listed)</li>
+</ul>
+</li>
+<li>
+<p>DeepInfra</p>
+<ul>
+<li>deepseek-ai/DeepSeek-V3.1</li>
+<li>openai/gpt-oss-120b</li>
+<li>zai-org/GLM-4.5V</li>
+<li>openai/gpt-oss-20b</li>
+<li>Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo</li>
+<li>zai-org/GLM-4.5</li>
+<li>moonshotai/Kimi-K2-Instruct</li>
+<li>etc. (extensive list)</li>
+</ul>
+</li>
+<li>
+<p>DeepInfraChat</p>
+<ul>
+<li>deepseek-ai/DeepSeek-V3.1</li>
+<li>openai/gpt-oss-120b</li>
+<li>zai-org/GLM-4.5V</li>
+<li>openai/gpt-oss-20b</li>
+<li>Qwen/Qwen3-Coder-480B-A35B-Instruct</li>
+<li>etc. (extensive list)</li>
+</ul>
+</li>
+<li>
+<p>DeepSeek</p>
+<ul>
+<li>deepseek-chat</li>
+</ul>
+</li>
+<li>
+<p>DeepseekAI_JanusPro7b</p>
+<ul>
+<li>janus-pro-7b</li>
+<li>janus-pro-7b-image</li>
+</ul>
+</li>
+<li>
+<p>EasyChat</p>
+<ul>
+<li>gemini-2.0-flash</li>
+<li>gemini-2.5-flash</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini-image</li>
+<li>gpt-4o-research</li>
+<li>gpt-oss-120b</li>
+<li>grok-3</li>
+<li>grok-4-expert</li>
+<li>grok-4</li>
+</ul>
+</li>
+<li>
+<p>FenayAI</p>
+<ul>
+<li>(long list; includes many Claude variants, Gemini variants, Mistral, OpenHermes, etc.)</li>
+<li>Example entries: claude-3-7, claude-3-5-haiku, claude-3-opus, mistral-large, gpt-4, qwen-3-235b-a22b, etc.</li>
+</ul>
+</li>
+<li>
+<p>GLM</p>
+<ul>
+<li>GLM-4.5</li>
+<li>GLM-4.5-Air</li>
+<li>GLM-4.5V</li>
+<li>GLM-4-32B</li>
+<li>GLM-4.1V-9B-Thinking</li>
+<li>Z1-Rumination</li>
+<li>Z1-32B</li>
+<li>任务专用</li>
+</ul>
+</li>
+<li>
+<p>Gemini</p>
+<ul>
+<li>""</li>
+<li>gemini-2.5-flash</li>
+<li>gemini-2.5-pro</li>
+</ul>
+</li>
+<li>
+<p>GeminiCLI</p>
+<ul>
+<li>gemini-2.5-pro</li>
+<li>gemini-2.5-flash</li>
+</ul>
+</li>
+<li>
+<p>GeminiPro</p>
+<ul>
+<li>gemini-2.0-flash</li>
+<li>gemini-2.0-flash-lite</li>
+<li>gemini-2.0-flash-thinking-exp</li>
+<li>gemini-2.5-flash</li>
+<li>gemma-3-1b-it</li>
+<li>gemma-3-12b-it</li>
+<li>gemma-3-27b-it</li>
+<li>gemma-3-4b-it</li>
+<li>gemma-3n-e2b-it</li>
+<li>gemma-3n-e4b-it</li>
+</ul>
+</li>
+<li>
+<p>GigaChat</p>
+<ul>
+<li>GigaChat-2</li>
+<li>GigaChat-2-Pro</li>
+<li>GigaChat-2-Max</li>
+<li>GigaChat</li>
+<li>GigaChat-Pro</li>
+<li>GigaChat-Max</li>
+</ul>
+</li>
+<li>
+<p>GithubCopilot</p>
+<ul>
+<li>gpt-4o</li>
+<li>o1-mini</li>
+<li>o1-preview</li>
+<li>claude-3.5-sonnet</li>
+</ul>
+</li>
+<li>
+<p>GlhfChat</p>
+<ul>
+<li>hf:meta-llama/Llama-3.1-405B-Instruct</li>
+<li>hf:meta-llama/Llama-3.3-70B-Instruct</li>
+<li>hf:deepseek-ai/DeepSeek-V3</li>
+<li>hf:Qwen/QwQ-32B-Preview</li>
+<li>hf:huihui-ai/Llama-3.3-70B-Instruct-abliterated</li>
+<li>hf:anthracite-org/magnum-v4-12b</li>
+<li>hf:meta-llama/Llama-3.1-70B-Instruct</li>
+<li>hf:meta-llama/Llama-3.1-8B-Instruct</li>
+<li>hf:meta-llama/Llama-3.2-3B-Instruct</li>
+<li>hf:meta-llama/Llama-3.2-11B-Vision-Instruct</li>
+<li>hf:meta-llama/Llama-3.2-90B-Vision-Instruct</li>
+<li>hf:Qwen/Qwen2.5-72B-Instruct</li>
+<li>hf:Qwen/Qwen2.5-Coder-32B-Instruct</li>
+<li>hf:google/gemma-2-9b-it</li>
+<li>hf:google/gemma-2-27b-it</li>
+<li>hf:mistralai/Mistral-7B-Instruct-v0.3</li>
+<li>...</li>
+</ul>
+</li>
+<li>
+<p>Grok</p>
+<ul>
+<li>grok-3</li>
+<li>grok-3-thinking</li>
+<li>grok-2</li>
+</ul>
+</li>
+<li>
+<p>Groq</p>
+<ul>
+<li>(extensive Groq provider list; includes many LLMs)</li>
+<li>Examples: allam-2-7b, compound-beta, deepseek-r1-distill-llama-70b, distil-whisper-large-v3-en, gemma2-9b-it, llama-3.1-8b-instant, llama-3.3-70b-versatile, llama3-70b-8192, llama3-8b-8192, etc.</li>
+<li>plus numerous entries for Llama, Mistral, Gemini, Qwen, etc.</li>
+</ul>
+</li>
+<li>
+<p>Hailuo AI</p>
+<ul>
+<li>minimax</li>
+</ul>
+</li>
+<li>
+<p>HuggingFace</p>
+<ul>
+<li>(huge model list; many text models across HuggingFace ecosystems)</li>
+<li>Examples: deepseek-ai/DeepSeek-V3.1, openai/gpt-oss-20b, openai/gpt-oss-120b, CohereLabs/command-a-reasoning-08-2025, zai-org/GLM-4.5, Qwen/Qwen3-Coder-30B-A3B-Instruct, meta-llama/Llama-3.2-1B-Instruct, etc.</li>
+<li>plus many more: Qwen3-235B, meta-llama variants, Mistral variants, Gemini variants, etc.</li>
+</ul>
+</li>
+<li>
+<p>HuggingFaceAPI</p>
+<ul>
+<li>(subset of the HuggingFace catalog focused on API-based inferences)</li>
+<li>Examples: deepseek-ai/DeepSeek-V3.1</li>
+<li>openai/gpt-oss-20b</li>
+<li>etc. (extensive list; many of the same families as HuggingFace)</li>
+</ul>
+</li>
+<li>
+<p>HuggingFaceMedia</p>
+<ul>
+<li>(media-focused variants)</li>
+<li>Examples: Wan-AI/Wan2.2-T2V-A14B, stabilityai/stable-diffusion-xl-base-1.0, etc.</li>
+<li>plus many image-centric models</li>
+</ul>
+</li>
+<li>
+<p>HuggingSpace</p>
+<ul>
+<li>command-a</li>
+<li>command-a-03-2025</li>
+<li>command-r</li>
+<li>command-r-08-2024</li>
+<li>command-r-plus</li>
+<li>command-r-plus-08-2024</li>
+<li>command-r7b</li>
+<li>command-r7b-12-2024</li>
+<li>command-r7b-arabic-02-2025</li>
+<li>flux</li>
+<li>flux-dev</li>
+<li>flux-kontext-dev</li>
+<li>grok-4</li>
+<li>janus-pro-7b</li>
+<li>janus-pro-7b-image</li>
+<li>phi-4</li>
+<li>phi-4-multimodal</li>
+<li>qwen-2-72b</li>
+<li>qwen-2.5</li>
+<li>qwen-2.5-1m</li>
+<li>qwen-2.5-max</li>
+<li>qwen-3-0.6b</li>
+<li>qwen-3-1.7b</li>
+<li>qwen-3-14b</li>
+<li>qwen-3-235b</li>
+<li>qwen-3-30b</li>
+<li>qwen-3-30b-a3b</li>
+<li>qwen-3-32b</li>
+<li>qwen-3-4b</li>
+<li>qwen-3-8b</li>
+<li>sd-3.5-large</li>
+</ul>
+</li>
+<li>
+<p>ImageLabs</p>
+<ul>
+<li>sdxl-turbo</li>
+</ul>
+</li>
+<li>
+<p>Kimi</p>
+<ul>
+<li>kimi-k2</li>
+</ul>
+</li>
+<li>
+<p>LMArenaBeta</p>
+<ul>
+<li>(broad list including many text models; see the 22+ items in the original)</li>
+</ul>
+</li>
+<li>
+<p>LambdaChat</p>
+<ul>
+<li>(text-focused)</li>
+<li>deepseek-v3, etc.</li>
+</ul>
+</li>
+<li>
+<p>MarkItDown</p>
+<ul>
+<li>(empty)</li>
+</ul>
+</li>
+<li>
+<p>MetaAI</p>
+<ul>
+<li>meta-ai</li>
+</ul>
+</li>
+<li>
+<p>MetaAIAccount</p>
+<ul>
+<li>meta-ai</li>
+</ul>
+</li>
+<li>
+<p>MicrosoftDesigner</p>
+<ul>
+<li>dall-e-3</li>
+<li>1024x1024</li>
+<li>1024x1792</li>
+<li>1792x1024</li>
+</ul>
+</li>
+<li>
+<p>Microsoft_Phi_4_Multimodal</p>
+<ul>
+<li>phi-4-multimodal</li>
+</ul>
+</li>
+<li>
+<p>MiniMax</p>
+<ul>
+<li>MiniMax-Text-01</li>
+<li>abab6.5s-chat</li>
+</ul>
+</li>
+<li>
+<p>Nvidia</p>
+<ul>
+<li>(huge list across Nvidia ecosystem)</li>
+<li>Many gpt-oss variants, Llama variants, Nemotron variants, CodeLlama, etc.</li>
+</ul>
+</li>
+<li>
+<p>OIVSCodeSer0501</p>
+<ul>
+<li>gpt-4.1-mini</li>
+</ul>
+</li>
+<li>
+<p>OIVSCodeSer2</p>
+<ul>
+<li>gpt-4o-mini</li>
+</ul>
+</li>
+<li>
+<p>Ollama</p>
+<ul>
+<li>gpt-oss:120b</li>
+<li>gpt-oss:20b</li>
+</ul>
+</li>
+<li>
+<p>OpenAIFM</p>
+<ul>
+<li>friendly</li>
+<li>patient_teacher</li>
+<li>noir_detective</li>
+<li>cowboy</li>
+<li>calm</li>
+<li>scientific_style</li>
+<li>alloy</li>
+<li>ash</li>
+<li>ballad</li>
+<li>coral</li>
+<li>echo</li>
+<li>fable</li>
+<li>onyx</li>
+<li>nova</li>
+<li>sage</li>
+<li>shimmer</li>
+<li>verse</li>
+</ul>
+</li>
+<li>
+<p>OpenRouter</p>
+<ul>
+<li>agentica-org/deepcoder-14b-preview</li>
+<li>agentica-org/deepcoder-14b-preview:free</li>
+<li>ai21/jamba-large-1.7</li>
+<li>ai21/jamba-mini-1.7</li>
+<li>aion-labs/aion-1.0</li>
+<li>aion-labs/aion-1.0-mini</li>
+<li>aion-labs/aion-rp-llama-3.1-8b</li>
+<li>alfredpros/codellama-7b-instruct-solidity</li>
+<li>alpindale/goliath-120b</li>
+<li>amazon/nova-lite-v1</li>
+<li>...and many more (extensive catalog)</li>
+</ul>
+</li>
+<li>
+<p>OpenRouterFree</p>
+<ul>
+<li>agentica-org/deepcoder-14b-preview</li>
+<li>arlian/qwq-32b-arliai-rpr-v1</li>
+<li>cognitivecomputations/dolphin-mistral-24b-venice-edition</li>
+<li>...and many more (free tier variants)</li>
+</ul>
+</li>
+<li>
+<p>OpenAI API</p>
+<ul>
+<li>(none listed here; this provider group is present but no model strings are specified in this dataset)</li>
+</ul>
+</li>
+<li>
+<p>OpenaiAccount</p>
+<ul>
+<li>auto</li>
+<li>gpt-5</li>
+<li>gpt-5-instant</li>
+<li>gpt-5-thinking</li>
+<li>gpt-4</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.5</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o3-mini</li>
+<li>o3-mini-high</li>
+<li>o4-mini</li>
+<li>o4-mini-high</li>
+<li>gpt-image</li>
+</ul>
+</li>
+<li>
+<p>OpenaiChat</p>
+<ul>
+<li>auto</li>
+<li>gpt-5</li>
+<li>gpt-5-instant</li>
+<li>gpt-5-thinking</li>
+<li>gpt-4</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.5</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o3-mini</li>
+<li>o3-mini-high</li>
+<li>o4-mini</li>
+<li>o4-mini-high</li>
+<li>gpt-image</li>
+</ul>
+</li>
+<li>
+<p>OperaAria</p>
+<ul>
+<li>aria (text-generation model named “aria”)</li>
+</ul>
+</li>
+<li>
+<p>PerplexityApi</p>
+<ul>
+<li>llama-3-sonar-small-32k-chat</li>
+<li>llama-3-sonar-large-32k-online</li>
+<li>llama-3-sonar-large-32k-chat</li>
+<li>llama-3-sonar-large-32k-online</li>
+<li>llama-3-8b-instruct</li>
+<li>llama-3-70b-instruct</li>
+</ul>
+</li>
+<li>
+<p>PerplexityLabs</p>
+<ul>
+<li>r1-1776</li>
+<li>sonar-pro</li>
+<li>sonar</li>
+<li>sonar-reasoning</li>
+<li>sonar-reasoning-pro</li>
+</ul>
+</li>
+<li>
+<p>Pi</p>
+<ul>
+<li>(no text-models listed; Pi is a driver/utility)</li>
+</ul>
+</li>
+<li>
+<p>PollinationsAI</p>
+<ul>
+<li>openai</li>
+<li>evil</li>
+<li>deepseek-r1-0528</li>
+<li>gemini-2.5-flash-lite</li>
+<li>gpt-5-nano</li>
+<li>llama-3.2-1b</li>
+<li>llama-3.1-8b</li>
+<li>llama-4-scout-17b-16e</li>
+<li>mistral-small-3.1-24b</li>
+<li>mistral-nemo-2407</li>
+<li>mistral-small-cloudflare</li>
+<li>nova-micro-v1</li>
+<li>gpt-4.1-nano</li>
+<li>gpt-4o-mini-audio-preview</li>
+<li>openai-fast</li>
+<li>gpt-4.1</li>
+<li>o3</li>
+<li>openai-roblox</li>
+<li>qwen-2.5-coder-32b</li>
+<li>roblox-rp</li>
+<li>bidara</li>
+<li>midijourney</li>
+<li>mirexa</li>
+<li>rtist</li>
+<li>sur</li>
+<li>unity</li>
+<li>flux</li>
+<li>turbo</li>
+<li>kontext</li>
+<li>openai-audio</li>
+<li>alloy</li>
+<li>echo</li>
+<li>fable</li>
+<li>onyx</li>
+<li>nova</li>
+<li>shimmer</li>
+<li>coral</li>
+<li>verse</li>
+<li>ballad</li>
+<li>ash</li>
+<li>sage</li>
+<li>amuch</li>
+<li>dan</li>
+</ul>
+</li>
+<li>
+<p>PollinationsImage</p>
+<ul>
+<li>flux</li>
+<li>turbo</li>
+<li>kontext</li>
+</ul>
+</li>
+<li>
+<p>PuterJS</p>
+<ul>
+<li>gpt-5-2025-08-07</li>
+<li>gpt-5</li>
+<li>gpt-5-mini-2025-08-07</li>
+<li>gpt-5-mini</li>
+<li>gpt-5-nano-2025-08-07</li>
+<li>gpt-5-nano</li>
+<li>gpt-5-chat-latest</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o1-pro</li>
+<li>o3</li>
+<li>o3-mini</li>
+<li>o4-mini</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.1-nano</li>
+<li>gpt-4.5-preview</li>
+<li>claude-opus-4-1-20250805</li>
+<li>claude-opus-4-1</li>
+<li>claude-opus-4-20250514</li>
+<li>claude-opus-4</li>
+<li>claude-opus-4-latest</li>
+<li>claude-sonnet-4-20250514</li>
+<li>claude-sonnet-4</li>
+<li>claude-sonnet-4-latest</li>
+<li>claude-3-7-sonnet-20250219</li>
+<li>claude-3-7-sonnet-latest</li>
+<li>claude-3-5-sonnet-20241022</li>
+<li>claude-3-5-sonnet-latest</li>
+<li>claude-3-5-sonnet-20240620</li>
+<li>claude-3-haiku-20240307</li>
+<li>mistral-large-latest</li>
+<li>mistral-medium-2508</li>
+<li>mistral-medium-latest</li>
+<li>mistral-medium</li>
+<li>ministral-3b-2410</li>
+<li>ministral-3b-latest</li>
+<li>ministral-8b-2410</li>
+<li>ministral-8b-latest</li>
+<li>open-mistral-7b</li>
+<li>mistral-tiny</li>
+<li>mistral-tiny-2312</li>
+<li>open-mistral-nemo</li>
+<li>open-mistral-nemo-2407</li>
+<li>mistral-tiny-2407</li>
+<li>mistral-tiny-latest</li>
+<li>open-mixtral-8x7b</li>
+<li>mistral-small</li>
+<li>mistral-small-2312</li>
+<li>open-mixtral-8x22b</li>
+<li>open-mixtral-8x22b-2404</li>
+<li>pixtral-large-2411</li>
+<li>pixtral-large-latest</li>
+<li>mistral-large-pixtral-2411</li>
+<li>codestral-2508</li>
+<li>codestral-latest</li>
+<li>devstral-small-2507</li>
+<li>devstral-small-latest</li>
+<li>pixtral-12b-2409</li>
+<li>pixtral-12b</li>
+<li>pixtral-12b-latest</li>
+<li>mistral-small-2506</li>
+<li>mistral-small-latest</li>
+<li>mistral-saba-2502</li>
+<li>mistral-saba-latest</li>
+<li>magistral-medium-2507</li>
+<li>magistral-medium-latest</li>
+<li>magistral-small-2507</li>
+<li>magistral-small-latest</li>
+<li>mistral-moderation-2411</li>
+<li>mistral-moderation-latest</li>
+<li>mistral-ocr-2505</li>
+<li>mistral-ocr-latest</li>
+<li>grok-beta</li>
+<li>grok-vision-beta</li>
+<li>grok-3</li>
+<li>grok-3-fast</li>
+<li>grok-3-mini</li>
+<li>grok-3-mini-fast</li>
+<li>grok-2-vision</li>
+<li>grok-2</li>
+<li>deepseek-chat</li>
+<li>deepseek-reasoner</li>
+<li>gemini-1.5-flash</li>
+<li>gemini-2.0-flash</li>
+<li>mixtral-8x22b</li>
+<li>pixtral-large</li>
+<li>llama-2-70b</li>
+<li>llama-3-8b</li>
+<li>llama-3-70b</li>
+<li>llama-3.1-8b</li>
+<li>llama-3.1-70b</li>
+<li>llama-3.1-405b</li>
+<li>llama-3.2-1b</li>
+<li>llama-3.2-3b</li>
+<li>llama-3.2-11b</li>
+<li>llama-3.2-90b</li>
+<li>llama-3.3-8b</li>
+<li>llama-3.3-70b</li>
+<li>llama-4-maverick</li>
+<li>llama-4-scout</li>
+<li>gemini-1.5-8b-flash</li>
+<li>gemini-1.5-pro</li>
+<li>gemini-2.5-pro</li>
+<li>gemini-2.5-flash</li>
+<li>gemini-2.5-flash-thinking</li>
+<li>gemma-2-9b</li>
+<li>gemma-2-27b</li>
+<li>gemma-3-1b</li>
+<li>gemma-3-4b</li>
+<li>gemma-3-12b</li>
+<li>gemma-3-27b</li>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4</li>
+<li>gpt-4-turbo</li>
+<li>gpt-4o-search</li>
+<li>gpt-4o-mini-search</li>
+<li>o3-mini-high</li>
+<li>o4-mini-high</li>
+<li>gpt-4.5</li>
+<li>mistral-large</li>
+<li>mistral-7b</li>
+<li>mixtral-8x7b</li>
+<li>ministral-8b</li>
+<li>mistral-nemo</li>
+<li>ministral-3b</li>
+<li>mistral-saba</li>
+<li>codestral</li>
+<li>hermes-2-dpo</li>
+<li>hermes-2-pro</li>
+<li>hermes-3-70b</li>
+<li>hermes-3-405b</li>
+<li>deephermes-3-8b</li>
+<li>deephermes-3-24b</li>
+<li>phi-3-mini</li>
+<li>phi-3-medium</li>
+<li>phi-3.5-mini</li>
+<li>phi-4</li>
+<li>phi-4-multimodal</li>
+<li>phi-4-reasoning</li>
+<li>phi-4-reasoning-plus</li>
+<li>wizardlm-2-8x22b</li>
+<li>mai-ds-r1</li>
+<li>claude-3.7-sonnet</li>
+<li>claude-3.7-sonnet-thinking</li>
+<li>claude-3.5-haiku</li>
+<li>claude-3.5-sonnet</li>
+<li>claude-3-haiku</li>
+<li>claude-3-opus</li>
+<li>claude-3-sonnet</li>
+<li>claude-2.1</li>
+<li>claude-2</li>
+<li>claude-2.0</li>
+<li>reka-flash</li>
+<li>command-r7b</li>
+<li>command-r-plus</li>
+<li>command</li>
+<li>command-r</li>
+<li>command-a</li>
+<li>qwq-32b</li>
+<li>qwen-vl-plus</li>
+<li>qwen-vl-max</li>
+<li>qwen-turbo</li>
+<li>qwen-2.5-vl-72b</li>
+<li>qwen-plus</li>
+<li>qwen-max</li>
+<li>qwen-2.5-coder-32b</li>
+<li>qwen-2.5-7b</li>
+<li>qwen-2.5-72b</li>
+<li>qwen-2.5-vl-7b</li>
+<li>qwen-2-72b</li>
+<li>qwen-3-0.6b</li>
+<li>qwen-3-1.7b</li>
+<li>qwen-3-4b</li>
+<li>qwen-3-30b</li>
+<li>qwen-3-8b</li>
+<li>qwen-3-14b</li>
+<li>qwen-3-32b</li>
+<li>qwen-3-235b</li>
+<li>qwen-2.5-coder-7b</li>
+<li>qwen-2.5-vl-3b</li>
+<li>qwen-2.5-vl-32b</li>
+<li>deepseek-prover-v2</li>
+<li>deepseek-v3</li>
+<li>deepseek-v3-0324</li>
+<li>deepseek-r1-zero</li>
+<li>deepseek-r1-distill-llama-8b</li>
+<li>deepseek-r1-distill-qwen-1.5b</li>
+<li>deepseek-r1-distill-qwen-32b</li>
+<li>deepseek-r1-distill-qwen-14b</li>
+<li>deepseek-r1-distill-llama-70b</li>
+<li>deepseek-r1</li>
+<li>deepseek-coder</li>
+<li>inflection-3-productivity</li>
+<li>inflection-3-pi</li>
+<li>grok-3-beta</li>
+<li>grok</li>
+<li>sonar-reasoning-pro</li>
+<li>sonar-pro</li>
+<li>sonar-deep-research</li>
+<li>r1-1776</li>
+<li>sonar-reasoning</li>
+<li>sonar</li>
+<li>llama-3.1-sonar-small-online</li>
+<li>llama-3.1-sonar-large-online</li>
+<li>nemotron-49b</li>
+<li>nemotron-70b</li>
+<li>nemotron-253b</li>
+<li>glm-4</li>
+<li>glm-4-32b</li>
+<li>glm-z1-32b</li>
+<li>glm-4-9b</li>
+<li>glm-z1-9b</li>
+<li>glm-z1-rumination-32b</li>
+<li>minimax</li>
+<li>dolphing-3.0-r1-24b</li>
+<li>dolphing-3.0-24b</li>
+<li>dolphing-8x22b</li>
+<li>deepcoder-14b</li>
+<li>kimi-vl-thinking</li>
+<li>moonlight-16b</li>
+<li>qwerky-72b</li>
+<li>lfm-7b</li>
+<li>lfm-3b</li>
+<li>lfm-40b</li>
+</ul>
+</li>
+<li>
+<p>OpenRouter</p>
+<ul>
+<li>(many entries; example text models)</li>
+<li>introspective: openai-compatible models, Qwen variants, Gemini variants, Claude variants, etc.</li>
+<li>Note: OpenRouter’s catalog is very large; see the OpenRouter section in the provider list for the full set.</li>
+</ul>
+</li>
+<li>
+<p>OpenaiAccount</p>
+<ul>
+<li>auto</li>
+<li>gpt-5</li>
+<li>gpt-5-instant</li>
+<li>gpt-5-thinking</li>
+<li>gpt-4</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.5</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o3-mini</li>
+<li>o3-mini-high</li>
+<li>o4-mini</li>
+<li>o4-mini-high</li>
+<li>gpt-image</li>
+</ul>
+</li>
+<li>
+<p>OpenaiChat</p>
+<ul>
+<li>auto</li>
+<li>gpt-5</li>
+<li>gpt-5-instant</li>
+<li>gpt-5-thinking</li>
+<li>gpt-4</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.5</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o3-mini</li>
+<li>o3-mini-high</li>
+<li>o4-mini</li>
+<li>o4-mini-high</li>
+<li>gpt-image</li>
+</ul>
+</li>
+<li>
+<p>OperaAria</p>
+<ul>
+<li>aria (text)</li>
+</ul>
+</li>
+<li>
+<p>PerplexityApi</p>
+<ul>
+<li>llama-3-sonar-small-32k-chat</li>
+<li>llama-3-sonar-large-32k-online</li>
+<li>llama-3-sonar-large-32k-chat</li>
+<li>llama-3-sonar-large-32k-online</li>
+<li>llama-3-8b-instruct</li>
+<li>llama-3-70b-instruct</li>
+</ul>
+</li>
+<li>
+<p>PerplexityLabs</p>
+<ul>
+<li>r1-1776</li>
+<li>sonar-pro</li>
+<li>sonar</li>
+<li>sonar-reasoning</li>
+<li>sonar-reasoning-pro</li>
+</ul>
+</li>
+<li>
+<p>PollinationsAI</p>
+<ul>
+<li>(text-capable models across many families; see the full PollinationsAI list above)</li>
+</ul>
+</li>
+<li>
+<p>PollinationsImage</p>
+<ul>
+<li>flux</li>
+<li>flux-pro</li>
+<li>flux-dev</li>
+<li>flux-schnell</li>
+<li>dall-e-3</li>
+<li>sdxl-turbo</li>
+<li>gpt-image</li>
+</ul>
+</li>
+<li>
+<p>PuterJS</p>
+<ul>
+<li>gpt-5-2025-08-07</li>
+<li>gpt-5</li>
+<li>gpt-5-mini-2025-08-07</li>
+<li>gpt-5-mini</li>
+<li>gpt-5-nano-2025-08-07</li>
+<li>gpt-5-nano</li>
+<li>gpt-5-chat-latest</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o1-pro</li>
+<li>o3</li>
+<li>o3-mini</li>
+<li>o4-mini</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.1-nano</li>
+<li>gpt-4.5-preview</li>
+<li>claude-opus-4-1-20250805</li>
+<li>claude-opus-4-1</li>
+<li>claude-opus-4-20250514</li>
+<li>claude-opus-4</li>
+<li>claude-opus-4-latest</li>
+<li>claude-sonnet-4-20250514</li>
+<li>claude-sonnet-4</li>
+<li>claude-sonnet-4-latest</li>
+<li>claude-3-7-sonnet-20250219</li>
+<li>claude-3-7-sonnet-latest</li>
+<li>claude-3-5-sonnet-20241022</li>
+<li>claude-3-5-sonnet-latest</li>
+<li>claude-3-5-sonnet-20240620</li>
+<li>claude-3-haiku-20240307</li>
+<li>mistral-large-latest</li>
+<li>mistral-medium-2508</li>
+<li>mistral-medium-latest</li>
+<li>mistral-medium</li>
+<li>ministral-3b-2410</li>
+<li>ministral-3b-latest</li>
+<li>ministral-8b-2410</li>
+<li>ministral-8b-latest</li>
+<li>open-mistral-7b</li>
+<li>mistral-tiny</li>
+<li>mistral-tiny-2312</li>
+<li>open-mistral-nemo</li>
+<li>open-mistral-nemo-2407</li>
+<li>mistral-tiny-2407</li>
+<li>mistral-tiny-latest</li>
+<li>open-mixtral-8x7b</li>
+<li>mistral-small</li>
+<li>mistral-small-2312</li>
+<li>open-mixtral-8x22b</li>
+<li>open-mixtral-8x22b-2404</li>
+<li>pixtral-large-2411</li>
+<li>pixtral-large-latest</li>
+<li>mistral-large-pixtral-2411</li>
+<li>codestral-2508</li>
+<li>codestral-latest</li>
+<li>devstral-small-2507</li>
+<li>devstral-small-latest</li>
+<li>pixtral-12b-2409</li>
+<li>pixtral-12b</li>
+<li>pixtral-12b-latest</li>
+<li>mistral-small-2506</li>
+<li>mistral-small-latest</li>
+<li>mistral-saba-2502</li>
+<li>mistral-saba-latest</li>
+<li>magistral-medium-2507</li>
+<li>magistral-medium-latest</li>
+<li>magistral-small-2507</li>
+<li>magistral-small-latest</li>
+<li>mistral-moderation-2411</li>
+<li>mistral-moderation-latest</li>
+<li>mistral-ocr-2505</li>
+<li>mistral-ocr-latest</li>
+<li>grok-beta</li>
+<li>grok-vision-beta</li>
+<li>grok-3</li>
+<li>grok-3-fast</li>
+<li>grok-3-mini</li>
+<li>grok-3-mini-fast</li>
+<li>grok-2-vision</li>
+<li>grok-2</li>
+<li>deepseek-chat</li>
+<li>deepseek-reasoner</li>
+<li>gemini-1.5-flash</li>
+<li>gemini-2.0-flash</li>
+<li>mixtral-8x22b</li>
+<li>pixtral-large</li>
+<li>llama-2-70b</li>
+<li>llama-3-8b</li>
+<li>llama-3-70b</li>
+<li>llama-3.1-8b</li>
+<li>llama-3.1-70b</li>
+<li>llama-3.1-405b</li>
+<li>llama-3.2-1b</li>
+<li>llama-3.2-3b</li>
+<li>llama-3.2-11b</li>
+<li>llama-3.2-90b</li>
+<li>llama-3.3-8b</li>
+<li>llama-3.3-70b</li>
+<li>llama-4-maverick</li>
+<li>llama-4-scout</li>
+<li>gemini-1.5-8b-flash</li>
+<li>gemini-1.5-pro</li>
+<li>gemini-2.5-pro</li>
+<li>gemini-2.5-flash</li>
+<li>gemini-2.5-flash-thinking</li>
+<li>gemma-2-9b</li>
+<li>gemma-2-27b</li>
+<li>gemma-3-1b</li>
+<li>gemma-3-4b</li>
+<li>gemma-3-12b</li>
+<li>gemma-3-27b</li>
+<li>gpt-3.5-turbo</li>
+<li>gpt-4</li>
+<li>gpt-4-turbo</li>
+<li>gpt-4o-search</li>
+<li>gpt-4o-mini-search</li>
+<li>o3-mini-high</li>
+<li>o4-mini-high</li>
+<li>gpt-4.5</li>
+<li>mistral-large</li>
+<li>mistral-7b</li>
+<li>mixtral-8x7b</li>
+<li>ministral-8b</li>
+<li>mistral-nemo</li>
+<li>ministral-3b</li>
+<li>mistral-saba</li>
+<li>codestral</li>
+<li>hermes-2-dpo</li>
+<li>hermes-2-pro</li>
+<li>hermes-3-70b</li>
+<li>hermes-3-405b</li>
+<li>deephermes-3-8b</li>
+<li>deephermes-3-24b</li>
+<li>phi-3-mini</li>
+<li>phi-3-medium</li>
+<li>phi-3.5-mini</li>
+<li>phi-4</li>
+<li>phi-4-multimodal</li>
+<li>phi-4-reasoning</li>
+<li>phi-4-reasoning-plus</li>
+<li>wizardlm-2-8x22b</li>
+<li>mai-ds-r1</li>
+<li>claude-3.7-sonnet</li>
+<li>claude-3.7-sonnet-thinking</li>
+<li>claude-3.5-haiku</li>
+<li>claude-3.5-sonnet</li>
+<li>claude-3-haiku</li>
+<li>claude-3-opus</li>
+<li>claude-3-sonnet</li>
+<li>claude-2.1</li>
+<li>claude-2</li>
+<li>claude-2.0</li>
+<li>reka-flash</li>
+<li>command-r7b</li>
+<li>command-r-plus</li>
+<li>command</li>
+<li>command-r</li>
+<li>command-a</li>
+<li>qwq-32b</li>
+<li>qwen-vl-plus</li>
+<li>qwen-vl-max</li>
+<li>qwen-turbo</li>
+<li>qwen-2.5-vl-72b</li>
+<li>qwen-plus</li>
+<li>qwen-max</li>
+<li>qwen-2.5-coder-32b</li>
+<li>qwen-2.5-7b</li>
+<li>qwen-2.5-72b</li>
+<li>qwen-2.5-vl-7b</li>
+<li>qwen-2-72b</li>
+<li>qwen-3-0.6b</li>
+<li>qwen-3-1.7b</li>
+<li>qwen-3-4b</li>
+<li>qwen-3-30b</li>
+<li>qwen-3-8b</li>
+<li>qwen-3-14b</li>
+<li>qwen-3-32b</li>
+<li>qwen-3-235b</li>
+<li>qwen-2.5-coder-7b</li>
+<li>qwen-2.5-vl-3b</li>
+<li>qwen-2.5-vl-32b</li>
+<li>deepseek-prover-v2</li>
+<li>deepseek-v3</li>
+<li>deepseek-v3-0324</li>
+<li>deepseek-r1-zero</li>
+<li>deepseek-r1-distill-llama-8b</li>
+<li>deepseek-r1-distill-qwen-1.5b</li>
+<li>deepseek-r1-distill-qwen-32b</li>
+<li>deepseek-r1-distill-qwen-14b</li>
+<li>deepseek-r1-distill-llama-70b</li>
+<li>deepseek-r1</li>
+<li>deepseek-coder</li>
+<li>inflection-3-productivity</li>
+<li>inflection-3-pi</li>
+<li>grok-3-beta</li>
+<li>grok</li>
+<li>sonar-reasoning-pro</li>
+<li>sonar-pro</li>
+<li>sonar-deep-research</li>
+<li>r1-1776</li>
+<li>sonar-reasoning</li>
+<li>sonar</li>
+<li>llama-3.1-sonar-small-online</li>
+<li>llama-3.1-sonar-large-online</li>
+<li>nemotron-49b</li>
+<li>nemotron-70b</li>
+<li>nemotron-253b</li>
+<li>glm-4</li>
+<li>glm-4-32b</li>
+<li>glm-z1-32b</li>
+<li>glm-4-9b</li>
+<li>glm-z1-9b</li>
+<li>glm-z1-rumination-32b</li>
+<li>minimax</li>
+<li>dolphing-3.0-r1-24b</li>
+<li>dolphing-3.0-24b</li>
+<li>dolphing-8x22b</li>
+<li>deepcoder-14b</li>
+<li>kimi-vl-thinking</li>
+<li>moonlight-16b</li>
+<li>qwerky-72b</li>
+<li>lfm-7b</li>
+<li>lfm-3b</li>
+<li>lfm-40b</li>
+</ul>
+</li>
+<li>
+<p>OpenaiAccount (and related OpenAI family)</p>
+<ul>
+<li>auto</li>
+<li>gpt-5</li>
+<li>gpt-5-instant</li>
+<li>gpt-5-thinking</li>
+<li>gpt-4</li>
+<li>gpt-4.1</li>
+<li>gpt-4.1-mini</li>
+<li>gpt-4.5</li>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>o1</li>
+<li>o1-mini</li>
+<li>o3-mini</li>
+<li>o3-mini-high</li>
+<li>o4-mini</li>
+<li>o4-mini-high</li>
+<li>gpt-image</li>
+</ul>
+</li>
 </ul>
 <hr>
-<h3>Providers No auth required</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Website</th>
-<th>API Credentials</th>
-<th>Provider</th>
-<th>Text generation</th>
-<th>Image generation</th>
-<th>Audio generation</th>
-<th>Video generation</th>
-<th>Vision (Image Upload)</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://ai-arta.com" rel="nofollow">ai-arta.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.ARTA</code></td>
-<td>❌</td>
-<td><code class="notranslate">flux, flux-dev, flux-pro, gpt-image, sdxl-1.0 sdxl-l</code> <em><strong>(51+)</strong></em></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.blackbox.ai" rel="nofollow">blackbox.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Blackbox</code></td>
-<td><code class="notranslate">blackboxai, gpt-4.1-mini, gpt-4.1-nano, gpt-4, gpt-4o, gpt-4o-mini</code> <em><strong>(29+)</strong></em></td>
-<td></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-</tr>
-<tr>
-<td><a href="https://www.blackboxapi.com" rel="nofollow">blackboxapi.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Blackboxapi</code></td>
-<td><code class="notranslate">llama-3.1-70b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chatai.aritek.app" rel="nofollow">chatai.aritek.app</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Chatai</code></td>
-<td><code class="notranslate">gpt-4o-mini</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chatglm.cn" rel="nofollow">chatglm.cn</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.ChatGLM</code></td>
-<td><code class="notranslate">glm-4</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://playground.ai.cloudflare.com" rel="nofollow">playground.ai.cloudflare.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Cloudflare</code></td>
-<td><code class="notranslate">llama-2-7b, llama-3-8b, llama-3.1-8b, llama-3.2-1b, qwen-1.5-7b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://copilot.microsoft.com" rel="nofollow">copilot.microsoft.com</a></td>
-<td>No auth required/HAR file</td>
-<td><code class="notranslate">g4f.Provider.Copilot</code></td>
-<td><code class="notranslate">gpt-4, o1</code></td>
-<td><code class="notranslate">dall-e-3</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://deepinfra.com/chat" rel="nofollow">deepinfra.com/chat</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.DeepInfraChat</code></td>
-<td><code class="notranslate">deepseek-prover-v2-671b, qwen-3-235b, qwen-3-30b, qwen-3-32b, qwen-3-14b, llama-4-maverick, llama-4-maverick, phi-4-reasoning-plus, qwq-32b, deepseek-v3-0324, deepseek-r1-0528, gemma-3-27b, gemma-3-12b, phi-4-multimodal, llama-3.1-8b, llama-3.2-90b, llama-3.3-70b, deepseek-v3, mixtral-small-24b, deepseek-r1-turbo, deepseek-r1, deepseek-r1-distill-llama-70b, deepseek-r1-distill-qwen-32b, phi-4, wizardlm-2-8x22b, qwen-2-72b, dolphin-2.6, dolphin-2.9, airoboros-70b, lzlv-70b, wizardlm-2-7b, mixtral-8x22b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><code class="notranslate">llama-3.2-90b, minicpm-2.5</code></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://docsbot.ai" rel="nofollow">docsbot.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.DocsBot</code></td>
-<td><code class="notranslate">gpt-4o</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://duckduckgo.com/aichat" rel="nofollow">duckduckgo.com/aichat</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.DuckDuckGo</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chat10.free2gpt.xyz" rel="nofollow">chat10.free2gpt.xyz</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Free2GPT</code></td>
-<td><code class="notranslate">gemini-1.5-pro, gemini-1.5-flash</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://freegptsnav.aifree.site" rel="nofollow">freegptsnav.aifree.site</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.FreeGpt</code></td>
-<td><code class="notranslate">gemini-1.5-pro, gemini-1.5-flash</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://app.giz.ai/assistant" rel="nofollow">app.giz.ai/assistant</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.GizAI</code></td>
-<td><code class="notranslate">gemini-1.5-flash</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="editor.imagelabs.net">editor.imagelabs.net</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.ImageLabs</code></td>
-<td>❌</td>
-<td><code class="notranslate">sdxl-turbo</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://huggingface.co/spaces" rel="nofollow">huggingface.co/spaces</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.HuggingSpace</code></td>
-<td><code class="notranslate">qwen-2-72b, qwen-3-235b, qwen-3-32b, qwen-3-30b, qwen-3-14b, qwen-3-4b, qwen-3-1.7b, qwen-3-0.6b, command-r-plus, command-r, command-r7b</code></td>
-<td><code class="notranslate">flux-dev, sd-3.5-large</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://lambda.chat" rel="nofollow">lambda.chat</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.LambdaChat</code></td>
-<td><code class="notranslate">deepseek-v3, deepseek-r1, hermes-3, hermes-3-405b, nemotron-70b, llama-3.3-70b, qwen-2.5-coder-32b</code> <em><strong>(1+)</strong></em></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://legacy.lmarena.ai" rel="nofollow">legacy.lmarena.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.LegacyLMArena</code></td>
-<td><code class="notranslate">claude-3.7-sonnet, claude-3.7-sonnet-thinking, gpt-4o, grok-3, gemini-2.0-flash-thinking, gemini-2.0-pro, deepseek-r1, gemini-2.0-flash, o1, qwen-2.5-max, o3-mini, o3, o4-mini, deepseek-v3, deepseek-v3-0324, qwen-plus, glm-4-plus, o1-mini, gemini-1.5-pro, grok-2, claude-3.5-sonnet, qwen-2.5-plus, deepseek-v2.5, gpt-4o-mini, gemini-1.5-flash, llama-3.1-405b, nemotron-70b, grok-2-mini, qwen-max, qwen-2.5-72b, qwen-2.5-vl-32b, qwen-2.5-vl-72b, gpt-4-turbo, llama-3.3-70b, nemotron-49b, mistral-large, mistral-medium, pixtral-large, gpt-4, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, llama-3.1-70b, nemotron-253b, claude-3-opus, tulu-3-70b, claude-3.5-haiku, reka-core, gemma-2-27b, gemma-3-27b, gemma-3-12b, gemma-3-4b, deepseek-v2, qwen-2.5-coder-32b, gemma-2-9b, command-r-plus, command-a, deepseek-coder-v2, nemotron-51b, mistral-small-24b, mistral-small-3.1-24b, nemotron-4-340b, glm-4, llama-3-70b, llama-4-maverick, llama-4-scout, reka-flash, phi-4, claude-3-sonnet, qwen-2-72b, qwen-3-235b, qwen-3-30b, qwen-3-32b, tulu-3-8b, command-r, codestral, claude-3-haiku, llama-3.1-8b, qwen-1.5-110b, qwq-32b, llama-3-8b, qwen-1.5-72b, gemma-2-2b, qwen-vl-max, gemini-2.5-pro, gemini-2.5-flash, mixtral-8x22b, qwen-1.5-32b, qwen-1.5-14b, qwen-1.5-7b, qwen-1.5-4b, mistral-next, phi-3-medium, phi-3-small, phi-3-mini, tulu-2-70b, llama-2-70b, llama-2-13b, llama-2-7b, hermes-2-dpo, pplx-70b-online, pplx-7b-online, deepseek-67b, openhermes-2.5-7b, mistral-7b, llama-3.2-3b, llama-3.2-1b, codellama-34b, codellama-70b, qwen-14b, gpt-3.5-turbo, mixtral-8x7b, dbrx-instruct, llama-13b</code>  <em><strong>(54+)</strong></em></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><code class="notranslate">claude-3.7-sonnet, claude-3.7-sonnet-thinking, gpt-4o, gemini-2.0-flash, o3, o4-mini, gemini-1.5-pro, claude-3.5-sonnet, gpt-4o-mini, gemini-1.5-flash, qwen-2.5-vl-32b, qwen-2.5-vl-72b, mistral-medium, pixtral-large, gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, claude-3-opus, claude-3.5-haiku, reka-core, gemma-3-27b, mistral-small-3.1-24b, llama-4-maverick, llama-4-scout, reka-flash, claude-3-sonnet, claude-3-haiku, qwen-vl-max, gemini-2.5-pro, gemini-2.5-flash, amazon-nova-pro, amazon-nova-lite, step-1o-vision, c4ai-aya-vision-32b, pixtral-12b _**(12+)**_</code></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://oi-vscode-server-2.onrender.com" rel="nofollow">oi-vscode-server-2.onrender.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.OIVSCodeSer2</code></td>
-<td><code class="notranslate">gpt-4o-mini</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://oi-vscode-server-5.onrender.com" rel="nofollow">oi-vscode-server-5.onrender.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.OIVSCodeSer5</code></td>
-<td><code class="notranslate">gpt-4.1-mini</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://oi-vscode-server-0501.onrender.com" rel="nofollow">oi-vscode-server-0501.onrender.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.OIVSCodeSer0501</code></td>
-<td><code class="notranslate">gpt-4.1-mini</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.openai.fm" rel="nofollow">openai.fm</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.OpenAIFM</code></td>
-<td>❌</td>
-<td>❌</td>
-<td><code class="notranslate">gpt-4o-mini-tts</code></td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://labs.perplexity.ai" rel="nofollow">labs.perplexity.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.PerplexityLabs</code></td>
-<td><code class="notranslate">sonar, sonar-pro, sonar-reasoning, sonar-reasoning-pro</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://pollinations.ai" rel="nofollow">pollinations.ai</a></td>
-<td>No auth required/<a href="https://auth.pollinations.ai" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.PollinationsAI</code></td>
-<td><code class="notranslate">gpt-4o-mini, gpt-4.1-nano, gpt-4, gpt-4o, gpt-4.1, o4-mini, gpt-4.1-mini, command-r-plus, gemini-2.5-flash, gemini-2.0-flash-thinking, qwen-2.5-coder-32b, llama-3.3-70b, llama-4-scout, mistral-small-3.1-24b, deepseek-r1, deepseek-r1-distill-llama-70b, deepseek-r1-distill-qwen-32b, phi-4, qwq-32b, deepseek-v3, deepseek-v3-0324, grok-3-mini</code> <em><strong>(4+)</strong></em></td>
-<td><code class="notranslate">flux, flux-pro, flux-dev, flux-schnell, dall-e-3, sdxl-turbo, gpt-image</code></td>
-<td><code class="notranslate">gpt-4o-mini-audio</code></td>
-<td>❌</td>
-<td><code class="notranslate">gpt-4o, gpt-4o-mini, o1-mini, o3-mini, o4-mini</code></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://pollinations.ai" rel="nofollow">pollinations.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.PollinationsImage</code></td>
-<td>❌</td>
-<td><code class="notranslate">flux, flux-pro, flux-dev, flux-schnell, dall-e-3, sdxl-turbo, gpt-image</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.teach-anything.com" rel="nofollow">teach-anything.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.TeachAnything</code></td>
-<td><code class="notranslate">gemini-1.5-pro, gemini-1.5-flash</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://together.xyz" rel="nofollow">together.xyz</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Together</code></td>
-<td><code class="notranslate">llama-3.2-3b, llama-2-70b, llama-3-70b, llama-3.2-90b, llama-3.3-70b, llama-4-scout, llama-3.1-8b, llama-3.2-11b, llama-3-8b, llama-3.1-70b, llama-3.1-405b, llama-4-maverick, deepseek-r1, deepseek-r1-0528, deepseek-v3-0324, deepseek-r1-distill-llama-70b, deepseek-r1-distill-qwen-1.5b, deepseek-r1-distill-qwen-14b, deepseek-v3, qwen-2.5-vl-72b, qwen-2.5-coder-32b, qwen-2.5-7b, qwen-2-vl-72b, qwq-32b, qwen-2.5-72b, qwen-3-235b, qwen-2-72b, mixtral-8x7b, mistral-small-24b, mistral-7b, gemma-2-27b, nemotron-70b, hermes-2-dpo, r1-1776</code></td>
-<td><code class="notranslate">flux, flux-schnell, flux-pro, flux-redux, flux-depth, flux-canny, flux-kontext-max, flux-dev-lora, flux-dev, flux-kontext-pro</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>``</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://websim.ai" rel="nofollow">websim.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Websim</code></td>
-<td><code class="notranslate">gemini-1.5-pro, gemini-1.5-flash</code></td>
-<td><code class="notranslate">flux</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chat-gpt.com" rel="nofollow">chat-gpt.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.WeWordle</code></td>
-<td><code class="notranslate">gpt-4</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chat9.yqcloud.top" rel="nofollow">chat9.yqcloud.top</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Yqcloud</code></td>
-<td><code class="notranslate">gpt-4</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<hr>
-<h3>Providers HuggingSpace</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Website</th>
-<th>API Credentials</th>
-<th>Provider</th>
-<th>Text generation</th>
-<th>Image generation</th>
-<th>Audio generation</th>
-<th>Video generation</th>
-<th>Vision (Image Upload)</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://black-forest-labs-flux-1-dev.hf.space" rel="nofollow">black-forest-labs-flux-1-dev.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.BlackForestLabs_Flux1Dev</code></td>
-<td>❌</td>
-<td><code class="notranslate">flux, flux-dev</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://black-forest-labs-flux-1-schnell.hf.space" rel="nofollow">black-forest-labs-flux-1-schnell.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.BlackForestLabs_Flux1Schnell</code></td>
-<td>❌</td>
-<td><code class="notranslate">flux, flux-schnell</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://cohereforai-c4ai-command.hf.space" rel="nofollow">cohereforai-c4ai-command.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.CohereForAI_C4AI_Command</code></td>
-<td><code class="notranslate">command-r-plus, command-r, command-r7b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://huggingface.co/spaces/deepseek-ai/Janus-Pro-7B" rel="nofollow">huggingface.co/spaces/deepseek-ai/Janus-Pro-7B</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.DeepseekAI_Janus_Pro_7b</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://roxky-flux-1-dev.hf.space" rel="nofollow">roxky-flux-1-dev.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.G4F</code></td>
-<td>✔ <em><strong>(1+)</strong></em></td>
-<td>✔ <em><strong>(4+)</strong></em></td>
-<td>❌</td>
-<td>❌</td>
-<td>✔ <em><strong>(1+)</strong></em></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://microsoft-phi-4-multimodal.hf.space" rel="nofollow">microsoft-phi-4-multimodal.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Microsoft_Phi_4</code></td>
-<td><code class="notranslate">phi-4</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><code class="notranslate">phi-4</code></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://qwen-qwen2-5.hf.space" rel="nofollow">qwen-qwen2-5.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Qwen_Qwen_2_5</code></td>
-<td><code class="notranslate">qwen-2.5</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://qwen-qwen2-5-1m-demo.hf.space" rel="nofollow">qwen-qwen2-5-1m-demo.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Qwen_Qwen_2_5M</code></td>
-<td><code class="notranslate">qwen-2.5-1m</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://qwen-qwen2-5-max-demo.hf.space" rel="nofollow">qwen-qwen2-5-max-demo.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Qwen_Qwen_2_5_Max</code></td>
-<td><code class="notranslate">qwen-2-5-max</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://qwen-qwen2-72b-instruct.hf.space" rel="nofollow">qwen-qwen2-72b-instruct.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Qwen_Qwen_2_72B</code></td>
-<td><code class="notranslate">qwen-2-72b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://qwen-qwen2-72b-instruct.hf.space" rel="nofollow">qwen-qwen2-72b-instruct.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Qwen_Qwen_3</code></td>
-<td><code class="notranslate">qwen-3-235b, qwen-3-32b, qwen-3-30b, qwen-3-14b, qwen-3-4b, qwen-3-1.7b, qwen-3-0.6b</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://stabilityai-stable-diffusion-3-5-large.hf.space" rel="nofollow">stabilityai-stable-diffusion-3-5-large.hf.space</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.StabilityAI_SD35Large</code></td>
-<td>❌</td>
-<td><code class="notranslate">sd-3.5-large</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<hr>
-<h3>Providers Needs Auth</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Website</th>
-<th>API Credentials</th>
-<th>Provider</th>
-<th>Text generation</th>
-<th>Image generation</th>
-<th>Audio generation</th>
-<th>Video generation</th>
-<th>Vision (Image Upload)</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://console.anthropic.com" rel="nofollow">console.anthropic.com</a></td>
-<td><a href="https://console.anthropic.com/settings/keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Anthropic</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.bing.com/images/create" rel="nofollow">bing.com/images/create</a></td>
-<td><a href="https://www.bing.com" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.BingCreateImages</code></td>
-<td>❌</td>
-<td><code class="notranslate">dall-e-3</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.blackbox.ai" rel="nofollow">blackbox.ai</a></td>
-<td><a href="https://www.blackbox.ai" rel="nofollow">HAR file</a></td>
-<td><code class="notranslate">g4f.Provider.BlackboxPro</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://cablyai.com/chat" rel="nofollow">cablyai.com/chat</a></td>
-<td><a href="https://cablyai.com" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.CablyAI</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://inference.cerebras.ai/" rel="nofollow">inference.cerebras.ai</a></td>
-<td><a href="https://cloud.cerebras.ai" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Cerebras</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://copilot.microsoft.com" rel="nofollow">copilot.microsoft.com</a></td>
-<td><a href="https://copilot.microsoft.com" rel="nofollow">Nodriver</a></td>
-<td><code class="notranslate">g4f.Provider.CopilotAccount</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://deepinfra.com" rel="nofollow">deepinfra.com</a></td>
-<td><a href="https://deepinfra.com/dash/api_keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.DeepInfra</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://platform.deepseek.com" rel="nofollow">platform.deepseek.com</a></td>
-<td><a href="https://platform.deepseek.com/api_keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.DeepSeek</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chat.deepseek.com" rel="nofollow">chat.deepseek.com</a></td>
-<td><a href="https://platform.deepseek.com/api_keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.DeepSeekAPI</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://gemini.google.com" rel="nofollow">gemini.google.com</a></td>
-<td><a href="https://gemini.google.com" rel="nofollow">Nodriver</a></td>
-<td><code class="notranslate">g4f.Provider.Gemini</code></td>
-<td><code class="notranslate">gemini-2.0, gemini-2.0-flash, gemini-2.5-pro, gemini-2.5-flash, gemini-2.0-flash-thinking, gemini-2.0-flash-thinking-with-apps _**(2+)**_</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://ai.google.dev" rel="nofollow">ai.google.dev</a></td>
-<td><a href="https://aistudio.google.com/u/0/apikey" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.GeminiPro</code></td>
-<td><code class="notranslate">gemini-1.5-pro, gemini-1.5-flash, gemini-2.0-flash</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><code class="notranslate">gemini-1.5-pro</code></td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://developers.sber.ru/gigachat" rel="nofollow">developers.sber.ru/gigachat</a></td>
-<td><a href="https://developers.sber.ru/gigachat" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.GigaChat</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://github.com/copilot">github.com/copilot</a></td>
-<td><a href="https://github.com/copilot">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.GithubCopilot</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://glhf.chat" rel="nofollow">glhf.chat</a></td>
-<td><a href="https://glhf.chat/user-settings/api" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.GlhfChat</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://console.groq.com/playground" rel="nofollow">console.groq.com/playground</a></td>
-<td><a href="https://console.groq.com/keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Groq</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.hailuo.ai" rel="nofollow">hailuo.ai</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.HailuoAI</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://huggingface.co/chat" rel="nofollow">huggingface.co/chat</a></td>
-<td><a href="https://huggingface.co/chat" rel="nofollow">м</a></td>
-<td><code class="notranslate">g4f.Provider.HuggingChat</code></td>
-<td><code class="notranslate">llama-3.2-11b, llama-3.3-70b, mistral-nemo, phi-3.5-mini, command-r-plus, qwen-2.5-coder-32b, qwq-32b, deepseek-r1, nemotron-70b</code></td>
-<td><code class="notranslate">flux-dev, flux-schnell</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://api-inference.huggingface.co" rel="nofollow">huggingface.co</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.HuggingFaceAPI</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://huggingface.co" rel="nofollow">huggingface.co</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.HuggingFaceInference</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://huggingface.co" rel="nofollow">huggingface.co</a></td>
-<td><a href="https://huggingface.co/settings/tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.HuggingFaceMedia</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://beta.lmarena.ai" rel="nofollow">beta.lmarena.ai</a></td>
-<td><a href="https://beta.lmarena.ai" rel="nofollow">Nodriver</a></td>
-<td><code class="notranslate">g4f.Provider.LMArenaBeta</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.meta.ai" rel="nofollow">meta.ai</a></td>
-<td><a href="https://www.meta.ai" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.MetaAI</code></td>
-<td><code class="notranslate">meta-ai</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.meta.ai" rel="nofollow">meta.ai</a></td>
-<td><a href="https://www.meta.ai" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.MetaAIAccount</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://designer.microsoft.com" rel="nofollow">designer.microsoft.com</a></td>
-<td><a href="https://designer.microsoft.com" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.MicrosoftDesigner</code></td>
-<td>❌</td>
-<td><code class="notranslate">dall-e-3</code></td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.hailuo.ai/chat" rel="nofollow">hailuo.ai/chat</a></td>
-<td><a href="https://intl.minimaxi.com/user-center/basic-information/interface-key" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.MiniMax</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chatgpt.com" rel="nofollow">chatgpt.com</a></td>
-<td><a href="https://chatgpt.com" rel="nofollow">HAR file</a></td>
-<td><code class="notranslate">g4f.Provider.OpenaiAccount</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://platform.openai.com" rel="nofollow">platform.openai.com</a></td>
-<td><a href="https://platform.openai.com/settings/organization/api-keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.OpenaiAPI</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chatgpt.com" rel="nofollow">chatgpt.com</a></td>
-<td><a href="https://chatgpt.com" rel="nofollow">HAR file</a></td>
-<td><code class="notranslate">g4f.Provider.OpenaiChat</code></td>
-<td><code class="notranslate">gpt-4, gpt-4.1, gpt-4.5, gpt-4o, gpt-4o-mini, o1, o1-mini, o3-mini, o3-mini-high, o4-mini, o4-mini-high</code> <em><strong>(1+)</strong></em></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://openrouter.ai" rel="nofollow">openrouter.ai</a></td>
-<td><a href="https://openrouter.ai/settings/keys" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.OpenRouter</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.perplexity.ai" rel="nofollow">perplexity.ai</a></td>
-<td><a href="https://www.perplexity.ai/settings/api" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.PerplexityApi</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://pi.ai/talk" rel="nofollow">pi.ai/talk</a></td>
-<td><a href="https://pi.ai/talk" rel="nofollow">Cookies/Nodriver</a></td>
-<td><code class="notranslate">g4f.Provider.Pi</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="Error" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://docs.puter.com/playground" rel="nofollow">docs.puter.com</a></td>
-<td><a href="https://github.com/HeyPuter/puter-cli">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.PuterJS</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.perplexity.ai" rel="nofollow">perplexity.ai</a></td>
-<td><a href="https://www.perplexity.ai/settings/api" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.PerplexityApi</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://chat.reka.ai" rel="nofollow">chat.reka.ai</a></td>
-<td><a href="https://chat.reka.ai" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.Reka</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://replicate.com" rel="nofollow">replicate.com</a></td>
-<td><a href="https://replicate.com/account/api-tokens" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.Replicate</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://beta.theb.ai" rel="nofollow">beta.theb.ai</a></td>
-<td><a href="https://beta.theb.ai" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.ThebApi</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://www.whiterabbitneo.com" rel="nofollow">whiterabbitneo.com</a></td>
-<td><a href="https://www.whiterabbitneo.com" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.WhiteRabbitNeo</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://console.x.ai" rel="nofollow">console.x.ai</a></td>
-<td><a href="https://console.x.ai" rel="nofollow">Get API key</a></td>
-<td><code class="notranslate">g4f.Provider.xAI</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://you.com" rel="nofollow">you.com</a></td>
-<td><a href="https://you.com" rel="nofollow">Cookies</a></td>
-<td><code class="notranslate">g4f.Provider.You</code></td>
-<td>✔</td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>✔</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<hr>
-<h3>Providers Local</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Website</th>
-<th>API Credentials</th>
-<th>Provider</th>
-<th>Text generation</th>
-<th>Image generation</th>
-<th>Audio generation</th>
-<th>Video generation</th>
-<th>Vision (Image Upload)</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href=""></a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Local</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-<tr>
-<td><a href="https://ollama.com" rel="nofollow">ollama.com</a></td>
-<td>No auth required</td>
-<td><code class="notranslate">g4f.Provider.Ollama</code></td>
-<td>✔</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td>❌</td>
-<td><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e"><img src="https://camo.githubusercontent.com/f6568efc8f8bfc2737658c067da51b51e7bf672f372da8ed9e3d05a16efd2ad4/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4163746976652d627269676874677265656e" alt="" data-canonical-src="https://img.shields.io/badge/Active-brightgreen" style="max-width: 100%;"></a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<hr>
-<h2>Models</h2>
-<h3>Text generation models</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Model</th>
-<th>Base Provider</th>
-<th>Providers</th>
-<th>Website</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>gpt-3.5-turbo</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://platform.openai.com/docs/engines/gpt-3.5-turbo" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4</td>
-<td>OpenAI</td>
-<td>7 providers</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4-turbo</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4o</td>
-<td>OpenAI</td>
-<td>5 providers</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4o" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4o-mini</td>
-<td>OpenAI</td>
-<td>6 providers</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4o-mini" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4o-mini-audio</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4o-mini-audio-preview" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4o-mini-tts</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-4o-mini-tts" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>o1</td>
-<td>OpenAI</td>
-<td>3 providers</td>
-<td><a href="https://openai.com/index/introducing-openai-o1-preview/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o1-mini</td>
-<td>OpenAI</td>
-<td>2 providers</td>
-<td><a href="https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o3</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://openai.com/index/introducing-o3-and-o3-mini/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o3-mini</td>
-<td>OpenAI</td>
-<td>2 provider</td>
-<td><a href="https://openai.com/index/introducing-o3-and-o3-mini/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o3-mini-high</td>
-<td>OpenAI</td>
-<td>1 provider</td>
-<td><a href="https://openai.com/index/introducing-o3-and-o3-mini/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o4-mini</td>
-<td>OpenAI</td>
-<td>3 providers</td>
-<td><a href="https://openai.com/index/introducing-o3-and-o4-mini/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>o4-mini-high</td>
-<td>OpenAI</td>
-<td>2 providers</td>
-<td><a href="https://openai.com/index/introducing-o3-and-o4-mini/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4.1</td>
-<td>OpenAI</td>
-<td>3 providers</td>
-<td><a href="https://openai.com/index/gpt-4-1/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4.1-mini</td>
-<td>OpenAI</td>
-<td>5 providers</td>
-<td><a href="https://openai.com/index/gpt-4-1/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4.1-nano</td>
-<td>OpenAI</td>
-<td>3 providers</td>
-<td><a href="https://openai.com/index/gpt-4-1/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-4.5</td>
-<td>OpenAI</td>
-<td>1 providers</td>
-<td><a href="https://openai.com/index/gpt-4-5/" rel="nofollow">openai.com</a></td>
-</tr>
-<tr>
-<td>meta-ai</td>
-<td>Meta</td>
-<td>1 provider</td>
-<td><a href="https://ai.meta.com/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-13b</td>
-<td>Meta Llama</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-13b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>codellama-34b</td>
-<td>Meta Llama</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/codellama/CodeLlama-34b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-2-7b</td>
-<td>Meta Llama</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-2-7b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-2-13b</td>
-<td>Meta Llama</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-2-13b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-2-70b</td>
-<td>Meta Llama</td>
-<td>2 provider</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-2-70b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-3-8b</td>
-<td>Meta Llama</td>
-<td>3 providers</td>
-<td><a href="https://ai.meta.com/blog/meta-llama-3/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3-70b</td>
-<td>Meta Llama</td>
-<td>2 provider</td>
-<td><a href="https://ai.meta.com/blog/meta-llama-3/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3.1-8b</td>
-<td>Meta Llama</td>
-<td>4 providers</td>
-<td><a href="https://ai.meta.com/blog/meta-llama-3-1/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3.1-70b</td>
-<td>Meta Llama</td>
-<td>3 provider</td>
-<td><a href="https://ai.meta.com/blog/meta-llama-3-1/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3.1-405b</td>
-<td>Meta Llama</td>
-<td>2 provider</td>
-<td><a href="https://ai.meta.com/blog/meta-llama-3-1/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3.2-1b</td>
-<td>Meta Llama</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-3.2-1B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-3.2-3b</td>
-<td>Meta Llama</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-3.2-3B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-3.2-11b</td>
-<td>Meta Llama</td>
-<td>3 providers</td>
-<td><a href="https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-3.2-90b</td>
-<td>Meta Llama</td>
-<td>2 provider</td>
-<td><a href="https://huggingface.co/meta-llama/Llama-3.2-90B-Vision" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>llama-3.3-70b</td>
-<td>Meta Llama</td>
-<td>7 providers</td>
-<td><a href="https://ai.meta.com/blog/llama-3-3/" rel="nofollow">ai.meta.com</a></td>
-</tr>
-<tr>
-<td>llama-4-scout</td>
-<td>Meta Llama</td>
-<td>4 providers</td>
-<td><a href="https://www.llama.com/models/llama-4/" rel="nofollow">llama.com</a></td>
-</tr>
-<tr>
-<td>llama-4-maverick</td>
-<td>Meta Llama</td>
-<td>3 providers</td>
-<td><a href="https://www.llama.com/models/llama-4/" rel="nofollow">llama.com</a></td>
-</tr>
-<tr>
-<td>mistral-7b</td>
-<td>Mistral AI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mistral-7B-v0.3" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mixtral-8x7b</td>
-<td>Mistral AI</td>
-<td>3 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mixtral-8x7B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mixtral-8x22b</td>
-<td>Mistral AI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mixtral-8x22B-Instruct-v0.1" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mistral-nemo</td>
-<td>Mistral AI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mistral-small-24b</td>
-<td>Mistral AI</td>
-<td>3 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mistral-small-3.1-24b</td>
-<td>Mistral AI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>mistral-large</td>
-<td>Mistral AI</td>
-<td>1 provider</td>
-<td><a href="https://mistral.ai/news/mistral-large/" rel="nofollow">mistral.ai</a></td>
-</tr>
-<tr>
-<td>mistral-medium</td>
-<td>Mistral AI</td>
-<td>1 provider</td>
-<td><a href="https://mistral.ai/news/mistral-medium/" rel="nofollow">mistral.ai</a></td>
-</tr>
-<tr>
-<td>mistral-next</td>
-<td>Mistral AI</td>
-<td>1 provider</td>
-<td><a href="https://mistral.ai/technology/" rel="nofollow">mistral.ai</a></td>
-</tr>
-<tr>
-<td>pixtral-large</td>
-<td>Mistral AI</td>
-<td>1 provider</td>
-<td><a href="https://mistral.ai/news/pixtral-large/" rel="nofollow">mistral.ai</a></td>
-</tr>
-<tr>
-<td>codestral</td>
-<td>Mistral AI</td>
-<td>1 provider</td>
-<td><a href="https://mistral.ai/news/codestral/" rel="nofollow">mistral.ai</a></td>
-</tr>
-<tr>
-<td>hermes-2-dpo</td>
-<td>NousResearch</td>
-<td>2 provider</td>
-<td><a href="https://huggingface.co/NousResearch/Hermes-2-Pro-Llama-3-8B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>hermes-3-405b</td>
-<td>NousResearch</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-405B-FP8" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-3-small</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/microsoft/Phi-3-small" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-3-mini</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/microsoft/Phi-3-mini" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-3-medium</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/microsoft/Phi-3-medium" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-3.5-mini</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/microsoft/Phi-3.5-mini-instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-4</td>
-<td>Microsoft</td>
-<td>4 providers</td>
-<td><a href="https://techcommunity.microsoft.com/blog/aiplatformblog/introducing-phi-4-microsoft%E2%80%99s-newest-small-language-model-specializing-in-comple/4357090" rel="nofollow">techcommunity.microsoft.com</a></td>
-</tr>
-<tr>
-<td>phi-4-multimodal</td>
-<td>Microsoft</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/microsoft/Phi-4-multimodal-instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>phi-4-reasoning-plus</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/microsoft/Phi-4-reasoning-plus" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>wizardlm-2-7b</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://wizardlm.github.io/WizardLM2/" rel="nofollow">wizardlm.github.io</a></td>
-</tr>
-<tr>
-<td>wizardlm-2-8x22b</td>
-<td>Microsoft</td>
-<td>1 provider</td>
-<td><a href="https://wizardlm.github.io/WizardLM2/" rel="nofollow">wizardlm.github.io</a></td>
-</tr>
-<tr>
-<td>gemini-2.0</td>
-<td>Google</td>
-<td>1 provider</td>
-<td><a href="http://deepmind.google/technologies/gemini/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemini-1.5-flash</td>
-<td>Google</td>
-<td>6 providers</td>
-<td><a href="https://deepmind.google/technologies/gemini/flash/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemini-1.5-pro</td>
-<td>Google</td>
-<td>6 providers</td>
-<td><a href="https://deepmind.google/technologies/gemini/pro/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemini-2.0-pro</td>
-<td>Google</td>
-<td>1 provider</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/thinking-mode" rel="nofollow">ai.google.dev</a></td>
-</tr>
-<tr>
-<td>gemini-2.0-flash</td>
-<td>Google</td>
-<td>3 providers</td>
-<td><a href="https://deepmind.google/technologies/gemini/flash/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemini-2.0-flash-thinking</td>
-<td>Google</td>
-<td>3 providers</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/thinking-mode" rel="nofollow">ai.google.dev</a></td>
-</tr>
-<tr>
-<td>gemini-2.0-flash-thinking-with-apps</td>
-<td>Google</td>
-<td>1 provider</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/thinking-mode" rel="nofollow">ai.google.dev</a></td>
-</tr>
-<tr>
-<td>gemini-2.5-flash</td>
-<td>Google</td>
-<td>3 providers</td>
-<td><a href="https://deepmind.google/technologies/gemini/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemini-2.5-pro</td>
-<td>Google</td>
-<td>2 providers</td>
-<td><a href="https://deepmind.google/technologies/gemini/" rel="nofollow">deepmind.google</a></td>
-</tr>
-<tr>
-<td>gemma-2-2b</td>
-<td>Google</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/google/gemma-2-2b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>gemma-2-9b</td>
-<td>Google</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/google/gemma-2-9b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>gemma-2-27b</td>
-<td>Google</td>
-<td>2 provider</td>
-<td><a href="https://huggingface.co/google/gemma-2-27b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>gemma-3-4b</td>
-<td>Google</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/google/gemma-3-4b-it" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>gemma-3-12b</td>
-<td>Google</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/google/gemma-3-12b-it" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>gemma-3-27b</td>
-<td>Google</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/google/gemma-3-27b-it" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>claude-3-haiku</td>
-<td>Anthropic</td>
-<td>1 providers</td>
-<td><a href="https://www.anthropic.com/news/claude-3-haiku" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3-sonnet</td>
-<td>Anthropic</td>
-<td>1 provider</td>
-<td><a href="https://www.anthropic.com/news/claude-3-sonnet" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3-opus</td>
-<td>Anthropic</td>
-<td>1 provider</td>
-<td><a href="https://www.anthropic.com/news/claude-3-opus" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3.5-haiku</td>
-<td>Anthropic</td>
-<td>1 provider</td>
-<td><a href="https://www.anthropic.com/news/claude-3-5-haiku" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3.5-sonnet</td>
-<td>Anthropic</td>
-<td>1 providers</td>
-<td><a href="https://www.anthropic.com/news/claude-3-5-sonnet" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3.7-sonnet</td>
-<td>Anthropic</td>
-<td>1 providers</td>
-<td><a href="https://www.anthropic.com/claude/sonnet" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>claude-3.7-sonnet-thinking</td>
-<td>Anthropic</td>
-<td>1 provider</td>
-<td><a href="https://www.anthropic.com/claude/sonnet" rel="nofollow">anthropic.com</a></td>
-</tr>
-<tr>
-<td>reka-core</td>
-<td>Reka AI</td>
-<td>1 providers</td>
-<td><a href="https://www.reka.ai/ourmodels" rel="nofollow">reka.ai</a></td>
-</tr>
-<tr>
-<td>reka-flash</td>
-<td>Reka AI</td>
-<td>1 providers</td>
-<td><a href="https://www.reka.ai/" rel="nofollow">reka.ai</a></td>
-</tr>
-<tr>
-<td>blackboxai</td>
-<td>Blackbox AI</td>
-<td>1 provider</td>
-<td><a href="https://docs.blackbox.chat/blackbox-ai-1" rel="nofollow">docs.blackbox.chat</a></td>
-</tr>
-<tr>
-<td>command-r</td>
-<td>CohereForAI</td>
-<td>2 providers</td>
-<td><a href="https://docs.cohere.com/v2/docs/command-r-plus" rel="nofollow">docs.cohere.com</a></td>
-</tr>
-<tr>
-<td>command-r-plus</td>
-<td>CohereForAI</td>
-<td>4 providers</td>
-<td><a href="https://huggingface.co/CohereLabs/c4ai-command-r-plus-08-2024" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>command-r7b</td>
-<td>CohereForAI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/CohereLabs/c4ai-command-r7b-12-2024/blob/main/README.html" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>command-a</td>
-<td>CohereForAI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/CohereLabs/c4ai-command-a-03-2025" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-plus</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://www.qwen-ai.com/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-max</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://www.qwen-ai.com/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-vl-max</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://www.qwen-ai.com/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-14b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen-14B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-4b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-4B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-7b</td>
-<td>Qwen</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-7B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-14b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-14B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-32b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-32B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-72b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-72B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-1.5-110b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen1.5-110B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2-72b</td>
-<td>Qwen</td>
-<td>5 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2-72B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2-vl-7b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2-VL-7B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2-vl-72b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2-VL-72B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://www.qwen-ai.com/2-5/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-7b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-72b</td>
-<td>Qwen</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-72B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-coder-32b</td>
-<td>Qwen</td>
-<td>5 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-Coder-32B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-1m</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-1M-Demo" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-max</td>
-<td>Qwen</td>
-<td>2 providers</td>
-<td><a href="https://www.qwen-ai.com/2-5-max/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-vl-32b</td>
-<td>Qwen</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-VL-32B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-vl-72b</td>
-<td>Qwen</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-2.5-plus</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://www.qwen-ai.com/2-5-plus/" rel="nofollow">qwen-ai.com</a></td>
-</tr>
-<tr>
-<td>qwen-3-235b</td>
-<td>Qwen</td>
-<td>4 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen3-235B-A22B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-3-32b</td>
-<td>Qwen</td>
-<td>3 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen3-32B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-3-30b</td>
-<td>Qwen</td>
-<td>3 providers</td>
-<td><a href="https://huggingface.co/Qwen/Qwen3-30B-A3B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-3-14b</td>
-<td>Qwen</td>
-<td>2 providers</td>
-<td><a href="https://qwenlm.github.io/blog/qwen3/" rel="nofollow">qwenlm.github.io</a></td>
-</tr>
-<tr>
-<td>qwen-3-4b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen3-4B-Base" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwen-3-1.7b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://qwenlm.github.io/blog/qwen3/" rel="nofollow">qwenlm.github.io</a></td>
-</tr>
-<tr>
-<td>qwen-3-0.6b</td>
-<td>Qwen</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/Qwen/Qwen3-0.6B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>qwq-32b</td>
-<td>Qwen</td>
-<td>5 providers</td>
-<td><a href="https://huggingface.co/Qwen/QwQ-32B-Preview" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-67b</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/deepseek-ai/deepseek-llm-67b-base" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-v3</td>
-<td>DeepSeek</td>
-<td>4 providers</td>
-<td><a href="https://api-docs.deepseek.com/news/news250120" rel="nofollow">api-docs.deepseek.com</a></td>
-</tr>
-<tr>
-<td>deepseek-r1</td>
-<td>DeepSeek</td>
-<td>7 providers</td>
-<td><a href="https://api-docs.deepseek.com/news/news250120" rel="nofollow">api-docs.deepseek.com</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-turbo</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-R1" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-distill-llama-70b</td>
-<td>DeepSeek</td>
-<td>3 providers</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-70B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-distill-qwen-1.5b</td>
-<td>DeepSeek</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-distill-qwen-14b</td>
-<td>DeepSeek</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/api/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-distill-qwen-32b</td>
-<td>DeepSeek</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-v2</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V2" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-coder-v2</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-Coder-V2" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-prover-v2</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://github.com/deepseek-ai/DeepSeek-Prover-V2">github.com/deepseek-ai</a></td>
-</tr>
-<tr>
-<td>deepseek-prover-v2-671b</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://github.com/deepseek-ai/DeepSeek-Prover-V2">github.com/deepseek-ai</a></td>
-</tr>
-<tr>
-<td>deepseek-v2.5</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V2.5" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-v3-0324</td>
-<td>DeepSeek</td>
-<td>4 providers</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V3-0324" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>deepseek-r1-0528</td>
-<td>DeepSeek</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/deepseek-ai/DeepSeek-R1-0528" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>janus-pro-7b</td>
-<td>DeepSeek</td>
-<td>1 provider</td>
-<td><a href="https://api-docs.deepseek.com/docs/janus-pro-7b" rel="nofollow">api-docs.deepseek.com</a></td>
-</tr>
-<tr>
-<td>grok-2</td>
-<td>x.ai</td>
-<td>2 providers</td>
-<td><a href="https://x.ai/blog/grok-2" rel="nofollow">x.ai</a></td>
-</tr>
-<tr>
-<td>grok-2-mini</td>
-<td>x.ai</td>
-<td>1 provider</td>
-<td><a href="https://x.ai/blog/grok-2" rel="nofollow">x.ai</a></td>
-</tr>
-<tr>
-<td>grok-3</td>
-<td>x.ai</td>
-<td>2 providers</td>
-<td><a href="https://x.ai/blog/grok-3" rel="nofollow">x.ai</a></td>
-</tr>
-<tr>
-<td>grok-3-mini</td>
-<td>x.ai</td>
-<td>1 providers</td>
-<td><a href="https://x.ai/blog/grok-3" rel="nofollow">x.ai</a></td>
-</tr>
-<tr>
-<td>grok-3-r1</td>
-<td>x.ai</td>
-<td>1 provider</td>
-<td><a href="https://x.ai/blog/grok-3" rel="nofollow">x.ai</a></td>
-</tr>
-<tr>
-<td>sonar</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://sonar.perplexity.ai/" rel="nofollow">sonar.perplexity.ai</a></td>
-</tr>
-<tr>
-<td>sonar-pro</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://sonar.perplexity.ai/" rel="nofollow">sonar.perplexity.ai</a></td>
-</tr>
-<tr>
-<td>sonar-reasoning</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://sonar.perplexity.ai/" rel="nofollow">sonar.perplexity.ai</a></td>
-</tr>
-<tr>
-<td>sonar-reasoning-pro</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://sonar.perplexity.ai/" rel="nofollow">sonar.perplexity.ai</a></td>
-</tr>
-<tr>
-<td>r1-1776</td>
-<td>Perplexity AI</td>
-<td>2 provider</td>
-<td><a href="https://www.perplexity.ai/hub/blog/open-sourcing-r1-1776" rel="nofollow">perplexity.ai</a></td>
-</tr>
-<tr>
-<td>pplx-7b-online</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://www.perplexity.ai/" rel="nofollow">perplexity.ai</a></td>
-</tr>
-<tr>
-<td>pplx-70b-online</td>
-<td>Perplexity AI</td>
-<td>1 provider</td>
-<td><a href="https://www.perplexity.ai/" rel="nofollow">perplexity.ai</a></td>
-</tr>
-<tr>
-<td>nemotron-49b</td>
-<td>Nvidia</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/nvidia/Llama-3_3-Nemotron-Super-49B-v1" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>nemotron-51b</td>
-<td>Nvidia</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/nvidia/Llama-3_1-Nemotron-51B-Instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>nemotron-70b</td>
-<td>Nvidia</td>
-<td>5 providers</td>
-<td><a href="https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct" rel="nofollow">build.nvidia.com</a></td>
-</tr>
-<tr>
-<td>nemotron-253b</td>
-<td>Nvidia</td>
-<td>1 providers</td>
-<td><a href="https://build.nvidia.com/nvidia/llama-3_1-nemotron-ultra-253b-v1/modelcard" rel="nofollow">build.nvidia.com</a></td>
-</tr>
-<tr>
-<td>nemotron-4-340b</td>
-<td>Nvidia</td>
-<td>1 provider</td>
-<td><a href="https://build.nvidia.com/nvidia/nemotron-4-340b-instruct" rel="nofollow">build.nvidia.com</a></td>
-</tr>
-<tr>
-<td>glm-4</td>
-<td>THUDM</td>
-<td>2 providers</td>
-<td><a href="https://github.com/THUDM/GLM-4">github.com/THUDM</a></td>
-</tr>
-<tr>
-<td>glm-4-plus</td>
-<td>THUDM</td>
-<td>1 provider</td>
-<td><a href="https://github.com/THUDM/GLM-4">github.com/THUDM</a></td>
-</tr>
-<tr>
-<td>dolphin-2.6</td>
-<td>Cognitive Computations</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/cognitivecomputations/dolphin-2.6-mixtral-8x7b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>dolphin-2.9</td>
-<td>Cognitive Computations</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/cognitivecomputations/dolphin-2.9.1-llama-3-70b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>airoboros-70b</td>
-<td>DeepInfra</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/cognitivecomputations/dolphin-2.9.1-llama-3-70b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>lzlv-70b</td>
-<td>Lizpreciatior</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/cognitivecomputations/dolphin-2.9.1-llama-3-70b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>lfm-40b</td>
-<td>Liquid AI</td>
-<td>1 provider</td>
-<td><a href="https://www.liquid.ai/liquid-foundation-models" rel="nofollow">liquid.ai</a></td>
-</tr>
-<tr>
-<td>tulu-2-70b</td>
-<td>Allen AI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/allenai/tulu-2-dpo-70b" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>tulu-3-8b</td>
-<td>Allen AI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/allenai/Llama-3.1-Tulu-3-8B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>tulu-3-70b</td>
-<td>Allen AI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/allenai/Llama-3.1-Tulu-3-70B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>openhermes-2.5-7b</td>
-<td>Allen AI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>dbrx-instruct</td>
-<td>Databricks</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/databricks/dbrx-instruct" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>evil</td>
-<td>Evil Mode - Experimental</td>
-<td>1 provider</td>
-<td>❌</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<h3>Image generation models</h3>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>Model</th>
-<th>Base Provider</th>
-<th>Providers</th>
-<th>Website</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>dall-e-3</td>
-<td>OpenAI</td>
-<td>5 providers</td>
-<td><a href="https://platform.openai.com/docs/models/dall-e" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>gpt-image</td>
-<td>OpenAI</td>
-<td>2 providers</td>
-<td><a href="https://platform.openai.com/docs/models/gpt-image-1" rel="nofollow">platform.openai.com</a></td>
-</tr>
-<tr>
-<td>sdxl-1.0</td>
-<td>Stability AI</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>sdxl-l</td>
-<td>Stability AI</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>sdxl-turbo</td>
-<td>Stability AI</td>
-<td>2 providers</td>
-<td><a href="https://huggingface.co/stabilityai/sdxl-turbo" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>sd-3.5-large</td>
-<td>Stability AI</td>
-<td>1 provider</td>
-<td><a href="https://huggingface.co/stabilityai/stable-diffusion-3.5-large" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>flux</td>
-<td>Black Forest Labs</td>
-<td>5 providers</td>
-<td><a href="https://blackforestlabs.ai/announcing-flux/" rel="nofollow">blackforestlabs.ai</a></td>
-</tr>
-<tr>
-<td>flux-pro</td>
-<td>Black Forest Labs</td>
-<td>3 provider</td>
-<td><a href="https://blackforestlabs.ai/flux-pro/" rel="nofollow">blackforestlabs.ai</a></td>
-</tr>
-<tr>
-<td>flux-dev</td>
-<td>Black Forest Labs</td>
-<td>6 providers</td>
-<td><a href="https://blackforestlabs.ai/flux-dev/" rel="nofollow">blackforestlabs.ai</a></td>
-</tr>
-<tr>
-<td>flux-schnell</td>
-<td>Black Forest Labs</td>
-<td>4 providers</td>
-<td><a href="https://blackforestlabs.ai/flux-schnell/" rel="nofollow">blackforestlabs.ai</a></td>
-</tr>
-<tr>
-<td>flux-redux</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/black-forest-labs/FLUX.1-Redux-dev" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>flux-depth</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/black-forest-labs/FLUX.1-Depth-dev" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>flux-canny</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/black-forest-labs/FLUX.1-Canny-dev" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>flux-kontext-max</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td>❌</td>
-</tr>
-<tr>
-<td>flux-dev-lora</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td><a href="https://huggingface.co/black-forest-labs/FLUX.1-dev" rel="nofollow">huggingface.co</a></td>
-</tr>
-<tr>
-<td>flux-kontext-pro</td>
-<td>Black Forest Labs</td>
-<td>1 providers</td>
-<td>❌</td>
-</tr>
-<tr>
-<td>midjourney</td>
-<td>Midjourney</td>
-<td>2 provider</td>
-<td><a href="https://www.midjourney.com/" rel="nofollow">midjourney.com</a></td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<h2>Conclusion and Usage Tips</h2>
-<p>This document provides a comprehensive overview of various AI providers and models available for text generation, image generation, and vision tasks. <strong>When choosing a provider or model, consider the following factors:</strong></p>
-<ol>
-<li><strong>Availability</strong>: Check the status of the provider to ensure it's currently active and accessible.</li>
-<li><strong>Model Capabilities</strong>: Different models excel at different tasks. Choose a model that best fits your specific needs, whether it's text generation, image creation, or vision-related tasks.</li>
-<li><strong>Authentication</strong>: Some providers require authentication, while others don't. Consider this when selecting a provider for your project.</li>
-<li><strong>Vision Models</strong>: For tasks requiring image understanding or multimodal interactions, look for providers offering vision models.</li>
-</ol>
-<p>Remember to stay updated with the latest developments in the AI field, as new models and providers are constantly emerging and evolving.</p>
+<p><strong>Source</strong></p>
+<ul>
+<li><a href="https://host.g4f.dev/backend-api/v2/providers" rel="nofollow">https://host.g4f.dev/backend-api/v2/providers</a></li>
+<li><a href="https://host.g4f.dev/backend-api/v2/models" rel="nofollow">https://host.g4f.dev/backend-api/v2/models</a></li>
+</ul>
+<p><strong>Notes</strong></p>
+<ul>
+<li>For the most up-to-date catalog, refer to the live endpoints referenced above.</li>
+</ul>
 <hr>
 <p><a href="/docs/">Return to Documentation</a></p>
 </main>

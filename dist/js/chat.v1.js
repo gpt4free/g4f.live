@@ -3575,7 +3575,7 @@ function loadModels(providers) {
         if (providers.length > 0) {
             setTimeout(() => {
                 loadNext();
-            }, 0);
+            }, 10);
         } else {
             appStorage.setItem('models_cached', Date.now());
         }

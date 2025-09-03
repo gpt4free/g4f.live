@@ -3560,10 +3560,10 @@ function loadModels(providers) {
             searchModels[provider.name] = JSON.parse(searchModels[provider.name]);
         }
     });
-    cached = appStorage.getItem('models_cached');
-    if (cached && Date.now() - cached < 1000 * 60 * 60 * 12) {
-        return;
-    }
+    // cached = appStorage.getItem('models_cached');
+    // if (cached && Date.now() - cached < 1000 * 60 * 60 * 12) {
+    //     return;
+    // }
     const loadNext = async () => {
         const provider = providers.pop();
         if (!provider.hf_space) {
@@ -3575,7 +3575,7 @@ function loadModels(providers) {
         if (providers.length > 0) {
             setTimeout(() => {
                 loadNext();
-            }, 1000);
+            }, 0);
         } else {
             appStorage.setItem('models_cached', Date.now());
         }

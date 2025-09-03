@@ -31,7 +31,7 @@ async function checkUrl(url, connectStatus) {
     }
     return false;
 }
-framework.backendUrl = localStorage.getItem('backendUrl')
+framework.backendUrl = localStorage.getItem('backendUrl') || "";
 if (framework.backendUrl && !framework.backendUrl.endsWith(".g4f.dev")) {
     framework.backendUrl = "";
 }

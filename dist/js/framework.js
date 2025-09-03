@@ -15,12 +15,12 @@ if (["https:", "http:"].includes(window.location.protocol)) {
     checkUrls.push(window.location.origin);
 }
 checkUrls.push(g4f_host);
-checkUrls.push("https://phone.g4f.dev");
-checkUrls.push("https://home.g4f.dev");
+//checkUrls.push("https://phone.g4f.dev");
+//checkUrls.push("https://home.g4f.dev");
 async function checkUrl(url, connectStatus) {
     let response;
     try {
-        response = await fetch(`${url}/backend-api/v2/version?cache=true`, {signal: AbortSignal.timeout(3000)});
+        response = await fetch(`${url}/backend-api/v2/version?cache=true`, {signal: AbortSignal.timeout(10000)});
     } catch (error) {
         console.debug("Error check url: ", url);
         return false;

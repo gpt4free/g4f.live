@@ -1,6 +1,8 @@
-window.oauthConfig = {
-    clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
-    scopes: ['inference-api']
+if (window.location.hostname == "g4f.dev" || window.location.hostname.endsWith(".g4f.dev")) {
+    window.oauthConfig = {
+        clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
+        scopes: ['inference-api']
+    }
 }
 window.framework = {}
 const g4f_host = "https://host.g4f.dev";

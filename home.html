@@ -258,7 +258,9 @@
                     localStorage.removeItem("HuggingFace-api_key");
                 }
             }
-            oauthResult ||= await oauthHandleRedirectIfPresent();
+            if (window.oauthConfig) {
+                oauthResult ||= await oauthHandleRedirectIfPresent();
+            }
             if (oauthResult) {
                 localStorage.setItem("oauth", JSON.stringify(oauthResult));
                 localStorage.setItem("HuggingFace-api_key", oauthResult.accessToken);
@@ -269,7 +271,7 @@
                     localStorage.removeItem("HuggingFace-api_key");
                     window.location.href.replace((""+window.location.href).split("?")[0]);
                 }
-            } else {
+            } else if (window.oauthConfig) {
                 localStorage.removeItem("oauth");
                 document.getElementById("signin").style.removeProperty("display");
                 document.getElementById("signin").onclick = async function() {

@@ -129,11 +129,11 @@ function filter_message(text) {
 }
 
 function filter_message_content(text) {
-    if (text.startsWith('[!')) {
-        return "";
-    }
     if (Array.isArray(text) || !text) {
         return text;
+    }
+    if (text.startsWith('[!')) {
+        return "";
     }
     return text.replace(/ \[aborted\]$/g, "").replace(/ \[error\]$/g, "")
 }

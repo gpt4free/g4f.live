@@ -122,6 +122,14 @@ framework.translateAll = async () =>{
     localStorage.setItem(framework.translationKey, JSON.stringify(translations || allTranslations));
     return allTranslations;
 }
+function delete_translations() {
+    for (let i = 0; i < appStorage.length; i++) {
+        let key = appStorage.key(i);
+        if (key.startsWith("translations")) {
+            appStorage.removeItem(key);
+        }
+    }
+}
 framework.delete = async (bucket_id) => {
     const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}`;
     await fetch(delete_url, {

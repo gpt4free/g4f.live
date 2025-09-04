@@ -244,7 +244,7 @@
                     <a href="" onclick="return false;">Translate UI</a>
                     <i class="fas fa-spinner fa-spin hidden"></i>
                 </button>
-                <button onclick="localStorage.getItem(framework.translationKey) ? (localStorage.removeItem(framework.translationKey) || window.location.reload()) : null">
+                <button onclick="localStorage.getItem(framework.translationKey) ? (delete_translations() || window.location.reload()) : null">
                     <i class="fa-solid fa-trash"></i>
                     <span>Delete Translations</span>
                 </button>
@@ -379,7 +379,7 @@
                     </div>
                    <div class="field">
                       <select name="provider" id="provider">
-                         <option value="AnyProvider">Provider: Auto</option>
+                         <option value="gpt-oss-120b">Default: gpt-oss-120b</option>
                         </select>
                     </div>
                     <div class="field">

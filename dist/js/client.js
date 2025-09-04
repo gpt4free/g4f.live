@@ -140,10 +140,18 @@ class Client {
           }
 
           let data = await response.json();
-          data = data.data || data;
+          data = data.data || data.result || data;
           data = data.map((model) => {
+            if (model.name) {
+                model._id = model.id;
+                model.id = model.name;
+            }
             if (!model.type) {
-              if (model.supports_chat) {
+              if (model.task?.name == "Text Generation") {
+                model.type = 'chat';
+              } else if (model.task?.name == "Text-to-Image") {
+                model.type = 'image';
+              } else if (model.supports_chat) {
                 model.type = 'chat';
               } else if (model.supports_images) {
                 model.type = 'image';
@@ -212,8 +220,11 @@ class Client {
             try {
               if (part.startsWith('data: ')) {
                 const data = JSON.parse(part.slice(6));
-                if (data.choices && data.choices[0]?.delta?.reasoning) {
-                    data.choices[0].delta.reasoning_content = data.choices[0].delta.reasoning;
+                if (data.response) {
+                    data.choices = [{delta: {content: data.response}}];
+                }
+                if (data.choices && data.choices[0]?.delta?.reasoning_content) {
+                    data.choices[0].delta.reasoning = data.choices[0].delta.reasoning_content;
                 }
                 yield data;
               }
@@ -277,23 +288,6 @@ class PollinationsAI extends Client {
             defaultModel: 'gpt-5-nano',
             referrer: 'https://g4f.dev',
             modelAliases: {
-                "gpt-oss-120b": "gpt-oss",
-                "gpt-4o-mini": "openai",
-                "gpt-4.1-nano": "openai-fast",
-                "gpt-4.1": "openai-large",
-                "o4-mini": "openai-reasoning",
-                "command-r-plus": "command-r",
-                "gemini-2.5-flash": "gemini",
-                "gemini-2.0-flash-thinking": "gemini-thinking",
-                "qwen-2.5-coder-32b": "qwen-coder",
-                "llama-3.3-70b": "llama",
-                "llama-4-scout": "llamascout",
-                "mistral-small-3.1-24b": "mistral",
-                "deepseek-r1": "deepseek-reasoning",
-                "phi-4": "phi",
-                "deepseek-v3": "deepseek",
-                "grok-3-mini-high": "grok",
-                "gpt-4o-audio": "openai-audio",
                 "sdxl-turbo": "turbo",
                 "gpt-image": "gptimage",
                 "flux-kontext": "kontext",
@@ -320,7 +314,8 @@ class PollinationsAI extends Client {
             const textModels = (textModelsResponse.data || textModelsResponse || []);
             this._models = [
                 ...textModels.map(model => {
-                    model.id = model.id || this.swapAliases[model.name]  || model.name;
+                    model.id = model.aliases ? model.aliases[0] : (this.swapAliases[model.name]  || model.name);
+                    this.modelAliases[model.id] = model.name;
                     model.type = model.type || 'chat';
                     return model
                 }),
@@ -355,6 +350,15 @@ class DeepInfra extends Client {
     constructor(options = {}) {
         super({
             baseUrl: 'https://api.deepinfra.com/v1/openai',
+            ...options
+        });
+    }
+}
+
+class Worker extends Client {
+    constructor(options = {}) {
+        super({
+            baseUrl: 'https://g4f.dev/api/Worker',
             ...options
         });
     }
@@ -592,7 +596,7 @@ class Puter {
                         options.model = this.defaultModel;
                     }
                     if (options.stream) {
-                        return this._streamCompletion(messages, options);
+                        return this._streamCompletion(options.model, messages, options);
                     }
                     const response = await (await this.puter).ai.chat(messages, false, options);
                     if (response.choices == undefined && response.message !== undefined) {
@@ -649,8 +653,9 @@ class Puter {
         });
     }
 
-    async *_streamCompletion(messages, options = {}) {
+    async *_streamCompletion(model, messages, options = {}) {
         for await (const item of await ((await this.puter).ai.chat(messages, false, options))) {
+          item.model = model;
           if (item.choices == undefined && item.text !== undefined) {
             yield {
                 ...item,
@@ -812,5 +817,5 @@ class HuggingFace extends Client {
 }
 
 
-export { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace };
+export { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace, Worker };
 export default Client;

@@ -1,11 +1,11 @@
-if (window.location.hostname == "g4f.dev" || window.location.hostname.endsWith(".g4f.dev")) {
+const G4F_HOST = "https://g4f.dev";
+if (window.location.origin === G4F_HOST || window.location.origin.endsWith(".g4f.dev")) {
     window.oauthConfig = {
         clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
         scopes: ['inference-api']
     }
 }
 window.framework = {}
-const g4f_host = "https://host.g4f.dev";
 const checkUrls = [];
 if (window.location.protocol === "file:") {
     checkUrls.push("http://localhost:1337");
@@ -14,9 +14,7 @@ if (window.location.protocol === "file:") {
 if (["https:", "http:"].includes(window.location.protocol)) {
     checkUrls.push(window.location.origin);
 }
-checkUrls.push(g4f_host);
-//checkUrls.push("https://phone.g4f.dev");
-//checkUrls.push("https://home.g4f.dev");
+checkUrls.push(G4F_HOST);
 async function checkUrl(url, connectStatus) {
     let response;
     try {
@@ -141,28 +139,17 @@ async function query(prompt, options={ json: false, cache: true }) {
     if (options.model) {
         params.model = options.model;
     }
-    const encodedParams = (new URLSearchParams(params)).toString();
-    let liveUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}`;
+    let encodedParams = (new URLSearchParams(params)).toString();
     if (encodedParams) {
-        liveUrl += "?" + encodedParams
+        encodedParams = "?" + encodedParams
     }
-    const response = await fetch(liveUrl);
-    if (response.status !== 200) {
-        const fallbackParams = { prompt: prompt };
-        if (options.model) {
-            fallbackParams.model = options.model;
-        }
-        if (options.json) {
-            fallbackParams.filter_markdown = true;
-        }
-        if (options.cache) {
-            fallbackParams.cache = true;
-        }
-        const fallbackEncodedParams = (new URLSearchParams(fallbackParams)).toString();
-        const fallbackUrl = `${framework.backendUrl}/backend-api/v2/create?${fallbackEncodedParams}`;
-        const response = await fetch(fallbackUrl);
-        if (response.status !== 200) {
-            console.error("Error on query: ", response.statusText);
+    let twoPartyUrl = `https://g4f.dev/api/pollinations.ai/${encodeURIComponent(prompt)}${encodedParams}`;
+    const response = await fetch(twoPartyUrl);
+    if (!response.ok) {
+        let firstPartyUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}${encodedParams}`;
+        const response = await fetch(firstPartyUrl);
+        if (!response.ok) {
+            console.error(`Error ${response.status}: `, await response.text());
             return;
         }
     }
@@ -203,7 +190,7 @@ const renderMarkdown = (content) => {
     content = markdown.render(content)
         .replaceAll("<a href=", '<a target="_blank" href=')
         .replaceAll('<code>', '<code class="language-plaintext">')
-        .replaceAll('<iframe src="', '<iframe frameborder="0" height="400" width="400" src="')
+        .replaceAll('<iframe src="', '<iframe frameborder="0" height="224" width="400" src="')
         .replaceAll('<iframe type="text/html" src="', '<iframe type="text/html" frameborder="0" allow="fullscreen" height="224" width="400" src="')
         .replaceAll('"></iframe>', `?enablejsapi=1"></iframe>`)
         .replaceAll('src="/media/', `src="${framework.backendUrl}/media/`)
@@ -243,7 +230,10 @@ function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     return defaultValue;
 }
 async function getPublicKey(backendUrl) {
-    const response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`, {method: 'POST'});
+    let response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`, {method: 'POST'});
+    if (!response.ok) {
+        response = await fetch(`${backendUrl || framework.backendUrl}/backend-api/v2/public-key`);
+    }
     if (response.ok) {
         return await response.json();
     }
@@ -252,7 +242,7 @@ async function getPublicKey(backendUrl) {
 async function genAK(_0x3d01f3){
     const _0x37f8=['getPublicKey','public_key','data','user_agent','navigator','userAgent','stringify','encrypt','localStorage','setItem','Azure-api'+'_key','Encryption failed. Please try again.','Error'];
     const _0x2cd1=function(_0x17e79b,_0x297747){_0x17e79b=_0x17e79b-0x0;return _0x37f8[_0x17e79b];}
-    const _0x2a5a9d=await getPublicKey(g4f_host);
+    const _0x2a5a9d=await getPublicKey(G4F_HOST);
     const _0x4d5bf2=new JSEncrypt();
     _0x4d5bf2['setPublicKey'](_0x2a5a9d[_0x2cd1('0x1')]);
     const _0x348d07={

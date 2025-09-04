@@ -53,7 +53,7 @@ class Client {
             }
         }
         this.proxyManager = new CorsProxyManager();
-        this.baseUrl = options.baseUrl || ((g4f_host || "") + "/api/Azure");
+        this.baseUrl = options.baseUrl || ((G4F_HOST || "") + "/api/Azure");
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel || 'openai/gpt-oss-120b';
@@ -312,14 +312,21 @@ class PollinationsAI extends Client {
         list: async () => {
           if (this._models.length > 0) return this._models;
           try {
-            let [textModelsResponse, imageModelsResponse] = await Promise.all([
-                this._fetchWithProxyRotation('https://text.pollinations.ai/models').catch(e => {
+            let textModelsResponse;
+            try {
+                textModelsResponse = await fetch('https://g4f.dev/api/pollinations.ai/models');
+                if (!textModelsResponse.ok) {
+                    throw new Error(`Status ${textModelsResponse.status}: ${await textModelsResponse.text()}`);
+                }
+            } catch (e) {
+                console.error("Failed to fetch pollinations.ai models from g4f.dev:", e);
+                textModelsResponse = await this._fetchWithProxyRotation('https://text.pollinations.ai/models').catch(e => {
                     console.error("Failed to fetch text models from all proxies:", e); return { data: [] };
-                }),
-                this._fetchWithProxyRotation('https://image.pollinations.ai/models').catch(e => {
-                    console.error("Failed to fetch image models from all proxies:", e); return [];
-                }),
-            ]);
+                });
+            }
+            imageModelsResponse = await this._fetchWithProxyRotation('https://image.pollinations.ai/models').catch(e => {
+                console.error("Failed to fetch image models from all proxies:", e); return { data: [] };
+            });
             textModelsResponse = await textModelsResponse.json();
             imageModelsResponse = await imageModelsResponse.json();
             const textModels = (textModelsResponse.data || textModelsResponse || []);
@@ -369,7 +376,7 @@ class DeepInfra extends Client {
 class Worker extends Client {
     constructor(options = {}) {
         super({
-            baseUrl: 'https://g4f.dev/api/Worker',
+            baseUrl: 'https://g4f.dev/api/worker',
             ...options
         });
     }

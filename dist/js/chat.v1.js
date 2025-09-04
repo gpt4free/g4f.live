@@ -3558,34 +3558,25 @@ modelSearch.addEventListener('input', function() {
     modelSuggestions.appendChild(div);
   });
 });
-function loadModels(providers) {
+async function loadModels(providers) {
     providers.forEach((provider) => {
         searchModels[provider.name] = appStorage.getItem(`${provider.name}:models`);
         if (searchModels[provider.name]) {
             searchModels[provider.name] = JSON.parse(searchModels[provider.name]);
         }
     });
-    // cached = appStorage.getItem('models_cached');
-    // if (cached && Date.now() - cached < 1000 * 60 * 60 * 12) {
-    //     return;
-    // }
-    const loadNext = async () => {
-        const provider = providers.pop();
-        if (!provider.hf_space) {
-            searchModels[provider.name] = await api('models', provider.name);
-            if (searchModels[provider.name]) {
-                appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
+    for (const chunks of chunkArray(providers, 10)) {
+        const fetchPromises =  chunks.map(async (provider)=> {
+            if (!provider.hf_space) {
+                searchModels[provider.name] = await api('models', provider.name);
+                if (searchModels[provider.name]) {
+                    appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
+                }
+                return searchModels[provider.name];
             }
-        }
-        if (providers.length > 0) {
-            setTimeout(() => {
-                loadNext();
-            }, 10);
-        } else {
-            appStorage.setItem('models_cached', Date.now());
-        }
-    }
-    setTimeout(loadNext, 1000);
+        });
+        await Promise.all(fetchPromises);
+    };
 }
 
 // Close dropdown when clicking outside

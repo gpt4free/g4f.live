@@ -387,3 +387,10 @@ const delete_conversation = async (id) => {
     store.delete(id);
     return done;
 };
+
+function chunkArray(array, chunkSize) {
+  return Array.from(
+    { length: Math.ceil(array.length / chunkSize) },
+    (_, index) => array.slice(index * chunkSize, index * chunkSize + chunkSize)
+  );
+}

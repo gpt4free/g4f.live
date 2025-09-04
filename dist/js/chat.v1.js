@@ -2614,6 +2614,9 @@ function get_modelTags(model, add_vision = true) {
 async function load_providers(providers, provider_options, providersListContainer) {
     providers.sort((a, b) => a.label.localeCompare(b.label));
     providers.forEach((provider) => {
+        if (provider.hf_space) {
+            return;
+        }
         let option = document.createElement("option");
         option.value = provider.name;
         option.dataset.label = provider.label;
@@ -3238,15 +3241,15 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         // providerModelSignal = new AbortController();
         api_key = get_api_key_by_provider(args);
         if (api_key) {
-            headers.x_api_key = api_key;
+            headers['x-api-key'] = api_key;
         }
         api_base = args == "Custom" ? document.getElementById(`${args}-api_base`).value : null;
         if (api_base) {
-            headers.x_api_base = api_base;
+            headers['x-api-base'] = api_base;
         }
         const ignored = Array.from(settings.querySelectorAll("input.provider:not(:checked)")).map((el)=>el.value);
         if (ignored) {
-            headers.x_ignored = ignored.join(" ");
+            headers['x-ignored'] = ignored.join(" ");
         }
         url = `${framework.backendUrl}/backend-api/v2/${ressource}/${args}`;
         headers['content-type'] = 'application/json';

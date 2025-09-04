@@ -185,14 +185,14 @@ class Client {
 
     async _regularCompletion(response) {
         if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
+            throw new Error(`Status ${response.status}: ${await response.text()}`);
         }
         return await response.json();
     }
 
     async *_streamCompletion(response) {
       if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+        throw new Error(`Status ${response.status}: ${await response.text()}`);
       }
       if (!response.body) {
         throw new Error('Streaming not supported in this environment');
@@ -255,7 +255,7 @@ class Client {
         url += '?' + encodedParams.toString();
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
-            throw new Error(`Image generation request failed with status ${response.status}`);
+            throw new Error(`Status ${response.status}: ${await response.text()}`);
         }
         return {data: [{url: response.url}]}
     }
@@ -268,14 +268,25 @@ class Client {
         });
         if (!response.ok) {
             const errorBody = await response.text();
-            console.error("Image generation failed. Server response:", errorBody);
-            throw new Error(`Image generation request failed with status ${response.status}`);
+            throw new Error(`Status ${response.status}: ${errorBody}`);
         }
-        data = await response.json();
-        if (data?.error?.message) {
-            throw new Error(`Image generation failed: ${data.error.message}`);
+        if (response.headers.get('Content-Type').startsWith('application/json')) {
+            const data = await response.json();
+            if (data?.error?.message) {
+                throw new Error(`Image generation failed: ${data.error.message}`);
+            }
+            if (data.image) {
+                return {data: [{url: `data:image/png;base64,${data.image}`}]}
+            }
+            return data;
         }
-        return data;
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+        return {data: [{url: await toBase64(await response.blob())}]};
     }
 }
 

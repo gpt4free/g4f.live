@@ -221,7 +221,8 @@ const renderMarkdown = (content) => {
                 audio: [ 'src', 'controls' ],
                 video: [ 'src', 'controls', 'loop', 'autoplay', 'muted' ],
             },
-            allowedIframeHostnames: ['www.youtube.com']
+            allowedIframeHostnames: ['www.youtube.com'],
+            allowedSchemes: [ 'http', 'https', 'data' ]
         });
     }
     return content;

@@ -129,6 +129,9 @@ function filter_message(text) {
 }
 
 function filter_message_content(text) {
+    if (text.startsWith('[!')) {
+        return "";
+    }
     if (Array.isArray(text) || !text) {
         return text;
     }
@@ -1279,8 +1282,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     }
     if (client) {
         const selectedOption = modelProvider.options[modelProvider.selectedIndex];
-        const selectedModel = selectedOption.value || client.defaultModel;
-        const modelType = selectedOption.dataset.type || 'chat';
+        const selectedModel = selectedOption?.value || client.defaultModel;
+        const modelType = selectedOption?.dataset.type || 'chat';
         try {
             // Conditionally call the correct client method based on model type.
             if (modelType === 'image') {
@@ -1288,13 +1291,13 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 const response = await client.images.generate({
                     model: selectedModel,
                     prompt: message,
-                    seed: regenerate ? Math.floor(Date.now() / 1000) : null
+                    ...(regenerate ? { seed: Math.floor(Date.now() / 1000) } : {})
                 });
                 const imageUrl = response.data[0].url;
                 await add_message(
                     window.conversation_id,
                     "assistant",
-                    `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl})`,
+                    `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl.startsWith('data:') ? '' : imageUrl})`,
                     null,
                     message_index,
                 );
@@ -1329,14 +1332,16 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         add_message_chunk({type: "error", ...chunk.error}, message_id);
                         return;
                     }
-                    if (chunk.choices[0]?.delta?.reasoning_content) {
-                        delta = chunk.choices[0].delta.reasoning_content;
-                        add_message_chunk({type: "reasoning", token: delta}, message_id);
-                    } else {
-                        delta = chunk.choices[0]?.delta?.content || '';
-                        delta = delta.replaceAll("/media/", baseUrl + "/media/");
-                        delta = delta.replaceAll("/thumbnail/", baseUrl + "/thumbnail/");
-                        add_message_chunk({type: "content", content: delta}, message_id);
+                    if (chunk.choices) {
+                        if (chunk.choices[0]?.delta?.reasoning_content) {
+                            delta = chunk.choices[0].delta.reasoning_content;
+                            add_message_chunk({type: "reasoning", token: delta}, message_id);
+                        } else {
+                            delta = chunk.choices[0]?.delta?.content || '';
+                            delta = delta.replaceAll("/media/", baseUrl + "/media/");
+                            delta = delta.replaceAll("/thumbnail/", baseUrl + "/thumbnail/");
+                            add_message_chunk({type: "content", content: delta}, message_id);
+                        }
                     }
                 }
                 await finish_message();
@@ -4364,11 +4369,14 @@ async function initClient() {
 }
 
 async function loadClientModels() {
-    modelProvider.innerHTML = `<option disabled selected>${framework.translate("Loading...")}</option>`;
+    modelProvider.innerHTML = `<option value="" disabled selected>${framework.translate("Loading...")}</option>`;
     try {
         const models = await client.models.list();
         modelProvider.innerHTML = '';
         models.forEach(model => {
+            if (!["chat", "image"].includes(model.type)) {
+                return;
+            }
             const opt = document.createElement('option');
             opt.value = model.id;
             opt.textContent = model.id + get_modelTags(model);

@@ -7,18 +7,6 @@ Here you’ll find a clear overview, quick examples, and entry points to deeper 
 
 ---
 
-### 🏁 Quick Table of Contents
-
-- [Installation & Setup](#installation--setup)
-- [Getting Started Examples](#getting-started)
-  - [Text Generation](#-text-generation)
-  - [Image Generation](#-image-generation)
-  - [Web JS Usage](#-using-gpt4freejs)
-- [Docs by Topic](#deep-dives)
-- [Community & Links](#community--links)
-
----
-
 ## Installation & Setup
 
 For full install guides—choose your method:

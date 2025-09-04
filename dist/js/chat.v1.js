@@ -4374,7 +4374,7 @@ async function loadClientModels() {
         const models = await client.models.list();
         modelProvider.innerHTML = '';
         models.forEach(model => {
-            if (!["chat", "image"].includes(model.type)) {
+            if (model.type && !["chat", "image"].includes(model.type)) {
                 return;
             }
             const opt = document.createElement('option');

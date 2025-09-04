@@ -199,7 +199,7 @@
       const models = await client.models.list();
       modelSelect.innerHTML = '';
       models.forEach(model => {
-        if (!["chat", "image"].includes(model.type)) {
+        if (model.type && !["chat", "image"].includes(model.type)) {
           return;
         }
         const opt = document.createElement('option');

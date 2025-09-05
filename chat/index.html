@@ -27,6 +27,7 @@
       import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker } from "../dist/js/client.js";
       window.providers = {
         Azure: Client,
+        "gpt-oss-120b": Client,
         PollinationsAI,
         ApiAirforce: Client,
         AnonDrop: Client,
@@ -379,7 +380,7 @@
                     </div>
                    <div class="field">
                       <select name="provider" id="provider">
-                         <option value="gpt-oss-120b">Default: gpt-oss-120b</option>
+                         <option value="AnyProvider">Provider: Auto</option>
                         </select>
                     </div>
                     <div class="field">

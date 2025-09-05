@@ -4350,6 +4350,8 @@ async function initClient() {
         options.baseUrl = "https://api.airforce/v1";
     } else if (provider == "AnonDrop") {
         options.baseUrl = "https://anondrop.net/v1";
+    } else if (provider == "gpt-oss-120b") {
+        options.baseUrl = "https://g4f.dev/api/gpt-oss-120b";
     }
 
     if (!window.providers[provider]) {

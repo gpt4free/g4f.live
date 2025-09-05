@@ -59,7 +59,8 @@ response = client.images.generate(
 print(f"Generated image URL: {response.data[0].url}")
 ```
 
-[More Python client info →](client.md) [and Async client →](async_client.md)
+[More Python client info →](client.md)
+[and Async client →](async_client.md)
 
 ---
 

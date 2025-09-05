@@ -126,6 +126,7 @@ Examples
 
 ## Deep Dives
 
+- [API endpoints and usage](ready_to_use.md) ***new**
 - [Available Providers & Models](providers-and-models.md)
 - [Selecting a Provider](selecting_a_provider.md)
 - [API docs (full spec)](/api-docs)

@@ -324,7 +324,7 @@ class PollinationsAI extends Client {
                     console.error("Failed to fetch text models from all proxies:", e); return { data: [] };
                 });
             }
-            imageModelsResponse = await this._fetchWithProxyRotation('https://image.pollinations.ai/models').catch(e => {
+            let imageModelsResponse = await this._fetchWithProxyRotation('https://image.pollinations.ai/models').catch(e => {
                 console.error("Failed to fetch image models from all proxies:", e); return { data: [] };
             });
             textModelsResponse = await textModelsResponse.json();

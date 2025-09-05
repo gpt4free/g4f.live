@@ -103,9 +103,22 @@ And for image generation:
 
 ### 💻 Using CLI Client
 
-```bash
-$ g4f client "Explain quantum computing"
-```
+Examples
+
+1. **Text generation**:
+   ```bash
+   g4f client "Explain quantum computing in simple terms"
+   ```
+
+2. **Image description**:
+   ```bash
+   g4f client image.jpg "Describe this image"
+   ```
+
+3. **Image generation** (with supported models):
+   ```bash
+   g4f client -m flux -O output.jpg "A futuristic cityscape"
+   ```
 
 [CLI Client documentation →](client_cli.md)
 

@@ -1306,10 +1306,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 load_conversations();
                 hide_sidebar();
             } else {
-                // if (model == "openai-audio") {
-                //     body.audio = {voice: "alloy", format: "mp3"};
-                //     body.modalities = ["text", "audio"];
-                // }
                 // Handle chat completion (existing logic)
                 const stream = await client.chat.completions.create({
                     model: selectedModel,
@@ -1326,7 +1322,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     }
                     if (chunk.model && !hasModel) {
                         hasModel = true;
-                        add_message_chunk({type: "provider", provider: {name: provider, model: chunk.model}}, message_id);
+                        add_message_chunk({type: "provider", provider: {name: chunk.provider || provider, model: chunk.model}}, message_id);
                     }
                     if (chunk.error) {
                         add_message_chunk({type: "error", ...chunk.error}, message_id);
@@ -3533,7 +3529,7 @@ modelSearch.addEventListener('input', function() {
             matches.push({ provider, model: subModel });
           }
         });
-      } else if (model.model.toLowerCase().includes(searchTerm)) {
+      } else if ((model.model || model).toLowerCase().includes(searchTerm)) {
         matches.push({ provider, model });
       }
     });
@@ -3544,42 +3540,25 @@ modelSearch.addEventListener('input', function() {
     const div = document.createElement('div');
     div.className = 'suggestion-item';
     div.innerHTML = `
-      <strong>${match.model.model}</strong>
+      <strong>${match.model.model || match.model}</strong>
       <span class="provider-tag">${match.provider}</span>
     `;
     div.addEventListener('click', async () => {
       modelSearch.value = "";
       providerSelect.value = match.provider;
       await load_provider_models();
-      modelProvider.value = match.model.model;
+      modelProvider.value = match.model.model || match.model;
       modelSelector.classList.add("hidden");
       providerSelect.classList.remove("hidden");
       modelProvider.classList.remove("hidden");
       modelSuggestions.innerHTML = '';
-      console.log(`Selected model: ${match.model.model}`);
+      console.log(`Selected model: ${match.model}`);
     });
     modelSuggestions.appendChild(div);
   });
 });
 async function loadModels(providers) {
-    providers.forEach((provider) => {
-        searchModels[provider.name] = appStorage.getItem(`${provider.name}:models`);
-        if (searchModels[provider.name]) {
-            searchModels[provider.name] = JSON.parse(searchModels[provider.name]);
-        }
-    });
-    for (const chunks of chunkArray(providers, 10)) {
-        const fetchPromises =  chunks.map(async (provider)=> {
-            if (!provider.hf_space) {
-                searchModels[provider.name] = await api('models', provider.name);
-                if (searchModels[provider.name]) {
-                    appStorage.setItem(`${provider.name}:models`, JSON.stringify(searchModels[provider.name]));
-                }
-                return searchModels[provider.name];
-            }
-        });
-        await Promise.all(fetchPromises);
-    };
+    searchModels = await api('models');
 }
 
 // Close dropdown when clicking outside
@@ -4370,7 +4349,7 @@ async function loadClientModels() {
         const models = await client.models.list();
         modelProvider.innerHTML = '';
         models.forEach(model => {
-            if (model.type && !["chat", "image"].includes(model.type)) {
+            if (model.type && !["chat", "image", "text"].includes(model.type)) {
                 return;
             }
             const opt = document.createElement('option');

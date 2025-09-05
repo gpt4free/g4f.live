@@ -756,7 +756,6 @@ form input[type="checkbox"] {
     display: none;
 }
 
-.chat-buttons label,
 .settings label.toogle,
 form label.toogle {
     cursor: pointer;
@@ -777,7 +776,6 @@ form label.toogle {
     margin-left: 0;
 }
 
-.chat-buttons label:after,
 .settings label.toogle:after,
 form label.toogle:after {
     content: "";

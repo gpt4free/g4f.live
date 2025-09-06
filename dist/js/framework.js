@@ -378,13 +378,13 @@ async function list_conversations() {
         const request = store.openCursor();
 
         request.onsuccess = event => {
-        const cursor = event.target.result;
-        if (cursor) {
-            conversations.push(cursor.value);
-            cursor.continue();
-        } else {
-            resolve(conversations);
-        }
+            const cursor = event.target.result;
+            if (cursor) {
+                conversations.push(cursor.value);
+                cursor.continue();
+            } else {
+                resolve(conversations);
+            }
         };
 
         request.onerror = () => reject(request.error);

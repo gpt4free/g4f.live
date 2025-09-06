@@ -4329,6 +4329,8 @@ async function initClient() {
         options.baseUrl = "https://anondrop.net/v1";
     } else if (provider == "gpt-oss-120b") {
         options.baseUrl = "https://g4f.dev/api/gpt-oss-120b";
+    } else if (provider == "Azure") {
+        options.baseUrl = "https://g4f.dev/api/azure";
     }
 
     if (!window.providers[provider]) {

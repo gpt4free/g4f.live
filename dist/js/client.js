@@ -56,8 +56,7 @@ class Client {
         this.baseUrl = options.baseUrl || ((G4F_HOST || "") + "/api/Azure");
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
-        this.defaultModel = options.defaultModel || 'openai/gpt-oss-120b';
-        this.defaulImageModel = options.defaultImageModel || 'flux';
+        this.defaultModel = options.defaultModel;
         this.apiKey = options.apiKey;
         this.referrer = options.referrer;
         
@@ -107,7 +106,11 @@ class Client {
                 if(this.modelAliases[modelId]) {
                     modelId = this.modelAliases[modelId];
                 }
-                params.model = modelId;
+                if (!modelId) {
+                    delete params.model;
+                } else {
+                    params.model = modelId;
+                }
                 if (this.referrer) {
                     params.referrer = this.referrer;
                 }
@@ -171,12 +174,15 @@ class Client {
     get images() {
         return {
             generate: async (params) => {
-                let modelId = params.model || this.defaulImageModel;
+                let modelId = params.model;
                 if(this.modelAliases[modelId]) {
                     modelId = this.modelAliases[modelId];
                 }
-                params.model = modelId;
-
+                if (!modelId) {
+                    delete params.model;
+                } else {
+                    params.model = modelId;
+                }
                 if (this.imageEndpoint.includes('{prompt}')) {
                     return this._defaultImageGeneration(params, { headers: this.extraHeaders });
                 }
@@ -399,7 +405,6 @@ class Together extends Client {
         }
         super({
             baseUrl: 'https://api.together.xyz/v1',
-            defaulImageModel: 'black-forest-labs/FLUX.1.1-pro',
             modelAliases: {
                 // Models Chat/Language
                 // meta-llama
@@ -597,7 +602,9 @@ class Together extends Client {
                 if (this._cachedModels.length < 1) {
                     await this.loadModels();
                 }
-                params.model = this._getModel(params.model, this.defaulImageModel);
+                if (params.model) {
+                    params.model = this._getModel(params.model);
+                }
                 return this._regularImageGeneration(params, { headers: this.extraHeaders });
             }
         };

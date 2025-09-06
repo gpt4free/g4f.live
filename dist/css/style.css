@@ -179,7 +179,7 @@ body:not(.white) a:visited{
     background-color: var(--blur-bg);
 }
 
-.sidebar i, .bottom_buttons i, .mem0 button i {
+.sidebar i, .bottom_buttons i, .mem0 button i, .mobile-sidebar-toggle i {
     color: var(--conversations);
     cursor: pointer;
 }
@@ -697,7 +697,7 @@ input-count .text {
 }
 
 #search.active {
-    border-color: var(--accent);
+    outline: 2px solid var(--accent);
 }
 
 label.image-label {

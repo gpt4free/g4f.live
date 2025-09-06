@@ -132,9 +132,6 @@ function filter_message_content(text) {
     if (Array.isArray(text) || !text) {
         return text;
     }
-    if (text.startsWith('[!')) {
-        return "";
-    }
     return text.replace(/ \[aborted\]$/g, "").replace(/ \[error\]$/g, "")
 }
 
@@ -1689,14 +1686,14 @@ const load_conversation = async (conversation) => {
         }
         if (text) {
             if (!framework.backendUrl) {
-                synthesize_params = (new URLSearchParams({input: text, voice: "alloy"})).toString();
+                synthesize_params = (new URLSearchParams({input: filter_message(text), voice: "alloy"})).toString();
                 synthesize_url = `https://www.openai.fm/api/generate?${synthesize_params}`;
             } else {
                 if (item.synthesize) {
                     synthesize_params = item.synthesize.data
                     synthesize_provider = item.synthesize.provider;
                 } else {
-                    synthesize_params = {text: text}
+                    synthesize_params = {text: filter_message(text)}
                     synthesize_provider = "Gemini";
                 }
                 synthesize_params = (new URLSearchParams(synthesize_params)).toString();

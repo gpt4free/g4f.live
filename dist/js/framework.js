@@ -371,23 +371,28 @@ async function save_conversation(conv) {
 
 // List all conversations
 async function list_conversations() {
-  const { store } = await withStore('readonly');
-  return new Promise((resolve, reject) => {
-    const conversations = [];
-    const request = store.openCursor();
+  try {
+    const { store } = await withStore('readonly');
+    return new Promise((resolve, reject) => {
+        const conversations = [];
+        const request = store.openCursor();
 
-    request.onsuccess = event => {
-      const cursor = event.target.result;
-      if (cursor) {
-        conversations.push(cursor.value);
-        cursor.continue();
-      } else {
-        resolve(conversations);
-      }
-    };
+        request.onsuccess = event => {
+        const cursor = event.target.result;
+        if (cursor) {
+            conversations.push(cursor.value);
+            cursor.continue();
+        } else {
+            resolve(conversations);
+        }
+        };
 
-    request.onerror = () => reject(request.error);
-  });
+        request.onerror = () => reject(request.error);
+    });
+  } catch (e) {
+      console.error("IndexedDB not available:", e);
+      return [];
+  }
 }
 
 const delete_conversation = async (id) => {

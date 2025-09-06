@@ -157,6 +157,8 @@ class Client {
                 model.type = 'image';
               } else if (model.image) {
                 model.type = 'image';
+              } else if (model.task?.name) {
+                model.type = "unknown";
               }
             }
             return model;

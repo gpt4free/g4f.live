@@ -2620,7 +2620,8 @@ async function load_providers(providers, provider_options, providersListContaine
             + get_modelTags(provider)
             + (provider.hf_space ? " 🤗" : "")
             + (provider.nodriver ? " 🌐" : "")
-            + (!provider.nodriver && provider.auth ? " 🔑" : "");
+            + (!provider.nodriver && provider.auth ? " 🔑" : "")
+            + (provider.live ? " 🟢" : "")
         if (provider.parent)
             option.dataset.parent = provider.parent;
         providerSelect.appendChild(option);

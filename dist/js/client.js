@@ -207,12 +207,10 @@ class Client {
       }
       if (response.headers.get('Content-Type') === 'application/json') {
             const data = await response.json();
-            if (!data.choices) {
-                if (data.choices && data.choices[0]?.message) {
-                    data.choices[0].delta = data.choices[0].message;
-                } else if (data.output && data.output[0].content) {
-                    data.choices = [{delta: {content: data.output[0].content[0].text}}];
-                }
+            if (data.choices && data.choices[0]?.message) {
+                data.choices[0].delta = data.choices[0].message;
+            } else if (data.output && data.output[0].content) {
+                data.choices = [{delta: {content: data.output[0].content[0].text}}];
             }
             yield data;
             return;

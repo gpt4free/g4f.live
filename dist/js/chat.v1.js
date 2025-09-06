@@ -28,7 +28,6 @@ const settings          = document.querySelector(".settings");
 const chat              = document.querySelector(".chat-container");
 const album             = document.querySelector(".images");
 const log_storage       = document.querySelector(".log");
-const switchInput       = document.getElementById("switch");
 const searchButton      = document.getElementById("search");
 const paperclip         = document.querySelector(".user-input .fa-paperclip");
 const hide_systemPrompt = document.getElementById("hide-systemPrompt")
@@ -43,7 +42,8 @@ const translationSnipptes = [
     "{0} Conversations/Settings were imported successfully",
     "No content found", "Files are loaded successfully",
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
-    "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers"
+    "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers",
+    "Search Off", "Search On", "Recognition On", "Recognition Off",
 ];
 
 let login_urls_storage = {
@@ -400,7 +400,7 @@ const register_message_buttons = async () => {
         });
     })
 
-    chatBody.querySelectorAll(".message .fa-volume-high").forEach(async (el) => {
+    chatBody.querySelectorAll(".message .fa-volume-high, .message .volume-high").forEach(async (el) => {
         if (el.dataset.click) {
             return
         }
@@ -1386,7 +1386,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             conversation_id: window.conversation_id,
             conversation: conversationData,
             model: model,
-            web_search: switchInput.checked,
+            web_search: searchButton.classList.contains("active"),
             provider: provider,
             messages: messages,
             action: action,
@@ -1403,6 +1403,9 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
 };
 
 async function scroll_to_bottom() {
+    if (document.body.classList.contains("screen-reader")) {
+        return; // Skip enhancements for screen readers
+    }
     window.scrollTo(0, 0);
     chatBody.scrollTop = chatBody.scrollHeight;
 }
@@ -1737,7 +1740,7 @@ const load_conversation = async (conversation) => {
                 <span><i class="fa-regular fa-clipboard"></i></span>
             </div>
             <i class="fa-solid fa-plus"></i>
-        </button>`);
+        </button><button class="hidden volume-high"><small class="sr-only">Play Audio</small></button>`);
 
         if (actions.includes("variant")) {
             add_buttons.push(`<button class="regenerate_button">
@@ -2186,6 +2189,7 @@ const register_settings_storage = async () => {
                     case "select-one":
                         appStorage.setItem(element.id, element.value);
                         break;
+                    case "url":
                     case "text":
                     case "number":
                         appStorage.setItem(element.id, element.value);
@@ -2238,6 +2242,7 @@ const load_settings_storage = async () => {
                 case "select-one":
                     element.value = value;
                     break;
+                case "url":
                 case "text":
                 case "number":
                 case "textarea":
@@ -2639,39 +2644,40 @@ async function load_providers(providers, provider_options, providersListContaine
             }
         }
     });
+    if (!document.body.classList.contains("screen-reader")) {
+        let providersContainer = document.createElement("div");
+        providersContainer.classList.add("field", "collapsible");
+        providersContainer.innerHTML = `
+            <div class="collapsible-header">
+                <span class="label">${framework.translate('Providers (Enable/Disable)')}</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="collapsible-content hidden"></div>
+        `;
+        settings.querySelector(".paper").appendChild(providersContainer);
 
-    let providersContainer = document.createElement("div");
-    providersContainer.classList.add("field", "collapsible");
-    providersContainer.innerHTML = `
-        <div class="collapsible-header">
-            <span class="label">${framework.translate('Providers (Enable/Disable)')}</span>
-            <i class="fa-solid fa-chevron-down"></i>
-        </div>
-        <div class="collapsible-content hidden"></div>
-    `;
-    settings.querySelector(".paper").appendChild(providersContainer);
+        providers.forEach((provider) => {
+            if (!provider.parent || provider.name == "PuterJS") {
+                const name = provider.parent || provider.name;
+                let option = document.createElement("div");
+                option.classList.add("provider-item");
+                let api_key = appStorage.getItem(`${name}-api_key`);
+                option.innerHTML = `
+                    <span class="label">Enable ${provider.label}</span>
+                    <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${(provider.active_by_default || api_key) ? 'checked="checked"' : ''}/>
+                    <label for="Provider${name}" class="toogle" title="Remove provider from dropdown"></label>
+                `;
+                option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, name));
+                providersContainer.querySelector(".collapsible-content").appendChild(option);
+                provider_options[name] = option;
+            }
+        });
 
-    providers.forEach((provider) => {
-        if (!provider.parent || provider.name == "PuterJS") {
-            const name = provider.parent || provider.name;
-            let option = document.createElement("div");
-            option.classList.add("provider-item");
-            let api_key = appStorage.getItem(`${name}-api_key`);
-            option.innerHTML = `
-                <span class="label">Enable ${provider.label}</span>
-                <input id="Provider${name}" type="checkbox" name="Provider${name}" value="${name}" class="provider" ${(provider.active_by_default || api_key) ? 'checked="checked"' : ''}/>
-                <label for="Provider${name}" class="toogle" title="Remove provider from dropdown"></label>
-            `;
-            option.querySelector("input").addEventListener("change", (event) => load_provider_option(event.target, name));
-            providersContainer.querySelector(".collapsible-content").appendChild(option);
-            provider_options[name] = option;
-        }
-    });
-
-    providersContainer.querySelector(".collapsible-header").addEventListener('click', (e) => {
-        providersContainer.querySelector(".collapsible-content").classList.toggle('hidden');
-        providersContainer.querySelector(".collapsible-header").classList.toggle('active');
-    });
+        providersContainer.querySelector(".collapsible-header").addEventListener('click', (e) => {
+            providersContainer.querySelector(".collapsible-content").classList.toggle('hidden');
+            providersContainer.querySelector(".collapsible-header").classList.toggle('active');
+        });
+    }
     load_provider_login_urls(providersListContainer);
     await load_settings(provider_options);
     loadModels(providers);
@@ -2722,7 +2728,7 @@ async function on_api() {
     userInput.addEventListener("blur", async (evt) => {
         timeoutBlur = setTimeout(() => userInput.style.height = "", 200);
     });
-    codeButton.addEventListener("click", async () => {
+    codeButton?.addEventListener("click", async () => {
         clearTimeout(timeoutBlur);
         insertBackticksInTextarea(userInput);
     });
@@ -2809,8 +2815,6 @@ async function on_api() {
         });
     }
 
-    const method = switchInput.checked ? "add" : "remove";
-    searchButton.classList[method]("active");
     document.getElementById('recognition-language').placeholder = await get_recognition_language();
 }
 
@@ -2892,9 +2896,7 @@ function renderMediaSelect() {
     });
 }
 
-imageInput.onclick = () => {
-    mediaSelect.classList.toggle("hidden");
-}
+imageInput ? imageInput.onclick = () => mediaSelect.classList.toggle("hidden") : null;
 
 mediaSelect.querySelector(".close").onclick = () => {
     if (Object.values(image_storage).length) {
@@ -3615,12 +3617,9 @@ function add_pinned(selected_provider, selected_model, save=true) {
     pin_container.appendChild(pinned);
 }
 
-switchInput.addEventListener("change", () => {
-    const method = switchInput.checked ? "add" : "remove";
-    searchButton.classList[method]("active");
-});
 searchButton.addEventListener("click", async () => {
-    switchInput.click();
+    searchButton.classList.toggle("active");
+    (searchButton.querySelector("*")).innerText = (searchButton.classList.contains("active") ? framework.translate("Search On") : framework.translate("Search Off"));
 });
 
 async function save_storage(settings=false) {
@@ -3744,8 +3743,11 @@ if (SpeechRecognition) {
     microLabel.addEventListener("click", async (e) => {
         if (!stopRecognition()) {
             microLabel.classList.add("recognition");
+            microLabel.querySelector("*").innerText = framework.translate("Recognition On");
             recognition.lang = await get_recognition_language();
             recognition.start();
+        } else {
+            microLabel.querySelector("*").innerText = framework.translate("Recognition Off");
         }
     });
 }
@@ -3969,6 +3971,9 @@ function isMobileDevice() {
 
 // Function to apply mobile-specific enhancements
 function applyMobileEnhancements() {
+  if (document.body.classList.contains("screen-reader")) {
+    return; // Skip enhancements for screen readers
+  }
   // Add mobile class to body for CSS targeting
   document.body.classList.add('mobile-device');
   

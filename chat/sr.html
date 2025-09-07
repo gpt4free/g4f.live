@@ -39,9 +39,9 @@
     <script src="../dist/js/sanitize-html.js" async></script>
 
     <script type="module" defer>
-      import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker } from "../dist/js/client.js?v={{ v }}";
+      import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } from "../dist/js/client.js?v={{ v }}";
       window.providers = {
-        Audio: Client,
+        Audio: Audio,
         Azure: Client,
         PollinationsAI,
         ApiAirforce: Client,

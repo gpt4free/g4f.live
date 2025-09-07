@@ -368,7 +368,6 @@ class Audio extends Client {
     constructor(options = {}) {
         super({
             apiEndpoint: 'https://text.pollinations.ai/openai',
-            fallbackUrl: options.pop("baseUrl"),
             referrer: 'https://g4f.dev/',
             defaultModel: 'openai-audio',
             ...options
@@ -406,7 +405,7 @@ class Audio extends Client {
                 } catch(e) {
                     params.model = originalModel;
                     requestOptions.body = JSON.stringify(params);
-                    const response = await fetch(this.fallbackUrl, requestOptions);
+                    const response = await fetch(`${this.baseUrl}/chat/completions`, requestOptions);
                     return await this._regularCompletion(response);
                 }
             }
@@ -897,5 +896,5 @@ class HuggingFace extends Client {
 }
 
 
-export { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace, Worker };
+export { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace, Worker, Audio };
 export default Client;

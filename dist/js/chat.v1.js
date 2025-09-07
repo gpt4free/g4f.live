@@ -1277,6 +1277,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const selectedModel = selectedOption?.value || client.defaultModel;
         const modelType = selectedOption?.dataset.type || 'chat';
+        const isAudio = selectedOption?.dataset.audio == "true";
         try {
             // Conditionally call the correct client method based on model type.
             if (modelType === 'image') {
@@ -1298,6 +1299,24 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 safe_remove_cancel_button();
                 load_conversations();
                 hide_sidebar();
+            } else if (isAudio) {
+                // Handle audio generation
+                const response = await client.chat.completions.create({
+                    model: selectedModel,
+                    messages,
+                });
+                if (response.choices) {
+                    const audio = response.choices[0].message.audio;
+                    await add_message(
+                        window.conversation_id,
+                        "assistant",
+                        response.choices[0].message.content || `<audio controls></audio>\n\n\n${audio.transcript}`,
+                        null,
+                        message_index
+                    );
+                    await load_conversation(await get_conversation(conversation_id));
+                    play_last_message(`data:audio/mpeg;base64,${audio.data}`);
+                }
             } else {
                 // Handle chat completion (existing logic)
                 const stream = await client.chat.completions.create({

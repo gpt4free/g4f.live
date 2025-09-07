@@ -3408,6 +3408,7 @@ function set_favorite_models(provider) {
         if (value_option) {
             option.text = value_option.text;
             option.dataset.audio = value_option.dataset.audio;
+            option.dataset.type = value_option.dataset.type;
         }
         optgroup.appendChild(option);
         if (optgroup.childElementCount > 5) {

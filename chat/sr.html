@@ -148,7 +148,7 @@
                   <div class="field box">
                       <label for="systemPrompt" class="label">System Prompt</label>
                       <textarea id="systemPrompt" placeholder="You are a helpful assistant." aria-describedby="systemPrompt-desc" data-example="You can use this prompt to customize AI behavior, e.g., to enable image generation by using specified syntax."></textarea>
-                      <small id="systemPrompt-desc">Customize the AI's system prompt to personalize responses or enable features like image generation.</small>
+                      <small id="systemPrompt-desc">Customize the AI's system prompt to personalize responses.</small>
                   </div>
                   <div class="field box">
                       <label for="recognition-language" class="label" title="Set preferred language for speech recognition">Speech Recognition Language</label>
@@ -253,6 +253,16 @@
                                 <span>Send</span>
                             </button>
                         </div>
+
+                        <button class="micro-label" for="micro" aria-label="Microphone toggle">
+                            <small class="sr-only">Toggle microphone for audio input.</small>
+                            <i class="fa-solid fa-microphone-slash" aria-hidden="true"></i>
+                        </button>
+
+                        <button id="search" aria-label="Enable web search">
+                            <small class="sr-only">Enable web search</small>
+                            <i class="fa-solid fa-search" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </section>
 
@@ -293,11 +303,6 @@
                         <i class="fa-solid fa-paperclip" aria-hidden="true"></i>
                     </label>
 
-                    <label class="micro-label" for="micro" aria-label="Microphone toggle">
-                        <small class="sr-only">Toggle microphone for audio input.</small>
-                        <i class="fa-solid fa-microphone-slash" aria-hidden="true"></i>
-                    </label>
-
                     <label class="image-select" for="image" title="Select image file">
                         <small id="imageHelp" class="sr-only">Select an image file.</small>
                         <input
@@ -311,6 +316,7 @@
                         />
                         <i class="fa-regular fa-image" aria-hidden="true"></i>
                     </label>
+                    <br>
                     <label class="capture-audio" for="audio" title="Record audio">
                         <button id="record-audio" type="button" aria-label="Record audio">
                             <i class="fa-solid fa-microphone" aria-hidden="true"></i>
@@ -331,20 +337,6 @@
 
                 <nav class="chat-buttons" role="navigation" aria-label="Chat options">
                     <div class="field">
-                        <button id="search" aria-label="Enable web search">
-                            <small class="sr-only">Enable web search</small>
-                            <i class="fa-solid fa-search" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="field">
-                        <label for="model" class="sr-only">Select AI Model</label>
-                        <select name="model" id="model" aria-describedby="modelHelp">
-                            <option value="" selected>Model: Default</option>
-                        </select>
-                        <small id="modelHelp" class="sr-only">Select AI model to use for conversations.</small>
-
-                        <select name="model2" id="model2" class="hidden model"></select>
-
                         <div class="model-selector hidden" role="region" aria-label="Model search and suggestions">
                             <div id="model-suggestions" class="suggestions-dropdown" aria-live="polite"></div>
                             <input
@@ -358,6 +350,9 @@
                               aria-label="Search models"
                             />
                         </div>
+                        <label for="model" class="sr-only">Select AI Model</label>
+                        <select name="model" id="model" aria-describedby="modelHelp"></select>
+                        <small id="modelHelp" class="sr-only">Select AI model to use for conversations.</small>
                     </div>
                     <div class="field">
                         <button id="model_edit" type="button" aria-label="Edit model settings">

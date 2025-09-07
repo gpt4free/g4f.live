@@ -60,7 +60,7 @@ framework.translateElements = function (elements = null) {
     if (!framework.translations) {
         return;
     }
-    elements = elements || document.querySelectorAll("p:not(:has(*)), a:not(:has(*)), h1, h2, h3, h4, h5, h6, button:not(:has(*)), title, span:not(:has(*)), strong, a:not(:has(*)), [data-translate], input, textarea, label:not(:has(*)), i, option[value='']");
+    elements = elements || document.querySelectorAll("p:not(:has(*)), a:not(:has(*)), h1, h2, h3, h4, h5, h6, button:not(:has(*)), title, span:not(:has(*)), strong, a:not(:has(*)), [data-translate], input, textarea, small, label:not(:has(*)), i, option[value='']");
     elements.forEach(function (element) {
         let parent = element.parentElement;
         if (element.classList.contains("notranslate") || parent && parent.classList.contains("notranslate")) {

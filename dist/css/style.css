@@ -164,6 +164,7 @@ body:not(.white) a:visited{
     display: flex;
     align-items: center;
     gap: 4px;
+    text-decoration: none;
 }
 
 .sidebar .convo .fa-ellipsis-vertical {

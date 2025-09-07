@@ -19,7 +19,6 @@ const microLabel        = document.querySelector(".micro-label");
 const inputCount        = document.getElementById("input-count").querySelector(".text");
 const providerSelect    = document.getElementById("provider");
 const modelSelect       = document.getElementById("model");
-const modelProvider     = document.getElementById("model2");
 const modelSearch       = document.getElementById("model-search");
 const modelSelector     = document.querySelector(".model-selector");
 const modelSuggestions  = document.getElementById('model-suggestions');
@@ -33,7 +32,7 @@ const paperclip         = document.querySelector(".user-input .fa-paperclip");
 const hide_systemPrompt = document.getElementById("hide-systemPrompt")
 const slide_systemPrompt_icon = document.querySelector(".slide-header i");
 
-const optionElementsSelector = ".settings input, .settings textarea, .chat-body input, #model, #model2, #provider";
+const optionElementsSelector = ".settings input, .settings textarea, .chat-body input, #model, #provider";
 
 const translationSnipptes = [
     "with", "**An error occured:**", "Private Conversation", "New Conversation", "Regenerate", "Continue",
@@ -43,7 +42,7 @@ const translationSnipptes = [
     "No content found", "Files are loaded successfully",
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
     "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers",
-    "Search Off", "Search On", "Recognition On", "Recognition Off",
+    "Search Off", "Search On", "Recognition On", "Recognition Off", "Delete Conversation",
 ];
 
 let login_urls_storage = {
@@ -90,9 +89,6 @@ let stopRecognition = ()=>{};
 let providerModelSignal = null;
 let searchModels = {};
 let client = null;
-
-// Hotfix for mobile
-document.querySelector(".container").style.maxHeight = window.innerHeight + "px"
 
 appStorage = window.localStorage || {
     setItem: (key, value) => self[key] = value,
@@ -1278,7 +1274,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         message = last_message?.content;
     }
     if (client) {
-        const selectedOption = modelProvider.options[modelProvider.selectedIndex];
+        const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const selectedModel = selectedOption?.value || client.defaultModel;
         const modelType = selectedOption?.dataset.type || 'chat';
         try {
@@ -1565,7 +1561,7 @@ const set_conversation = async (conversation_id) => {
 
 const new_conversation = async (private = false) => {
     if (window.location.hash) {
-        add_url_to_history("#new");
+        add_url_to_history(private ? "#private" : "#new");
     }
     window.conversation_id = private ? null : generateUUID();
     document.title = window.title || document.title;
@@ -2057,17 +2053,27 @@ const load_conversations = async () => {
         let convo = document.createElement("div");
         convo.classList.add("convo");
         convo.id = `convo-${conversation.id}`;
+        let choise;
+        if (document.body.classList.contains("screen-reader")) {
+            choise = `<button onclick="on_delete_conversation('${conversation.id}')" class="delete">
+                    ${framework.translate('Delete Conversation')}
+                </button>`;
+        } else {
+            choise = `
+                <i onclick="show_option('${conversation.id}')" class="fa-solid fa-ellipsis-vertical" id="conv-${conversation.id}"></i>
+                <div id="cho-${conversation.id}" class="choise" style="display:none;">
+                    <i onclick="on_delete_conversation('${conversation.id}')" class="fa-solid fa-trash"></i>
+                    <i onclick="hide_option('${conversation.id}')" class="fa-regular fa-x"></i>
+                </div>
+            `;
+        }
         convo.innerHTML = `
-            <div class="left" onclick="set_conversation('${conversation.id}')">
+            <a class="left" href="#${conversation.id}" onclick="set_conversation('${conversation.id}'); return false;">
                 <i class="fa-regular fa-comments"></i>
                 <span class="datetime">${conversation.updated ? toLocaleDateString(conversation.updated) : ""}</span>
                 <span class="convo-title">${shareIcon} ${framework.escape(conversation.new_title ? conversation.new_title : conversation.title)}</span>
-            </div>
-            <i onclick="show_option('${conversation.id}')" class="fa-solid fa-ellipsis-vertical" id="conv-${conversation.id}"></i>
-            <div id="cho-${conversation.id}" class="choise" style="display:none;">
-                <i onclick="on_delete_conversation('${conversation.id}')" class="fa-solid fa-trash"></i>
-                <i onclick="hide_option('${conversation.id}')" class="fa-regular fa-x"></i>
-            </div>
+            </a>
+            ${choise}
         `;
         box_conversations.appendChild(convo);
     });
@@ -2535,8 +2541,9 @@ async function on_load() {
         await load_conversations();
         return;
     }
-    const conversation_id = window.location.hash.replace("#", "");
-    if (conversation_id && conversation_id != "new" && conversation_id != "menu") {
+    let conversation_id = window.location.hash.replace("#", "");
+    conversation_id = ["new", "menu", "private"].includes(conversation_id) ? null : conversation_id;
+    if (conversation_id) {
         window.conversation_id = conversation_id;
     } else {
         window.conversation_id = generateUUID();
@@ -2547,9 +2554,9 @@ async function on_load() {
         userInput.value = chat_params.get("prompt");
         userInput.style.height = "100%";
         userInput.focus();
-        await load_conversations();
-    } else if (!conversation_id) {
-        await new_conversation();
+    }
+    if (!conversation_id) {
+        await new_conversation(window.location.hash == "#private");
     } else {
         await load_conversations();
     }
@@ -2566,13 +2573,6 @@ async function on_load() {
 
 const load_provider_option = (input, provider_name) => {
     if (input.checked) {
-        modelSelect.querySelectorAll(`option[data-disabled_providers*="${provider_name}"]`).forEach(
-            (el) => {
-                el.dataset.disabled_providers = el.dataset.disabled_providers ? el.dataset.disabled_providers.split(" ").filter((provider) => provider!=provider_name).join(" ") : "";
-                el.dataset.providers = (el.dataset.providers ? el.dataset.providers + " " : "") + provider_name;
-                modelSelect.querySelectorAll(`option[value="${el.value}"]`).forEach((o)=>o.removeAttribute("disabled", "disabled"))
-            }
-        );
         providerSelect.querySelectorAll(`option[value="${provider_name}"]`).forEach(
             (el) => el.removeAttribute("disabled")
         );
@@ -2582,13 +2582,6 @@ const load_provider_option = (input, provider_name) => {
         settings.querySelector(`.field:has(#${provider_name}-api_key)`)?.classList.remove("hidden");
         settings.querySelector(`.field:has(#${provider_name}-api_base)`)?.classList.remove("hidden");
     } else {
-        modelSelect.querySelectorAll(`option[data-providers*="${provider_name}"]`).forEach(
-            (el) => {
-                el.dataset.providers = el.dataset.providers ? el.dataset.providers.split(" ").filter((provider) => provider!=provider_name).join(" ") : "";
-                el.dataset.disabled_providers = (el.dataset.disabled_providers ? el.dataset.disabled_providers + " " : "") + provider_name;
-                if (!el.dataset.providers) modelSelect.querySelectorAll(`option[value="${el.value}"]`).forEach((o)=>o.setAttribute("disabled", "disabled"))
-            }
-        );
         providerSelect.querySelectorAll(`option[value="${provider_name}"]`).forEach(
             (el) => el.setAttribute("disabled", "disabled")
         );
@@ -2958,7 +2951,7 @@ audioButton.addEventListener('click', async (event) => {
         audio: true
     });
 
-    if (modelProvider.options[modelProvider.selectedIndex].dataset.audio) {
+    if (modelSelect.options[modelSelect.selectedIndex].dataset.audio) {
         mediaRecorder = new Recorder(stream);
         mediaRecorder.start();
         return;
@@ -3204,8 +3197,6 @@ function get_selected_model() {
     let model = null;
     if (modelSearch.value) {
         return modelSearch.value;
-    } else if (modelProvider.selectedIndex >= 0) {
-        model = modelProvider.options[modelProvider.selectedIndex];
     } else if (modelSelect.selectedIndex >= 0) {
         model = modelSelect.options[modelSelect.selectedIndex];
     }
@@ -3389,20 +3380,18 @@ async function load_provider_models(provider=null, search=null) {
     if (!provider) {
         provider = providerSelect.value;
     }
-    modelSelect.classList.add("hidden");
-    modelProvider.classList.remove("hidden");
-    modelProvider.innerHTML = '';
-    modelProvider.name = `model[${provider}]`;
+    modelSelect.classList.remove("hidden");
+    modelSelect.innerHTML = '';
+    modelSelect.name = `model[${provider}]`;
     if (!provider) {
-        modelProvider.classList.add("hidden");
+        modelSelect.classList.add("hidden");
         return;
     }
     if (await initClient()) {
         return;
     }
     function set_provider_models(models) {
-        modelProvider.innerHTML = '';
-        modelSelect.classList.add("hidden");
+        modelSelect.innerHTML = '';
         let defaultIndex = 0;
         function add_options(group, models, search) {
             models.forEach((model, i) => {
@@ -3428,13 +3417,13 @@ async function load_provider_models(provider=null, search=null) {
                     if (optgroup.childElementCount == 0) {
                         return;
                     }
-                    modelProvider.appendChild(optgroup);
+                    modelSelect.appendChild(optgroup);
                 }
             });
         }
         if (Array.isArray(models)) {
-            add_options(modelProvider, models, search);
-            modelProvider.selectedIndex = defaultIndex;
+            add_options(modelSelect, models, search);
+            modelSelect.selectedIndex = defaultIndex;
         }
         const optgroup = document.createElement('optgroup');
         optgroup.label = "Favorites:";
@@ -3444,7 +3433,7 @@ async function load_provider_models(provider=null, search=null) {
             const option = document.createElement('option');
             option.value = key;
             option.text = key;
-            const value_option = modelProvider.querySelector(`option[value="${key}"]`)
+            const value_option = modelSelect.querySelector(`option[value="${key}"]`)
             if (value_option) {
                 option.text = value_option.text;
                 option.dataset.audio = value_option.dataset.audio;
@@ -3463,7 +3452,7 @@ async function load_provider_models(provider=null, search=null) {
         favorites[provider] = selected;
         appStorage.setItem("favorites", JSON.stringify(favorites));
         optgroup.lastChild?.setAttribute("selected", "selected");
-        modelProvider.appendChild(optgroup);
+        modelSelect.appendChild(optgroup);
     }
     let models = appStorage.getItem(`${provider}:models`);
     if (models) {
@@ -3477,15 +3466,15 @@ async function load_provider_models(provider=null, search=null) {
     }
 };
 providerSelect.addEventListener("change", () => load_provider_models());
-modelProvider.addEventListener("change", () => {
+modelSelect.addEventListener("change", () => {
     const favorites = appStorage.getItem("favorites") ? JSON.parse(appStorage.getItem("favorites")) : {};
     const selected = favorites[providerSelect.value] || {};
-    if (!selected[modelProvider.value]) {
+    if (!selected[modelSelect.value]) {
         let option = document.createElement('option');
-        option.value = modelProvider.value;
-        option.text = modelProvider.querySelector(`option[value="${modelProvider.value}"]`).text;
+        option.value = modelSelect.value;
+        option.text = modelSelect.querySelector(`option[value="${modelSelect.value}"]`).text;
         option.selected = true;
-        const optgroup = modelProvider.querySelector('optgroup:last-child');
+        const optgroup = modelSelect.querySelector('optgroup:last-child');
         if (optgroup) {
             optgroup.appendChild(option);
             if (optgroup.childElementCount > 5) {
@@ -3494,22 +3483,22 @@ modelProvider.addEventListener("change", () => {
             }
         }
     }
-    const selected_values = selected[modelProvider.value] ? selected[modelProvider.value] + 1 : 1;
-    delete selected[modelProvider.value];
-    selected[modelProvider.value] = selected_values;
+    const selected_values = selected[modelSelect.value] ? selected[modelSelect.value] + 1 : 1;
+    delete selected[modelSelect.value];
+    selected[modelSelect.value] = selected_values;
     favorites[providerSelect.value] = selected;
     appStorage.setItem("favorites", JSON.stringify(favorites));
 });
 document.getElementById("model_edit")?.addEventListener("click", () => {
     if (!modelSelector.classList.contains("hidden")) {
         providerSelect.classList.remove("hidden");
-        modelProvider.classList.remove("hidden");
+        modelSelect.classList.remove("hidden");
         modelSelector.classList.add("hidden");
         modelSearch.value = "";
         return;
     }
     providerSelect.classList.add("hidden");
-    modelProvider.classList.add("hidden");
+    modelSelect.classList.add("hidden");
     modelSelector.classList.remove("hidden");
     modelSearch.focus()
 });
@@ -3549,10 +3538,10 @@ modelSearch.addEventListener('input', function() {
       modelSearch.value = "";
       providerSelect.value = match.provider;
       await load_provider_models();
-      modelProvider.value = match.model.model || match.model;
+      modelSelect.value = match.model.model || match.model;
       modelSelector.classList.add("hidden");
       providerSelect.classList.remove("hidden");
-      modelProvider.classList.remove("hidden");
+      modelSelect.classList.remove("hidden");
       modelSuggestions.innerHTML = '';
       console.log(`Selected model: ${match.model}`);
     });
@@ -3976,6 +3965,10 @@ function applyMobileEnhancements() {
   if (document.body.classList.contains("screen-reader")) {
     return; // Skip enhancements for screen readers
   }
+
+  // Hotfix for mobile
+  document.querySelector(".container").style.maxHeight = window.innerHeight + "px";
+
   // Add mobile class to body for CSS targeting
   document.body.classList.add('mobile-device');
   
@@ -4351,10 +4344,10 @@ async function initClient() {
 }
 
 async function loadClientModels() {
-    modelProvider.innerHTML = `<option value="" disabled selected>${framework.translate("Loading...")}</option>`;
+    modelSelect.innerHTML = `<option value="" disabled selected>${framework.translate("Loading...")}</option>`;
     try {
         const models = await client.models.list();
-        modelProvider.innerHTML = '';
+        modelSelect.innerHTML = '';
         models.forEach(model => {
             if (model.type && !["chat", "image", "text"].includes(model.type)) {
                 return;
@@ -4370,11 +4363,11 @@ async function loadClientModels() {
                 opt.dataset.audio = model.audio;
             }
             if (model.id === client.defaultModel) opt.selected = true;
-            modelProvider.appendChild(opt);
+            modelSelect.appendChild(opt);
         });
     } catch (err) {
         console.error('Model load failed:', err);
-        modelProvider.innerHTML = "";
+        modelSelect.innerHTML = "";
     }
 }
 

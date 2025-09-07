@@ -22,7 +22,7 @@ function add_error(event) {
     logStorage.appendChild(p);
 }
 
-window.addEventListener('error', add_log, true);
+window.addEventListener('error', add_error, true);
 
 if (window.location.origin === G4F_HOST || window.location.origin.endsWith(".g4f.dev")) {
     window.oauthConfig = {

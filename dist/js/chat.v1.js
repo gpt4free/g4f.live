@@ -4331,6 +4331,8 @@ async function initClient() {
         options.baseUrl = "https://g4f.dev/api/gpt-oss-120b";
     } else if (provider == "Azure") {
         options.baseUrl = "https://g4f.dev/api/azure";
+    } else if (provider == "Audio") {
+        options.baseUrl = "https://g4f.dev/api/audio";
     }
 
     if (!window.providers[provider]) {

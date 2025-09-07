@@ -43,7 +43,7 @@ const translationSnipptes = [
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
     "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers",
     "Search Off", "Search On", "Recognition On", "Recognition Off", "Delete Conversation",
-    "Favorite Models:"
+    "Favorite Models:", "Stop Recording", "Record Audio", "Upload Audio",
 ];
 
 let login_urls_storage = {
@@ -2938,10 +2938,12 @@ mediaSelect.querySelector(".close").onclick = () => {
 
 audioButton.addEventListener('click', async (event) => {
     const i = audioButton.querySelector("i");
+    const t = audioButton.querySelector("span");
     if (mediaRecorder) {
         i.classList.remove("fa-stop");
         i.classList.add("fa-microphone");
         mediaRecorder.stop();
+        t.innerText = framework.translate("Upload Audio");
         if(mediaRecorder.stream) {
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
         }
@@ -2954,6 +2956,7 @@ audioButton.addEventListener('click', async (event) => {
             }
             await ask_gpt(get_message_id(), -1, false, provider, model, "next");
             mediaRecorder.wavBlob = null;
+            t.innerText = framework.translate("Record Audio");
         }
         mediaRecorder = null;
         return;
@@ -2961,6 +2964,7 @@ audioButton.addEventListener('click', async (event) => {
 
     i.classList.remove("fa-microphone");
     i.classList.add("fa-stop");
+    t.innerText = framework.translate("Stop Recording");
 
     stream = await navigator.mediaDevices.getUserMedia({
         audio: true
@@ -3012,6 +3016,7 @@ audioButton.addEventListener('click', async (event) => {
             });
             await handle_ask(false, media);
         }
+        t.innerText = framework.translate("Record Audio");
     });
 
     mediaRecorder.start()

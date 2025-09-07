@@ -151,6 +151,20 @@ function fallback_clipboard (text) {
     document.body.removeChild(textBox);
 }
 
+function add_log(error) {
+    let p = document.createElement("p");
+    p.innerText = error.message ? (error.message + (error.filename ? `\n${error.filename}:${error.lineno}:${error.colno}` : "")) : error;
+    log_storage.appendChild(p);
+}
+
+window.addEventListener('error', add_log, true);
+
+window.addEventListener('error', function (evt) {
+    if (evt.target && (evt.target.src || evt.target.href)) {
+        add_log(`Resource failed to load: ${evt.target.src || evt.target.href}`);
+    }
+}, true);
+
 const iframe_container = document.querySelector(".hljs-iframe-container");
 const iframe = document.querySelector(".hljs-iframe");
 const iframe_close = Object.assign(document.createElement("button"), {

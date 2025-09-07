@@ -1,4 +1,9 @@
 const G4F_HOST = "https://g4f.dev";
+const DB_NAME = 'chat-db';
+const STORE_NAME = 'conversations';
+const VERSION = 1;
+let privateConversation = null;
+
 if (window.location.origin === G4F_HOST || window.location.origin.endsWith(".g4f.dev")) {
     window.oauthConfig = {
         clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
@@ -267,13 +272,6 @@ async function genAK(_0x3d01f3){
     window[_0x2cd1('0x8')][_0x2cd1('0x9')](_0x2cd1('0xa'),_0x36d9be);
     return _0x36d9be;
 }
-(async ()=>{
-    const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
-    const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
-    if (window.location.pathname.startsWith("/chat/")) {
-        await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
-    }
-})();
 async function gen() {
     const user = userInput.value.trim();
     if (!user) {
@@ -302,20 +300,13 @@ async function includeAdsense() {
     script.crossOrigin = "anonymous";
     document.head.appendChild(script);
 }
-if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
-    includeAdsense().catch(console.error);
-}
+
 framework.query = query;
 framework.markdown = renderMarkdown;
 framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
 framework.getPublicKey = getPublicKey;
-
-let privateConversation = null;
-const DB_NAME = 'chat-db';
-const STORE_NAME = 'conversations';
-const VERSION = 1;
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -406,4 +397,16 @@ function chunkArray(array, chunkSize) {
     { length: Math.ceil(array.length / chunkSize) },
     (_, index) => array.slice(index * chunkSize, index * chunkSize + chunkSize)
   );
+}
+
+(async ()=>{
+    const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
+    const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
+    if (window.location.pathname.startsWith("/chat/")) {
+        await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+    }
+})();
+
+if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
+    includeAdsense().catch(console.error);
 }

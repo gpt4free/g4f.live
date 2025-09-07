@@ -2761,7 +2761,7 @@ async function on_api() {
 
     const optgroup = document.createElement("optgroup");
     optgroup.label = framework.translate('Live Providers');
-    Object.entries(window.providers).forEach(([name, _]) => {
+    Object.entries(window.providers || {}).forEach(([name, _]) => {
         let option = document.createElement("option");
         option.value = name;
         option.dataset.live = "true";

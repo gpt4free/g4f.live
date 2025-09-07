@@ -6,8 +6,10 @@ const logStorage = document.querySelector(".log");
 
 let privateConversation = null;
 
-function add_error(event) {
-    console.error(event);
+function add_error(event, log=false) {
+    if (log) {
+        console.error(event);
+    }
     if (!logStorage) {
         return;
     }
@@ -17,7 +19,7 @@ function add_error(event) {
     } else if (event.message) {
         p.innerText = `${event.type}: ${event.message}` + (event.filename ? `\n${event.filename}:${event.lineno}:${event.colno}` : "");
     } else {
-        p.innerText = event.toString ? event.toString() : event;
+        return;
     }
     logStorage.appendChild(p);
 }
@@ -421,7 +423,7 @@ try {
         framework.translateElements();
     }
 } catch(e) {
-    add_error(e);
+    add_error(e, true);
 }
 
 (async ()=>{
@@ -432,7 +434,7 @@ try {
             await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
         }
     } catch(e) {
-        add_error(e);
+        add_error(e, true);
     }
 })();
 

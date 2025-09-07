@@ -302,7 +302,7 @@ async function includeAdsense() {
     document.head.appendChild(script);
 }
 if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
-    includeAdsense().catch(console.error);
+    //includeAdsense().catch(console.error);
 }
 framework.query = query;
 framework.markdown = renderMarkdown;

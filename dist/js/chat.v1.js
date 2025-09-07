@@ -26,7 +26,6 @@ const chatPrompt        = document.getElementById("chatPrompt");
 const settings          = document.querySelector(".settings");
 const chat              = document.querySelector(".chat-container");
 const album             = document.querySelector(".images");
-const log_storage       = document.querySelector(".log");
 const searchButton      = document.getElementById("search");
 const paperclip         = document.querySelector(".user-input .fa-paperclip");
 const hide_systemPrompt = document.getElementById("hide-systemPrompt")
@@ -150,20 +149,6 @@ function fallback_clipboard (text) {
     }
     document.body.removeChild(textBox);
 }
-
-function add_log(error) {
-    let p = document.createElement("p");
-    p.innerText = error.message ? (error.message + (error.filename ? `\n${error.filename}:${error.lineno}:${error.colno}` : "")) : error;
-    log_storage.appendChild(p);
-}
-
-window.addEventListener('error', add_log, true);
-
-window.addEventListener('error', function (evt) {
-    if (evt.target && (evt.target.src || evt.target.href)) {
-        add_log(`Resource failed to load: ${evt.target.src || evt.target.href}`);
-    }
-}, true);
 
 const iframe_container = document.querySelector(".hljs-iframe-container");
 const iframe = document.querySelector(".hljs-iframe");
@@ -943,7 +928,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         }
         let p = document.createElement("p");
         p.innerText = message.error;
-        log_storage.appendChild(p);
+        logStorage.appendChild(p);
         await api("log", {...message, provider: provider_storage[message_id]});
     } else if (message.type == "preview") {
         let img;
@@ -976,7 +961,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "log") {
         let p = document.createElement("p");
         p.innerText = message.log;
-        log_storage.appendChild(p);
+        logStorage.appendChild(p);
     } else if (message.type == "synthesize") {
         synthesize_storage[message_id] = message.synthesize;
     } else if (message.type == "title") {
@@ -2120,7 +2105,7 @@ async function hide_sidebar(remove_shown=false) {
     }
     settings.classList.add("hidden");
     chat.classList.remove("hidden");
-    log_storage.classList.add("hidden");
+    logStorage.classList.add("hidden");
     await hide_settings();
     if (window.location.hash.endsWith("#menu") || window.location.pathname.endsWith("#settings")) {
         history.back();
@@ -2191,7 +2176,7 @@ function open_settings() {
         chat.classList.remove("hidden");
         add_url_to_history(window.conversation_id ? `#${window.conversation_id}` : window.location.search);
     }
-    log_storage.classList.add("hidden");
+    logStorage.classList.add("hidden");
 }
 
 const register_settings_storage = async () => {
@@ -3765,9 +3750,9 @@ if (SpeechRecognition) {
 }
 
 document.getElementById("showLog") && document.getElementById("showLog").addEventListener("click", ()=> {
-    log_storage.classList.remove("hidden");
+    logStorage.classList.remove("hidden");
     settings.classList.add("hidden");
-    log_storage.scrollTop = log_storage.scrollHeight;
+    logStorage.scrollTop = logStorage.scrollHeight;
 });
 
 // Mobile Experience Enhancements

@@ -307,7 +307,7 @@ class PollinationsAI extends Client {
             apiEndpoint: 'https://text.pollinations.ai/openai',
             imageEndpoint: 'https://image.pollinations.ai/prompt/{prompt}',
             defaultModel: 'gpt-5-nano',
-            referrer: 'https://g4f.dev',
+            referrer: 'https://g4f.dev/',
             modelAliases: {
                 "sdxl-turbo": "turbo",
                 "gpt-image": "gptimage",
@@ -361,6 +361,57 @@ class PollinationsAI extends Client {
           }
         }
       };
+    }
+}
+
+class Audio extends Client {
+    constructor(options = {}) {
+        super({
+            apiEndpoint: 'https://text.pollinations.ai/openai',
+            fallbackUrl: options.pop("baseUrl"),
+            referrer: 'https://g4f.dev/',
+            defaultModel: 'openai-audio',
+            ...options
+        });
+    }
+
+    get chat() {
+        return {
+            completions: {
+            create: async (params) => {
+                const originalModel = params.model;
+
+                params.model = this.defaultModel;
+
+                if (this.referrer) {
+                    params.referrer = this.referrer;
+                }
+                if (!params.audio) {
+                    params.audio = {
+                        "voice": "alloy",
+                        "format": "mp3"
+                    }
+                }
+                if (!params.modalities) {
+                    params.modalities = ["text", "audio"]
+                }
+                const requestOptions = {
+                    method: 'POST',
+                    headers: this.extraHeaders,
+                    body: JSON.stringify(params)
+                };
+                try {
+                    const response = await fetch(this.apiEndpoint, requestOptions);
+                    return await this._regularCompletion(response);
+                } catch(e) {
+                    params.model = originalModel;
+                    requestOptions.body = JSON.stringify(params);
+                    const response = await fetch(this.fallbackUrl, requestOptions);
+                    return await this._regularCompletion(response);
+                }
+            }
+            }
+        };
     }
 }
 

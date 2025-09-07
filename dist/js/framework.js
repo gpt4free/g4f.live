@@ -2,7 +2,27 @@ const G4F_HOST = "https://g4f.dev";
 const DB_NAME = 'chat-db';
 const STORE_NAME = 'conversations';
 const VERSION = 1;
+const logStorage = document.querySelector(".log");
+
 let privateConversation = null;
+
+function add_error(event) {
+    console.error(event);
+    if (!logStorage) {
+        return;
+    }
+    let p = document.createElement("p");
+    if (event.target && (event.target.src || event.target.href)) {
+        p.innerText = `Resource failed to load: ${event.target.src || event.target.href}`;
+    } else if (event.message) {
+        p.innerText = `${event.type}: ${event.message}` + (event.filename ? `\n${event.filename}:${event.lineno}:${event.colno}` : "");
+    } else {
+        p.innerText = event.toString ? event.toString() : event;
+    }
+    logStorage.appendChild(p);
+}
+
+window.addEventListener('error', add_log, true);
 
 if (window.location.origin === G4F_HOST || window.location.origin.endsWith(".g4f.dev")) {
     window.oauthConfig = {
@@ -84,13 +104,6 @@ framework.translateElements = function (elements = null) {
             element.placeholder = framework.translate(element.placeholder);
         }
     });
-}
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", async () => {
-        framework.translateElements();
-    });
-} else {
-    framework.translateElements();
 }
 window.addEventListener('load', async () => {
     if (!document.body.classList.contains("translate")) {
@@ -399,14 +412,30 @@ function chunkArray(array, chunkSize) {
   );
 }
 
+try {
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", async () => {
+            framework.translateElements();
+        });
+    } else {
+        framework.translateElements();
+    }
+} catch(e) {
+    add_error(e);
+}
+
 (async ()=>{
-    const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
-    const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
-    if (window.location.pathname.startsWith("/chat/")) {
-        await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+    try {
+        const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
+        const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
+        if (window.location.pathname.startsWith("/chat/")) {
+            await genAK(window[_0x2c57('0x0')][_0x2c57('0x1')](_0x2c57('0x4'))||'')
+        }
+    } catch(e) {
+        add_error(e);
     }
 })();
 
 if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
-    includeAdsense().catch(console.error);
+    includeAdsense().catch(add_error);
 }

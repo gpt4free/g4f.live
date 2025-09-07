@@ -1,7 +1,7 @@
 const chatBody          = document.getElementById(`chatBody`);
 const userInput         = document.getElementById("userInput");
 const codeButton        = document.querySelector(".code");
-const box_conversations = document.querySelector(`.top`);
+const box_conversations = document.querySelector(`#box_conversations, .top`);
 const stop_generating   = document.querySelector(`.stop_generating`);
 const regenerate_button = document.querySelector(`.regenerate`);
 const sidebar           = document.querySelector(".sidebar");
@@ -43,6 +43,7 @@ const translationSnipptes = [
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
     "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers",
     "Search Off", "Search On", "Recognition On", "Recognition Off", "Delete Conversation",
+    "Favorite Models:"
 ];
 
 let login_urls_storage = {
@@ -3375,6 +3376,31 @@ function get_api_key_by_provider(provider) {
     return api_key;
 }
 
+function set_favorite_models(provider) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = framework.translate("Favorite Models:");
+    const favorites = JSON.parse(appStorage.getItem("favorites") || "{}");
+    const selected = favorites[provider] || {};
+    Object.keys(selected).forEach((key) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.text = key;
+        const value_option = modelSelect.querySelector(`option[value="${key}"]`)
+        if (value_option) {
+            option.text = value_option.text;
+            option.dataset.audio = value_option.dataset.audio;
+        }
+        optgroup.appendChild(option);
+        if (optgroup.childElementCount > 5) {
+            delete selected[optgroup.firstChild.value];
+            optgroup.removeChild(optgroup.firstChild);
+        }
+    });
+    favorites[provider] = selected;
+    appStorage.setItem("favorites", JSON.stringify(favorites));
+    optgroup.lastChild?.setAttribute("selected", "selected");
+    modelSelect.appendChild(optgroup);
+}
 
 async function load_provider_models(provider=null, search=null) {
     if (!provider) {
@@ -3390,7 +3416,7 @@ async function load_provider_models(provider=null, search=null) {
     if (await initClient()) {
         return;
     }
-    function set_provider_models(models) {
+    function set_provider_models(models, provider) {
         modelSelect.innerHTML = '';
         let defaultIndex = 0;
         function add_options(group, models, search) {
@@ -3424,44 +3450,19 @@ async function load_provider_models(provider=null, search=null) {
         if (Array.isArray(models)) {
             add_options(modelSelect, models, search);
             modelSelect.selectedIndex = defaultIndex;
+            if (models.length > 2) {
+                set_favorite_models(provider);
+            }
         }
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = "Favorites:";
-        const favorites = JSON.parse(appStorage.getItem("favorites") || "{}");
-        const selected = favorites[provider] || {};
-        Object.keys(selected).forEach((key) => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.text = key;
-            const value_option = modelSelect.querySelector(`option[value="${key}"]`)
-            if (value_option) {
-                option.text = value_option.text;
-                option.dataset.audio = value_option.dataset.audio;
-            }
-            if (search && !option.text.includes(search)) {
-                return;
-            }
-            if (optgroup.childElementCount > 0) {
-                optgroup.appendChild(option);
-                if (optgroup.childElementCount > 5) {
-                    delete selected[optgroup.firstChild.value];
-                    optgroup.removeChild(optgroup.firstChild);
-                }
-            }
-        });
-        favorites[provider] = selected;
-        appStorage.setItem("favorites", JSON.stringify(favorites));
-        optgroup.lastChild?.setAttribute("selected", "selected");
-        modelSelect.appendChild(optgroup);
     }
     let models = appStorage.getItem(`${provider}:models`);
     if (models) {
         models = JSON.parse(models);
-        set_provider_models(models);
+        set_provider_models(models, provider);
     }
     models = await api('models', provider);
     if (models) {
-        set_provider_models(models);
+        set_provider_models(models, provider);
         appStorage.setItem(`${provider}:models`, JSON.stringify(models));
     }
 };
@@ -4367,6 +4368,9 @@ async function loadClientModels() {
             if (model.id === client.defaultModel) opt.selected = true;
             modelSelect.appendChild(opt);
         });
+        if (models.length > 2) {
+            set_favorite_models(providerSelect.value);
+        }
     } catch (err) {
         console.error('Model load failed:', err);
         modelSelect.innerHTML = "";

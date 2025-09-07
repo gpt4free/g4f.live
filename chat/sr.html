@@ -31,15 +31,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../dist/img/favicon-16x16.png" />
     <link rel="manifest" href="../dist/img/site.webmanifest" />
 
-    <script src="../dist/js/framework.js?v=2-sr" defer></script>
-    <script src="../dist/js/chat.v1.js?v=2-sr" defer></script>
+    <script src="../dist/js/framework.js?v={{ v }}" defer></script>
+    <script src="../dist/js/chat.v1.js?v={{ v }}" defer></script>
     <script src="../dist/js/recorder.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js" defer></script>
     <script src="../dist/js/sanitize-html.js" async></script>
 
     <script type="module" defer>
-      import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker } from "../dist/js/client.js";
+      import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker } from "../dist/js/client.js?v={{ v }}";
       window.providers = {
         Audio: Client,
         Azure: Client,
@@ -74,15 +74,16 @@
                     </button>
                 </header>
                 <nav class="top" aria-label="Conversation actions">
-                    <button class="new_convo" onclick="new_conversation()" aria-label="Start a new conversation">
+                    <button class="new_convo" onclick="new_conversation()" aria-label="Start a new conversation" tabindex="0">
                         <i class="fa-regular fa-plus" aria-hidden="true"></i>
                         <span>New Conversation</span>
                     </button>
-                    <button class="new_convo" onclick="new_conversation(true)" aria-label="Start a private conversation">
+                    <button class="new_convo" onclick="new_conversation(true)" aria-label="Start a private conversation" tabindex="0">
                         <i class="fa-solid fa-user-secret" aria-hidden="true"></i>
                         <span>Private Conversation</span>
                     </button>
                     <br><br>
+                    <div id="box_conversations" class="conversations" role="region" aria-live="polite" aria-label="List of conversations"></div>
                 </nav>
                 <section class="bottom_buttons" aria-label="Support and links">
                     <button onclick="open_settings();" aria-label="Open settings">
@@ -354,7 +355,7 @@
                               aria-label="Search models"
                             />
                         </div>
-                        <br><br>
+                        <br>
                         <label for="model" class="sr-only">Select AI Model</label>
                         <select name="model" id="model" aria-describedby="modelHelp"></select>
                         <small id="modelHelp" class="sr-only">Select AI model to use for conversations.</small>

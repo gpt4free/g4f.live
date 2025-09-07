@@ -2553,8 +2553,10 @@ async function on_load() {
     } else {
         await load_conversations();
     }
-    hljs.addPlugin(new HtmlRenderPlugin())
-    hljs.addPlugin(new CopyButtonPlugin());
+    if (window.hljs) {
+        hljs.addPlugin(new HtmlRenderPlugin())
+        hljs.addPlugin(new CopyButtonPlugin());
+    }
     // Ensure sidebar is shown by default on desktop
     if (window.innerWidth >= 640) {
         sidebar.classList.add("shown");
@@ -2797,9 +2799,9 @@ async function on_api() {
     slide_systemPrompt_icon.addEventListener("click", ()=>{
         update_systemPrompt_icon(slide_systemPrompt_icon.classList.contains("fa-angles-up"));
     });
-    hide_systemPrompt.addEventListener('change', async (event) => {
+    hide_systemPrompt ? hide_systemPrompt.addEventListener('change', async (event) => {
         update_systemPrompt_icon(event.target.checked);
-    });
+    }) : null;
     const userInputHeight = appStorage.getItem("userInput-height");
     if (userInputHeight) {
         userInput.style.maxHeight = `${userInputHeight}px`;
@@ -2914,7 +2916,7 @@ mediaSelect.querySelector(".close").onclick = () => {
     }
 }
 
-[imageSelect, cameraInput].forEach((el) => {
+[imageSelect, cameraInput].filter(el=>el).forEach((el) => {
     el.addEventListener('change', async () => {
         if (el.files.length) {
             Array.from(el.files).forEach((file) => {
@@ -3752,7 +3754,7 @@ if (SpeechRecognition) {
     });
 }
 
-document.getElementById("showLog").addEventListener("click", ()=> {
+document.getElementById("showLog") && document.getElementById("showLog").addEventListener("click", ()=> {
     log_storage.classList.remove("hidden");
     settings.classList.add("hidden");
     log_storage.scrollTop = log_storage.scrollHeight;

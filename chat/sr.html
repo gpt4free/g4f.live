@@ -26,11 +26,6 @@
     <!-- Canonical URL to avoid duplicate content issues -->
     <link rel="canonical" href="https://g4f.dev/chat/" />
 
-    <link rel="stylesheet" href="../dist/css/style.css" />
-    <link rel="stylesheet" href="../dist/css/all.min.css" />
-    <link rel="stylesheet" href="../dist/css/dracula.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe/dist/photoswipe.css" />
-
     <link rel="apple-touch-icon" sizes="180x180" href="../dist/img/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="../dist/img/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="../dist/img/favicon-16x16.png" />
@@ -39,8 +34,6 @@
     <script src="../dist/js/framework.js?v=2-sr" defer></script>
     <script src="../dist/js/chat.v1.js?v=2-sr" defer></script>
     <script src="../dist/js/recorder.js" async></script>
-    <script src="../dist/js/highlight.min.js" async></script>
-    <script src="../dist/js/highlightjs-copy.min.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js" defer></script>
     <script src="../dist/js/sanitize-html.js" async></script>
@@ -75,7 +68,7 @@
             <a href="/chat/">View Original Version</a>
             <div class="sidebar-container">
                 <header class="sidebar-header">
-                    <h1 class="sidebar-logo" data-translate="true">G4F Screen Reader</h1>
+                    <h1 class="sidebar-logo" data-translate="true">G4F - Screen Reader Version</h1>
                     <button class="mobile-sidebar-toggle" aria-label="Toggle sidebar menu">
                         <i class="fa-solid fa-bars" aria-hidden="true"></i>
                     </button>
@@ -128,29 +121,14 @@
                 </header>
                 <form>
                   <div class="field">
-                      <span class="label">Enable Dark Mode</span>
-                      <input type="checkbox" id="darkMode" checked aria-checked="true" />
-                      <label for="darkMode" class="toogle" title="Toggle Dark Mode"></label>
-                  </div>
-                  <div class="field">
                       <span class="label">Disable Conversation History</span>
                       <input type="checkbox" id="history" aria-checked="false" />
                       <label for="history" class="toogle" title="Improve response time or fix large conversation issues"></label>
                   </div>
                   <div class="field">
-                      <span class="label">Hide System Prompt</span>
-                      <input type="checkbox" id="hide-systemPrompt" aria-checked="false" />
-                      <label for="hide-systemPrompt" class="toogle" title="Hide system prompt for more space on phones"></label>
-                  </div>
-                  <div class="field">
                       <span class="label">Download Generated Media</span>
                       <input type="checkbox" id="download_media" checked aria-checked="true" />
                       <label for="download_media" class="toogle" title="Download and save generated images, audios, and videos"></label>
-                  </div>
-                  <div class="field">
-                      <span class="label">Refine Files with spaCy</span>
-                      <input type="checkbox" id="refine" aria-checked="false" />
-                      <label for="refine" class="toogle" title="Enable file refinement with spaCy"></label>
                   </div>
                   <div class="field">
                       <span class="label">Report Errors</span>
@@ -171,10 +149,6 @@
                       <label for="systemPrompt" class="label">System Prompt</label>
                       <textarea id="systemPrompt" placeholder="You are a helpful assistant." aria-describedby="systemPrompt-desc" data-example="You can use this prompt to customize AI behavior, e.g., to enable image generation by using specified syntax."></textarea>
                       <small id="systemPrompt-desc">Customize the AI's system prompt to personalize responses or enable features like image generation.</small>
-                  </div>
-                  <div class="field box">
-                      <label for="userInput-height" class="label" title="Set maximum height of input box">Input Max Height (px)</label>
-                      <input type="number" id="userInput-height" value="200" min="100" max="500" />
                   </div>
                   <div class="field box">
                       <label for="recognition-language" class="label" title="Set preferred language for speech recognition">Speech Recognition Language</label>
@@ -211,10 +185,6 @@
                       <button type="button" onclick="localStorage.getItem(framework.translationKey) ? (delete_translations() || window.location.reload()) : null" aria-label="Delete translations">
                           <i class="fa-solid fa-trash" aria-hidden="true"></i>
                           <span>Delete Translations</span>
-                      </button>
-                      <button id="showLog" type="button" aria-label="Show log">
-                          <i class="fa-solid fa-terminal" aria-hidden="true"></i>
-                          <span>Show log</span>
                       </button>
                   </div>
                 </form>
@@ -310,6 +280,7 @@
                 <div class="media-select hidden" aria-label="Media input options" role="group">
 
                     <label class="file-label" for="file" aria-label="Attach one or multiple files">
+                        <small id="fileHelp" class="sr-only">Upload files to chat.</small>
                         <input
                             type="file"
                             id="file"
@@ -320,7 +291,6 @@
                             aria-describedby="fileHelp"
                         />
                         <i class="fa-solid fa-paperclip" aria-hidden="true"></i>
-                        <small id="fileHelp" class="sr-only">Upload files to send with your message.</small>
                     </label>
 
                     <label class="micro-label" for="micro" aria-label="Microphone toggle">
@@ -329,7 +299,7 @@
                     </label>
 
                     <label class="image-select" for="image" title="Select image file">
-                        <span>Select Image</span>
+                        <small id="imageHelp" class="sr-only">Select an image file.</small>
                         <input
                           type="file"
                           id="image"
@@ -337,21 +307,9 @@
                           accept="image/*"
                           required
                           aria-label="Select an image file"
+                          aria-describedby="imageHelp"
                         />
                         <i class="fa-regular fa-image" aria-hidden="true"></i>
-                    </label>
-                    <label class="capture-camera" for="camera" title="Capture photo using camera" aria-hidden="true">
-                        <input
-                          type="file"
-                          id="camera"
-                          name="camera"
-                          accept="image/*"
-                          capture="camera"
-                          required
-                          aria-label="Capture a photo using camera"
-                          aria-hidden="true"
-                        />
-                        <i class="fa-solid fa-camera" aria-hidden="true"></i>
                     </label>
                     <label class="capture-audio" for="audio" title="Record audio">
                         <button id="record-audio" type="button" aria-label="Record audio">

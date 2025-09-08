@@ -330,7 +330,7 @@ const register_message_buttons = async () => {
         });
     });
 
-    chatBody.querySelectorAll(".message .fa-xmark").forEach(async (el) => {
+    chatBody.querySelectorAll(".message .fa-xmark, .message .delete-message").forEach(async (el) => {
         if (el.dataset.click) {
             return
         }
@@ -347,7 +347,7 @@ const register_message_buttons = async () => {
         });
     });
 
-    chatBody.querySelectorAll(".message .fa-clipboard").forEach(async (el) => {
+    chatBody.querySelectorAll(".message .fa-clipboard, .message .copy-to-clipboard").forEach(async (el) => {
         if (el.dataset.click) {
             return
         }
@@ -368,6 +368,9 @@ const register_message_buttons = async () => {
             }
             el.classList.add("clicked");
             setTimeout(() => el.classList.remove("clicked"), 1000);
+            const start = el.innerText;
+            el.innerText = framework.translate("Copied")
+            setTimeout(() => el.innerText = start, 1000);
         });
     })
 
@@ -955,7 +958,10 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             content_map.inner.appendChild(div);
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-        } else if(message.content) {
+        } else if (document.body.classList.contains("screen-reader")) {
+            var content = document.createTextNode(message.content);
+            content_map.inner.appendChild(content);
+        } else if (message.content) {
             update_message(content_map, message_id, null);
         }
     } else if (message.type == "log") {
@@ -1201,7 +1207,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             delete controller_storage[message_id];
         }
         // Reload conversation if no error
-        if (!error_storage[message_id]) {
+        if (!error_storage[message_id] && !document.body.classList.contains("screen-reader")) {
             if(await safe_load_conversation(window.conversation_id)) {
                 play_last_message(content_data_storage[message_id]); // Play last message async
                 delete content_data_storage[message_id];
@@ -1742,7 +1748,16 @@ const load_conversation = async (conversation) => {
             }
         }
 
-        add_buttons.push(`<button class="options_button">
+        if (document.body.classList.contains("screen-reader")) {
+            add_buttons.push(`
+                <div role="group" aria-label="Message controls">
+                    <button class="delete-message" aria-label="Delete message">Delete Message</button>
+                    <button class="volume-high" aria-label="Play audio" aria-pressed="false" title="Play audio">Play Audio</button>
+                    <button class="copy-to-clipboard" aria-label="Copy message to clipboard">Copy</button>
+                </div>
+            `);
+        } else {
+            add_buttons.push(`<button class="options_button">
             <div>
                 <span><i class="fa-solid fa-qrcode"></i></span>
                 <span><i class="fa-brands fa-whatsapp"></i></span>
@@ -1752,7 +1767,8 @@ const load_conversation = async (conversation) => {
                 <span><i class="fa-regular fa-clipboard"></i></span>
             </div>
             <i class="fa-solid fa-plus"></i>
-        </button><button class="hidden volume-high"><small class="sr-only">Play Audio</small></button>`);
+        </button>`);
+        }
 
         if (actions.includes("variant")) {
             add_buttons.push(`<button class="regenerate_button">
@@ -3408,8 +3424,12 @@ function set_favorite_models(provider) {
         const value_option = modelSelect.querySelector(`option[value="${key}"]`)
         if (value_option) {
             option.text = value_option.text;
-            option.dataset.audio = value_option.dataset.audio;
-            option.dataset.type = value_option.dataset.type;
+            if (value_option.dataset.audio) {
+                option.dataset.audio = "true";
+            }
+            if (value_option.dataset.type) {
+                option.dataset.type = value_option.dataset.type;
+            }
         }
         optgroup.appendChild(option);
         if (optgroup.childElementCount > 5) {
@@ -3491,9 +3511,16 @@ providerSelect.addEventListener("change", () => load_provider_models());
 modelSelect.addEventListener("change", () => {
     const favorites = appStorage.getItem("favorites") ? JSON.parse(appStorage.getItem("favorites")) : {};
     const selected = favorites[providerSelect.value] || {};
+    const selectedOption = modelSelect.options[modelSelect.selectedIndex];
     if (!selected[modelSelect.value]) {
         let option = document.createElement('option');
         option.value = modelSelect.value;
+        if (selectedOption.dataset.type) {
+            option.dataset.type = selectedOption.dataset.type;
+        }
+        if (selectedOption.dataset.audio) {
+            option.dataset.audio = "true";
+        }
         option.text = modelSelect.querySelector(`option[value="${modelSelect.value}"]`).text;
         option.selected = true;
         const optgroup = modelSelect.querySelector('optgroup:last-child');

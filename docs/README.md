@@ -127,7 +127,7 @@ Examples
 ## Deep Dives
 
 - [API endpoints and usage](ready_to_use.md) ***new**
-- [Available Providers & Models](providers-and-models.md)
+- [Available Providers & Models](https://g4f.dev/docs/providers-and-models.html)
 - [Selecting a Provider](selecting_a_provider.md)
 - [API docs (full spec)](/api-docs)
 - [File API Documentation (Files and Documents)](file.md)

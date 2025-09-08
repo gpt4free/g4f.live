@@ -81,7 +81,7 @@ small{color:var(--muted);}
     providers.forEach(p=>{
       const row=document.createElement("div"); row.className="row";
       const prov=document.createElement("div"); prov.className="provider";
-      const logo=document.createElement("div"); logo.className="logo"; img=new Image(40, 40); img.src='https://image.pollinations.ai/prompt/Create a logo for '+(p.label||p.name).replace('Meta', 'Facebook').replace('Aria', '').replace('OpenAI', 'ChatGPT').replace('Video', 'TV AI').replace('Nvidia', 'GeForce').replace('Phi-4', 'Windows').replace('(Text Generation)', '').replace('Glhf', 'AI').replace('Gemini', '').replace('API', '').replace('-2.5M', '').replace('Qwen-3', '')+'?width=256&height=256&nologo=true&model=flux'; logo.appendChild(img);
+      const logo=document.createElement("div"); logo.className="logo"; img=new Image(40, 40); img.src='/prompt/Create a logo for '+(p.label||p.name).replace('Meta', 'Facebook').replace('Aria', '').replace('OpenAI', 'ChatGPT').replace('Video', 'TV AI').replace('Nvidia', 'GeForce').replace('Phi-4', 'Windows').replace('(Text Generation)', '').replace('Glhf', 'AI').replace('Gemini', '').replace('API', '').replace('-2.5M', '').replace('Qwen-3', '')+'?width=256&height=256&nologo=true&model=flux'; logo.appendChild(img);
       const meta=document.createElement("div");
       meta.innerHTML="<div>"+(p.label||p.name)+(p.label.split(" ")[0]!=p.name?` (${p.name})`:"")+"</div><small>"+iconsFor(p)+badgesFor(p)+"</small>";
       prov.appendChild(logo); prov.appendChild(meta);

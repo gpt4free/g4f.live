@@ -1038,9 +1038,6 @@ async function play_last_message(response = null) {
             }
         } else {
             if (response) {
-                if (response.choices) {
-                    response = `data:audio/mpeg;base64,${response.choices[0].message.audio.data}`;
-                }
                 last_media.src = response;
             }
             last_media.play();
@@ -1275,7 +1272,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     }
     if (client) {
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
-        const selectedModel = selectedOption?.value || client.defaultModel;
+        const selectedModel = get_selected_model() || client.defaultModel;
         const modelType = selectedOption?.dataset.type || 'chat';
         const isAudio = selectedOption?.dataset.audio == "true";
         try {
@@ -1337,7 +1334,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         add_message_chunk({type: "provider", provider: {name: chunk.provider || provider, model: chunk.model}}, message_id);
                     }
                     if (chunk.error) {
-                        add_message_chunk({type: "error", ...chunk.error}, message_id);
+                        add_message_chunk({type: "error", ...chunk.error}, message_id, null, finish_message);
                         return;
                     }
                     if (chunk.choices) {

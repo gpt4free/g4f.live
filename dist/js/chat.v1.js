@@ -368,9 +368,11 @@ const register_message_buttons = async () => {
             }
             el.classList.add("clicked");
             setTimeout(() => el.classList.remove("clicked"), 1000);
-            const start = el.innerText;
-            el.innerText = framework.translate("Copied")
-            setTimeout(() => el.innerText = start, 1000);
+            const startText = el.innerText;
+            if (startText) {
+                el.innerText = framework.translate("Copied")
+                setTimeout(() => el.innerText = startText, 1000);
+            }
         });
     })
 
@@ -2494,7 +2496,7 @@ window.addEventListener("hashchange", (event) => {
         new_conversation();
     }
 });
-window.addEventListener('load', async function() {
+window.addEventListener('DOMContentLoaded', async function () {
     await on_load();
     await on_api();
 
@@ -3512,6 +3514,7 @@ modelSelect.addEventListener("change", () => {
     const favorites = appStorage.getItem("favorites") ? JSON.parse(appStorage.getItem("favorites")) : {};
     const selected = favorites[providerSelect.value] || {};
     const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+    console.log("Selected model:", modelSelect.value, selectedOption);
     if (!selected[modelSelect.value]) {
         let option = document.createElement('option');
         option.value = modelSelect.value;

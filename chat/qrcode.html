@@ -241,7 +241,7 @@
             if (!share_id) {
                 return;
             }
-            const share = `${window.location.origin}/qrcode.html#${encodeURIComponent(share_id)}`;
+            const share = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(share_id)}`;
             qrcodeStatus.innerText = share;
             qrcodeStatus.href = share;
             document.getElementById("qrcode").innerHTML = '';
@@ -386,7 +386,7 @@
                 headers: {'content-type': 'application/json'},
                 body: JSON.stringify({id: share_id, updated: Date.now(), backup: conversations})
             });
-            const share = `${window.location.origin}/qrcode.html#${encodeURIComponent(share_id)}`;
+            const share = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(share_id)}`;
             const qrcodeStatus = document.getElementById('qrcode-status');
             if (response.status !== 200) {
                 qrcodeStatus.innerText = 'Error on backup: ' + response.statusText;

@@ -491,7 +491,7 @@ const register_message_buttons = async () => {
         }
         el.dataset.click = true;
         el.addEventListener("click", async () => {
-            iframe.src = '/qrcode.html' + (window.conversation_id ? `#${window.conversation_id}` : '');
+            iframe.src = 'qrcode.html' + (window.conversation_id ? `#${window.conversation_id}` : '');
             iframe_container.classList.remove("hidden");
         });
     });

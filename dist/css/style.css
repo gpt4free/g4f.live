@@ -1529,6 +1529,7 @@ form textarea {
     max-height: 200px;
     outline: none;
     font-size: 14px;
+    width: calc(100% - 88px);
 }
 
 .hidden, i.hidden, input.hidden, .chat-container.hidden {

@@ -2544,7 +2544,8 @@ setInterval(async () => {
     if (!conversation || !conversation.share) {
         return
     }
-    const response = await fetch(`${framework.backendUrl}/backend-api/v2/chat/${conversation.id}`, {
+    const now = Math.floor(Date.now() / 1000);
+    const response = await fetch(`${framework.backendUrl}/backend-api/v2/chat/${conversation.id}?now=${now - now % 5}`, {
         headers: {
             'accept': 'application/json',
             'if-none-match': conversation.updated,

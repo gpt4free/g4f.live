@@ -556,7 +556,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
             method: 'POST',
             body: formData
         });
-        connectToSSE(`${framework.backendUrl}/backend-api/v2/files/${bucket_id}`, false, bucket_id); //Retrieve and refine
+        connectToSSE(`${framework.backendUrl}/backend-api/v2/files/${bucket_id}/stream`, false, bucket_id); //Retrieve and refine
         return;
     }
     if (!message.length) {

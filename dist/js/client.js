@@ -433,9 +433,10 @@ class DeepInfra extends Client {
     }
 
     get models() {
+        const listModels = super().models.list();
         return {
             list: async () => {
-                return (await super().models.list()).map(model => {
+                return (await listModels).map(model => {
                     if ('metadata' in model && model.metadata === null) {
                         model.type = 'image';
                     }

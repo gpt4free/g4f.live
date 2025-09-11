@@ -1258,9 +1258,11 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             }
         });
     }
-    let last_message;
     if (messages.length > 0) {
-        last_message = messages[messages.length - 1];
+        const last_message = messages[messages.length - 1];
+        if (!message) {
+            message = last_message?.content;
+        }
         if (last_message.content && media.length > 0) {
             last_message.content = [
                 ...(Array.isArray(last_message.content) ? last_message.content : [{type: "text", text: last_message.content}]),
@@ -1275,9 +1277,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             content: media.length > 0 ? media : message || ""
         }];
     }
-    if (!message) {
-        message = last_message?.content;
-    }
     if (client) {
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const selectedModel = get_selected_model() || client.defaultModel;
@@ -1285,25 +1284,18 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         const isAudio = selectedOption?.dataset.audio == "true";
         try {
             // Conditionally call the correct client method based on model type.
-            if (modelType === 'image') {
+            if (['image', 'image-edit'].includes(modelType)) {
+                const method = modelType == 'image' ? 'generate' : 'edit';
                 // Handle image generation
-                const response = await client.images.generate({
+                const image = image_storage ? Object.values(image_storage)[0] : null;
+                const response = await client.images[method]({
                     model: selectedModel,
                     prompt: message,
-                    ...(regenerate ? { seed: Math.floor(Date.now() / 1000) } : {})
+                    ...(regenerate ? { seed: Math.floor(Date.now() / 1000) } : {}),
+                    ...(image && image.url ? { image: image.url } : {})
                 });
-                const imageUrl = response.data[0].url;
-                await add_message(
-                    window.conversation_id,
-                    "assistant",
-                    `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl.startsWith('data:') ? '' : imageUrl})`,
-                    null,
-                    message_index,
-                );
-                await load_conversation(await get_conversation(conversation_id));
-                safe_remove_cancel_button();
-                load_conversations();
-                hide_sidebar();
+                const imageUrl = response.data[0].b64_json ? `data:image/png;base64,${response.data[0].b64_json}` : response.data[0].url;
+                content_storage[message_id] = `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl.startsWith('data:') ? '' : imageUrl})`
             } else if (isAudio) {
                 // Handle audio generation
                 const response = await client.chat.completions.create({
@@ -1312,15 +1304,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 });
                 if (response.choices) {
                     const audio = response.choices[0].message.audio;
-                    await add_message(
-                        window.conversation_id,
-                        "assistant",
-                        response.choices[0].message.content || `<audio controls></audio>\n\n\n${audio.transcript}`,
-                        null,
-                        message_index
-                    );
-                    await load_conversation(await get_conversation(conversation_id));
-                    play_last_message(`data:audio/mpeg;base64,${audio.data}`);
+                    content_storage[message_id] = response.choices[0].message.content || `<audio controls></audio>\n\n\n${audio.transcript}`;
+                    content_data_storage[message_id] = `data:audio/mpeg;base64,${audio.data}`;
                 }
             } else {
                 // Handle chat completion (existing logic)
@@ -1357,8 +1342,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                         }
                     }
                 }
-                await finish_message();
             }
+            await finish_message();
         } catch (err) {
             safe_remove_cancel_button();
             console.error(err);
@@ -4404,7 +4389,7 @@ async function loadClientModels() {
         const models = await client.models.list();
         modelSelect.innerHTML = '';
         models.forEach(model => {
-            if (model.type && !["chat", "image", "text"].includes(model.type)) {
+            if (model.type && !["chat", "image", "text", "image-edit"].includes(model.type)) {
                 return;
             }
             const opt = document.createElement('option');

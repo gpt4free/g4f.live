@@ -175,18 +175,24 @@ class Client {
         return {
             generate: async (params) => {
                 let modelId = params.model;
-                if(this.modelAliases[modelId]) {
-                    modelId = this.modelAliases[modelId];
-                }
-                if (!modelId) {
-                    delete params.model;
-                } else {
-                    params.model = modelId;
+                if(modelId && this.modelAliases[modelId]) {
+                    params.model = this.modelAliases[modelId];
                 }
                 if (this.imageEndpoint.includes('{prompt}')) {
-                    return this._defaultImageGeneration(params, { headers: this.extraHeaders });
+                    return this._defaultImageGeneration(this.imageEndpoint, params, { headers: this.extraHeaders });
                 }
-                return this._regularImageGeneration(params, { headers: this.extraHeaders });
+                return this._regularImageGeneration(this.imageEndpoint, params, { headers: this.extraHeaders });
+            },
+
+            edit: async (params) => {
+                let modelId = params.model;
+                if(modelId && this.modelAliases[modelId]) {
+                    params.model = this.modelAliases[modelId];
+                }
+                if (this.imageEndpoint.includes('{prompt}')) {
+                    return this._defaultImageGeneration(this.imageEndpoint, params, { headers: this.extraHeaders });
+                }
+                return this._regularImageGeneration(this.imageEndpoint.replace('/generations', '/edits'), params, { headers: this.extraHeaders });
             }
         };
     }
@@ -248,7 +254,7 @@ class Client {
       }
     }
 
-    async _defaultImageGeneration(params, requestOptions) {
+    async _defaultImageGeneration(imageEndpoint, params, requestOptions) {
         params = {...params};
         let prompt = params.prompt ? params.prompt : '';
         prompt = encodeURIComponent(prompt).replaceAll('%20', '+');
@@ -261,7 +267,7 @@ class Client {
             delete params.size;
         }
         const encodedParams = new URLSearchParams(params);
-        let url = this.imageEndpoint.replace('{prompt}', prompt);
+        let url = imageEndpoint.replace('{prompt}', prompt);
         url += '?' + encodedParams.toString();
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
@@ -270,8 +276,8 @@ class Client {
         return {data: [{url: response.url}]}
     }
 
-    async _regularImageGeneration(params, requestOptions) {
-        const response = await fetch(this.imageEndpoint, {
+    async _regularImageGeneration(imageEndpoint, params, requestOptions) {
+        const response = await fetch(imageEndpoint, {
             method: 'POST',
             body: JSON.stringify(params),
             ...requestOptions
@@ -286,7 +292,7 @@ class Client {
                 throw new Error(`Image generation failed: ${data.error.message}`);
             }
             if (data.image) {
-                return {data: [{url: `data:image/png;base64,${data.image}`}]}
+                return {data: [{b64_json: data.image}]}
             }
             return data;
         }
@@ -432,19 +438,27 @@ class DeepInfra extends Client {
         });
     }
 
-    // get models() {
-    //     const listModels = super().models.list();
-    //     return {
-    //         list: async () => {
-    //             return (await listModels).map(model => {
-    //                 if ('metadata' in model && model.metadata === null) {
-    //                     model.type = 'image';
-    //                 }
-    //                 return model
-    //             });
-    //         }
-    //     };
-    // }
+   get models() {
+        const listModels = super.models.list();
+        
+        return {
+            list: async () => {
+                const modelsArray = await listModels; // Await the promise returned by listModels
+                
+                return modelsArray.map(model => {
+                    // Check if 'metadata' exists and is null, then set type
+                    if (!model.type) {
+                        if (model.id.toLowerCase().includes('image-edit') || model.id.toLowerCase().includes('kontext')) {
+                            model.type = 'image-edit';
+                        } else if ('metadata' in model && model.metadata === null) {
+                            model.type = 'image';
+                        }
+                    }
+                    return model;
+                });
+            }
+        };
+    }
 }
 
 class Worker extends Client {
@@ -608,12 +622,12 @@ class Together extends Client {
         }
     }
 
-    async _regularImageGeneration(params, requestOptions) {
+    async _regularImageGeneration(imageEndpoint, params, requestOptions) {
         if (params.image) {
             params.image_url = params.image;
             delete params.image;
         }
-        return await super._regularImageGeneration(params, requestOptions);
+        return await super._regularImageGeneration(imageEndpoint, params, requestOptions);
     }
 
     get models() {
@@ -667,7 +681,7 @@ class Together extends Client {
                 if (params.model) {
                     params.model = this._getModel(params.model);
                 }
-                return this._regularImageGeneration(params, { headers: this.extraHeaders });
+                return this._regularImageGeneration(this.imageEndpoint, params, { headers: this.extraHeaders });
             }
         };
     }

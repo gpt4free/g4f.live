@@ -431,6 +431,19 @@ class DeepInfra extends Client {
             ...options
         });
     }
+
+    get models() {
+        return {
+            list: async () => {
+                return (await super().models.list()).map(model => {
+                    if ('metadata' in model && model.metadata === null) {
+                        model.type = 'image';
+                    }
+                    return model
+                });
+            }
+        };
+    }
 }
 
 class Worker extends Client {

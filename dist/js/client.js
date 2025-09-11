@@ -46,14 +46,14 @@ class CorsProxyManager {
 class Client {
     constructor(options = {}) {
         if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
-            if (localStorage && localStorage.getItem("Azure-api_key")) {
+            if ((typeof localStorage !== 'undefined' && localStorage && localStorage.getItem("Azure-api_key")) {
                 options.apiKey = localStorage.getItem("Azure-api_key");
             } else {
                 throw new Error('Client requires at least baseUrl, apiEndpoint, or apiKey to be set.');
             }
         }
         this.proxyManager = new CorsProxyManager();
-        this.baseUrl = options.baseUrl || ((G4F_HOST || "") + "/api/Azure");
+        this.baseUrl = options.baseUrl || ((typeof G4F_HOST !== 'undefined' && G4F_HOST || "") + "/api/Azure");
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel;

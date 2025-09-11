@@ -432,19 +432,19 @@ class DeepInfra extends Client {
         });
     }
 
-    get models() {
-        const listModels = super().models.list();
-        return {
-            list: async () => {
-                return (await listModels).map(model => {
-                    if ('metadata' in model && model.metadata === null) {
-                        model.type = 'image';
-                    }
-                    return model
-                });
-            }
-        };
-    }
+    // get models() {
+    //     const listModels = super().models.list();
+    //     return {
+    //         list: async () => {
+    //             return (await listModels).map(model => {
+    //                 if ('metadata' in model && model.metadata === null) {
+    //                     model.type = 'image';
+    //                 }
+    //                 return model
+    //             });
+    //         }
+    //     };
+    // }
 }
 
 class Worker extends Client {

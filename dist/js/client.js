@@ -46,7 +46,7 @@ class CorsProxyManager {
 class Client {
     constructor(options = {}) {
         if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
-            if ((typeof localStorage !== 'undefined' && localStorage && localStorage.getItem("Azure-api_key")) {
+            if (typeof localStorage !== 'undefined' && localStorage && localStorage.getItem("Azure-api_key")) {
                 options.apiKey = localStorage.getItem("Azure-api_key");
             } else {
                 throw new Error('Client requires at least baseUrl, apiEndpoint, or apiKey to be set.');

@@ -185,16 +185,32 @@ class Client {
             },
 
             edit: async (params) => {
-                let modelId = params.model;
-                if(modelId && this.modelAliases[modelId]) {
-                    params.model = this.modelAliases[modelId];
-                }
-                if (this.imageEndpoint.includes('{prompt}')) {
-                    return this._defaultImageGeneration(this.imageEndpoint, params, { headers: this.extraHeaders });
-                }
-                return this._regularImageGeneration(this.imageEndpoint.replace('/generations', '/edits'), params, { headers: this.extraHeaders });
+                return this._regularImageEditing(this.imageEndpoint.replace('/generations', '/edits'), params, { headers: this.extraHeaders });
             }
         };
+    }
+
+    async _regularImageEditing(imageEndpoint, params, requestOptions) {
+        const formData = new FormData();
+        Object.entries(params).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
+        const response = await fetch(imageEndpoint, {
+            method: 'POST',
+            body: formData,
+            ...requestOptions
+        });
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`Status ${response.status}: ${errorBody}`);
+        }
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+        return {data: [{url: await toBase64(await response.blob())}]};
     }
 
     async _regularCompletion(response) {

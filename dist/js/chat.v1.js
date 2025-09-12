@@ -1295,16 +1295,17 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     ...(image && image.url ? { image: image.url } : {})
                 });
                 const imageUrl = response.data[0].b64_json ? `data:image/png;base64,${response.data[0].b64_json}` : response.data[0].url;
-                content_storage[message_id] = `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl.startsWith('data:') ? '' : imageUrl})`
+                message_storage[message_id] = `[![${sanitize(message, ' ')}](${imageUrl})](${imageUrl.startsWith('data:') ? '' : imageUrl})`
             } else if (isAudio) {
                 // Handle audio generation
                 const response = await client.chat.completions.create({
                     model: selectedModel,
                     messages,
                 });
-                if (response.choices) {
+                message_storage[message_id] = response.choices[0].message.content;
+                if (response.choices && response.choices[0].message.audio) {
                     const audio = response.choices[0].message.audio;
-                    content_storage[message_id] = response.choices[0].message.content || `<audio controls></audio>\n\n\n${audio.transcript}`;
+                    message_storage[message_id] = message_storage[message_id] || `<audio controls></audio>\n\n\n${audio.transcript}`;
                     content_data_storage[message_id] = `data:audio/mpeg;base64,${audio.data}`;
                 }
             } else {

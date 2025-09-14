@@ -426,6 +426,7 @@ class Audio extends Client {
                     return await this._regularCompletion(response);
                 } catch(e) {
                     params.model = originalModel;
+                    delete params.referrer;
                     requestOptions.body = JSON.stringify(params);
                     const response = await fetch(`${this.baseUrl}/chat/completions`, requestOptions);
                     return await this._regularCompletion(response);

@@ -2530,6 +2530,7 @@ setInterval(async () => {
     if (!conversation || !conversation.share) {
         return
     }
+    refreshOnHidden = false;
     const now = Math.floor(Date.now() / 1000);
     const response = await fetch(`${framework.backendUrl}/backend-api/v2/chat/${conversation.id}?now=${now - now % 5}`, {
         headers: {
@@ -2537,6 +2538,7 @@ setInterval(async () => {
             'if-none-match': conversation.updated,
         },
     });
+    refreshOnHidden = true;
     if (response.status == 200) {
         const new_conversation = await response.json();
         if (conversation.id == window.conversation_id && new_conversation.updated != conversation.updated) {

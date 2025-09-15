@@ -55,6 +55,7 @@ let login_urls_storage = {
 
 const modelTags = {
     image: "🎨",
+    "image-edit": "🎨",
     vision: "👓",
     audio: "🎧",
     video: "🎥"
@@ -2575,7 +2576,7 @@ async function on_load() {
     let chat_params = new URLSearchParams(window.location.search);
     if (chat_params.get("prompt")) {
         userInput.value = chat_params.get("prompt");
-        userInput.style.height = "100%";
+        userInput.style.height = appStorage.getItem("userInput-height") ? appStorage.getItem("userInput-height")+"px" : "";
         userInput.focus();
     }
     if (!conversation_id) {
@@ -2615,10 +2616,10 @@ const load_provider_option = (input, provider_name) => {
 };
 
 function get_modelTags(model, add_vision = true) {
-    if (model.type == "image") {
-        model.image = true;
-    }
     const parts = []
+    if (modelTags[model.type]) {
+        parts.push(` ${modelTags[model.type]}`);
+    }
     for (let [name, text] of Object.entries(modelTags)) {
         if (name != "vision" || add_vision) {
             parts.push(model[name] ? ` ${text}` : "")
@@ -2741,7 +2742,7 @@ async function on_api() {
     });
     let timeoutBlur = null;
     userInput.addEventListener("focus", async (evt) => {
-        userInput.style.height = "100%";
+        userInput.style.height = appStorage.getItem("userInput-height") ? appStorage.getItem("userInput-height")+"px" : "";
     });
     userInput.addEventListener("blur", async (evt) => {
         timeoutBlur = setTimeout(() => userInput.style.height = "", 200);
@@ -2820,7 +2821,7 @@ async function on_api() {
     }) : null;
     const userInputHeight = appStorage.getItem("userInput-height");
     if (userInputHeight) {
-        userInput.style.maxHeight = `${userInputHeight}px`;
+        userInput.style.height = `${userInputHeight}px`;
     }
     const darkMode = document.getElementById("darkMode");
     if (darkMode) {

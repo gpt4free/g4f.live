@@ -3250,10 +3250,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
-        // if (providerModelSignal) {
-        //     providerModelSignal.abort();
-        // }
-        // providerModelSignal = new AbortController();
+        if (providerModelSignal) {
+            providerModelSignal.abort();
+        }
+        providerModelSignal = new AbortController();
         api_key = get_api_key_by_provider(args);
         if (api_key) {
             headers['x-api-key'] = api_key;
@@ -3271,7 +3271,7 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         response = await fetch(url, {
             method: 'GET',
             headers: headers,
-            //signal: providerModelSignal.signal,
+            signal: providerModelSignal.signal,
         });
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);
@@ -3316,9 +3316,6 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
                     delete continue_storage[message_id];
                     await api("conversation", args, files, message_id, finish_message)
                 }
-            }
-            if (response.status == 524) {
-                await api("conversation", args, files, message_id, finish_message)
             }
             await finish_message();
             return;

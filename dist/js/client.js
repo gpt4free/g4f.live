@@ -227,7 +227,7 @@ class Client {
       if (!response.body) {
         throw new Error('Streaming not supported in this environment');
       }
-      if (response.headers.get('Content-Type') === 'application/json') {
+      if (response.headers.get('Content-Type').startsWith('application/json')) {
             const data = await response.json();
             if (data.choices && data.choices[0]?.message) {
                 data.choices[0].delta = data.choices[0].message;
@@ -377,8 +377,9 @@ class PollinationsAI extends Client {
           } catch (err) {
               console.error("Final fallback for Pollinations models:", err);
               return [
-                  { id: "gpt-4.1-mini", type: "chat" }, { id: "deepseek-v3", type: "chat" },
-                  { id: "flux", type: "image" }, { id: "gpt-image", type: "image" }
+                  { id: "openai", type: "chat" },
+                  { id: "deepseek", type: "chat" },
+                  { id: "flux", type: "image" },
               ];
           }
         }
@@ -401,9 +402,7 @@ class Audio extends Client {
             completions: {
             create: async (params) => {
                 const originalModel = params.model;
-
                 params.model = this.defaultModel;
-
                 if (this.referrer) {
                     params.referrer = this.referrer;
                 }
@@ -412,6 +411,7 @@ class Audio extends Client {
                         "voice": "alloy",
                         "format": "mp3"
                     }
+                    delete params.stream;
                 }
                 if (!params.modalities) {
                     params.modalities = ["text", "audio"]

@@ -59,7 +59,7 @@ async function checkUrl(url, connectStatus) {
     return false;
 }
 framework.backendUrl = localStorage.getItem('backendUrl') || "";
-if (framework.backendUrl && !framework.backendUrl.endsWith(".g4f.dev")) {
+if (framework.backendUrl && framework.backendUrl !== G4F_HOST) {
     framework.backendUrl = "";
 }
 framework.connectToBackend = async (connectStatus) => {

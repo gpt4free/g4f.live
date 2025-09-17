@@ -2642,7 +2642,7 @@ async function load_providers(providers, provider_options, providersListContaine
             + (provider.hf_space ? " 🤗" : "")
             + (provider.nodriver ? " 🌐" : "")
             + (!provider.nodriver && provider.auth ? " 🔑" : "")
-            + (provider.live ? " 🟢" : "")
+            + (provider.live > 0 ? " 🟢" : "")
         if (provider.parent)
             option.dataset.parent = provider.parent;
         providerSelect.appendChild(option);
@@ -2960,9 +2960,6 @@ audioButton.addEventListener('click', async (event) => {
             await add_conversation(window.conversation_id);
             provider = providerSelect.value;
             model = get_selected_model();
-            if (provider == "Live") {
-                model = "openai-audio";
-            }
             await ask_gpt(get_message_id(), -1, false, provider, model, "next");
             mediaRecorder.wavBlob = null;
             t.innerText = framework.translate("Record Audio");
@@ -3731,14 +3728,14 @@ if (SpeechRecognition) {
         buffer = "";
     };
     recognition.onend = function() {
-        if (buffer) {
-            userInput.value = `${startValue ? startValue + "\n" : ""}${buffer}`;
-        }
         if (microLabel.classList.contains("recognition")) {
             recognition.start();
         } else {
             userInput.readOnly = false;
-            userInput.focus();
+            if (buffer) {
+                userInput.value = `${startValue ? startValue + "\n" : ""}${buffer}`;
+                userInput.focus();
+            }
         }
     };
     recognition.onresult = function(event) {
@@ -4399,7 +4396,6 @@ async function loadClientModels() {
             const opt = document.createElement('option');
             opt.value = model.id;
             opt.textContent = model.id + get_modelTags(model);
-            // Store the model type (e.g., 'chat' or 'image') in a data attribute.
             if (model.type) {
                 opt.dataset.type = model.type;
             }

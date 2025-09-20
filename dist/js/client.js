@@ -167,6 +167,9 @@ class Client {
             return model;
           });
           return data;
+        },
+        isValid(model) {
+            return !model.type || !["chat", "image", "text", "image-edit"].includes(model.type);
         }
       };
     }
@@ -309,6 +312,14 @@ class Client {
             }
             if (data.image) {
                 return {data: [{b64_json: data.image}]}
+            }
+            if (data && data[0]?.b64_json) {
+                return data.map(img => ({
+                    ...img,
+                    get url() {
+                        return `data:image/png;base64,${img.b64_json}`;
+                    }
+                }));
             }
             return data;
         }

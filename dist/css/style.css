@@ -1011,7 +1011,7 @@ select:hover,
     .count_total {
         padding-left: 98px;
     }
-    body:not(.white) .gradient{
+    body:not(.white, .gradient-none) .gradient{
         display: block;
     }
     form .label {

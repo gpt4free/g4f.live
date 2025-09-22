@@ -118,6 +118,9 @@
       if (localStorage.getItem("darkMode") === "false") {
         document.body.classList.add("white");
       }
+      if (localStorage.getItem("disableGradient") === "true") {
+        document.body.classList.add("gradient-none");
+      }
     </script>
 
     <div class="media-overlay" aria-hidden="true"></div>
@@ -190,42 +193,52 @@
                 <form>
                   <div class="field">
                       <span class="label">Enable Dark Mode</span>
-                      <input type="checkbox" id="darkMode" checked aria-checked="true" />
+                      <input type="checkbox" id="darkMode" checked />
                       <label for="darkMode" class="toogle" title="Toggle Dark Mode"></label>
                   </div>
                   <div class="field">
+                      <span class="label">Disable Gradient Background</span>
+                      <input type="checkbox" id="disableGradient" />
+                      <label for="disableGradient" class="toogle" title="Disable gradient background"></label>
+                  </div>
+                  <div class="field">
                       <span class="label">Disable Conversation History</span>
-                      <input type="checkbox" id="history" aria-checked="false" />
+                      <input type="checkbox" id="history" />
                       <label for="history" class="toogle" title="Improve response time or fix large conversation issues"></label>
                   </div>
                   <div class="field">
                       <span class="label">Hide System Prompt</span>
-                      <input type="checkbox" id="hide-systemPrompt" aria-checked="false" />
+                      <input type="checkbox" id="hide-systemPrompt" />
                       <label for="hide-systemPrompt" class="toogle" title="Hide system prompt for more space on phones"></label>
                   </div>
                   <div class="field">
                       <span class="label">Download Generated Media</span>
-                      <input type="checkbox" id="download_media" checked aria-checked="true" />
+                      <input type="checkbox" id="download_media" checked />
                       <label for="download_media" class="toogle" title="Download and save generated images, audios, and videos"></label>
                   </div>
                   <div class="field">
                       <span class="label">Refine Files with spaCy</span>
-                      <input type="checkbox" id="refine" aria-checked="false" />
+                      <input type="checkbox" id="refine" />
                       <label for="refine" class="toogle" title="Enable file refinement with spaCy"></label>
                   </div>
                   <div class="field">
                       <span class="label">Report Errors</span>
-                      <input type="checkbox" id="report_error" checked aria-checked="true" />
+                      <input type="checkbox" id="report_error" checked />
                       <label for="report_error" class="toogle" title="Send error reports"></label>
                   </div>
                   <div class="field">
                       <span class="label">Count Words and Tokens</span>
-                      <input type="checkbox" id="countTokens" checked aria-checked="true" />
+                      <input type="checkbox" id="countTokens" checked />
                       <label for="countTokens" class="toogle" title="Enable word and token counting"></label>
                   </div>
                   <div class="field">
+                      <span class="label">Render Markdown</span>
+                      <input type="checkbox" id="renderMarkdown" checked />
+                      <label for="renderMarkdown" class="toogle" title="Enable rendering of Markdown content"></label>
+                  </div>
+                  <div class="field">
                       <span class="label">Automatic Orientation (16:9 or 9:16)</span>
-                      <input type="checkbox" id="automaticOrientation" checked aria-checked="true" />
+                      <input type="checkbox" id="automaticOrientation" checked />
                       <label for="automaticOrientation" class="toogle" title="Auto-orient generated media"></label>
                   </div>
                   <div class="field box">
@@ -245,7 +258,7 @@
                   <!-- Hidden advanced options -->
                   <div class="field mem0 hidden">
                       <span class="label">Enable Memory with Mem0</span>
-                      <input type="checkbox" id="mem0" aria-checked="false" />
+                      <input type="checkbox" id="mem0" />
                       <label for="mem0" class="toogle" title="Manage persistent conversations"></label>
                       <button type="button" onclick="import_memory()" aria-label="Import messages to Mem0">
                           <i class="fa-solid fa-arrow-up-from-bracket"></i>

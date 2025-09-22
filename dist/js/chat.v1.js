@@ -98,9 +98,9 @@ appStorage = window.localStorage || {
     length: 0
 }
 
-function render_reasoning(reasoning, final = false) {
+function render_reasoning(reasoning, final = false, method = "markdown") {
     const inner_text = reasoning.text ? `<div class="reasoning_text${final ? " final hidden" : ""}">
-        ${framework.markdown(reasoning.text)}
+        ${framework[method](reasoning.text)}
     </div>` : "";
     return `<div class="reasoning_body">
         <div class="reasoning_title">
@@ -567,6 +567,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
     await add_conversation(window.conversation_id);
     let message_index = await add_message(window.conversation_id, "user", message);
     let message_id = get_message_id();
+    const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
 
     const message_el = document.createElement("div");
     message_el.classList.add("message");
@@ -579,7 +580,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
         </div>
         <div class="content"> 
             <div class="content_inner">
-            ${framework.markdown(message)}
+            ${framework[method](message)}
             </div>
             <div class="count">
                 ${countTokensEnabled ? count_words_and_tokens(message, get_selected_model()) : ""}
@@ -961,9 +962,14 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             content_map.inner.appendChild(div);
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-        } else if (document.body.classList.contains("screen-reader")) {
-            var content = document.createTextNode(message.content);
-            content_map.inner.appendChild(content);
+        } else if (document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
+            const lines = message.content.split("\n");
+            lines.forEach((line, index) => {
+                content_map.inner.appendChild(document.createTextNode(line));
+                if (index < lines.length - 1) {
+                    content_map.inner.appendChild(document.createElement("br"));
+                }
+            });
         } else if (message.content) {
             update_message(content_map, message_id, null);
         }
@@ -1129,7 +1135,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         content_map.update_timeouts.forEach((timeoutId)=>clearTimeout(timeoutId));
         content_map.update_timeouts = [];
         if (!error_storage[message_id] && message_storage[message_id]) {
-            html = framework.markdown(message_storage[message_id]);
+            const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
+            html = framework[method](message_storage[message_id]);
             content_map.inner.innerHTML = html;
             highlight(content_map.inner);
         }
@@ -1786,6 +1793,7 @@ const load_conversation = async (conversation) => {
             prompt_tokens = next_usage?.prompt_tokens ? next_usage?.prompt_tokens : 0
         }
 
+        const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
         elements.push(`
             <div class="message${item.regenerate ? " regenerate": ""}" data-index="${i}" data-object_url="${objectUrl}" data-synthesize_url="${synthesize_url}">
                 <div class="${item.role}">
@@ -1799,8 +1807,8 @@ const load_conversation = async (conversation) => {
                 <div class="content">
                     ${provider}
                     <div class="content_inner">
-                        ${item.reasoning ? render_reasoning(item.reasoning, true): ""}
-                        ${framework.markdown(buffer)}
+                        ${item.reasoning ? render_reasoning(item.reasoning, true, method): ""}
+                        ${framework[method](buffer)}
                     </div>
                     <div class="count">
                         ${countTokensEnabled ? count_words_and_tokens(
@@ -2833,6 +2841,16 @@ async function on_api() {
             }
         });
     }
+    const disableGradient = document.getElementById("disableGradient");
+    if (disableGradient) {
+        disableGradient.addEventListener('change', async (event) => {
+            if (event.target.checked) {
+                document.body.classList.add("gradient-none");
+            } else {
+                document.body.classList.remove("gradient-none");
+            }
+        });
+    }
 
     document.getElementById('recognition-language').placeholder = await get_recognition_language();
 }
@@ -3250,10 +3268,10 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
     let url = `${framework.backendUrl}/backend-api/v2/${ressource}`;
     let response;
     if (ressource == "models" && args) {
-        // if (providerModelSignal) {
-        //     providerModelSignal.abort();
-        // }
-        // providerModelSignal = new AbortController();
+        if (providerModelSignal) {
+            providerModelSignal.abort();
+        }
+        providerModelSignal = new AbortController();
         api_key = get_api_key_by_provider(args);
         if (api_key) {
             headers['x-api-key'] = api_key;
@@ -3271,7 +3289,7 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         response = await fetch(url, {
             method: 'GET',
             headers: headers,
-            // signal: providerModelSignal.signal,
+            signal: providerModelSignal.signal,
         });
     } else if (ressource == "conversation") {
         let body = JSON.stringify(args);

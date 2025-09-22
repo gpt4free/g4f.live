@@ -247,6 +247,11 @@ function escapeHtml(str) {
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
+function nl2br(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML.replace(/\n/g, "<br>");
+}
 function filterMarkdown(text, allowedTypes = null, defaultValue = null) {
     const match = text.match(/```(.+)\n(?<code>[\s\S]+?)(\n```|$)/);
     if (match) {
@@ -323,6 +328,7 @@ framework.filterMarkdown = filterMarkdown;
 framework.escape = escapeHtml;
 framework.getHeaders = getHeaders;
 framework.getPublicKey = getPublicKey;
+framework.nl2br = nl2br;
 
 function openDB() {
   return new Promise((resolve, reject) => {

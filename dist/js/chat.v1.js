@@ -2947,7 +2947,7 @@ mediaSelect.querySelector(".close").onclick = () => {
 
 audioButton.addEventListener('click', async (event) => {
     const i = audioButton.querySelector("i");
-    const t = audioButton.querySelector("span");
+    const t = audioButton.querySelector("*");
     if (mediaRecorder) {
         i.classList.remove("fa-stop");
         i.classList.add("fa-microphone");
@@ -3367,8 +3367,8 @@ async function read_response(response, message_id, provider, finish_message) {
 function get_api_key_by_provider(provider) {
     let api_key = null;
     if (provider) {
-        if (provider == "Azure" && framework.backendUrl != window.location.origin) {
-            return api_key;
+        if (["Azure", "gpt-oss-120b"].includes(provider)) {
+            return appStorage.getItem("Azure-api_key");
         }
         if (provider == "AnyProvider") {
             return {

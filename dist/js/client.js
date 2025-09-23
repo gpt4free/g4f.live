@@ -169,7 +169,7 @@ class Client {
           return data;
         },
         isValid(model) {
-            return !model.type || !["chat", "image", "text", "image-edit"].includes(model.type);
+            return !model.type || ["chat", "image", "text", "image-edit"].includes(model.type);
         }
       };
     }

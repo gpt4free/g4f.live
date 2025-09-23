@@ -321,6 +321,9 @@ async function includeAdsense() {
     script.crossOrigin = "anonymous";
     document.head.appendChild(script);
 }
+function isValidModel(model) {
+    return !model.type || ["chat", "image", "text", "image-edit"].includes(model.type);
+}
 
 framework.query = query;
 framework.markdown = renderMarkdown;

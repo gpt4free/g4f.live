@@ -4405,7 +4405,7 @@ async function loadClientModels() {
         const models = await client.models.list();
         modelSelect.innerHTML = '';
         models.forEach(model => {
-            if (!client.models.isValid(model)) {
+            if (window.isValidModel && !isValidModel(model)) {
                 return;
             }
             const opt = document.createElement('option');

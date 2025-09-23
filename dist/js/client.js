@@ -167,9 +167,6 @@ class Client {
             return model;
           });
           return data;
-        },
-        isValid(model) {
-            return !model.type || ["chat", "image", "text", "image-edit"].includes(model.type);
         }
       };
     }

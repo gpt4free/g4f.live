@@ -183,8 +183,8 @@ async function fetchAndDisplay() {
     status.innerText = "Fetching data...";
     document.getElementById("urlLabel").innerHTML =
         dateArr.length === 1
-            ? `<a href="https://home.g4f.dev/backend-api/v2/usage/${dateArr[0]}" target="_blank">https://home.g4f.dev/backend-api/v2/usage/${dateArr[0]}</a>`
-            : `https://home.g4f.dev/backend-api/v2/usage/{${from} &rarr; ${to}}`;
+            ? `<a href="${framework.backendUrl}/backend-api/v2/usage/${dateArr[0]}">${framework.backendUrl}/backend-api/v2/usage/${dateArr[0]}</a>`
+            : `${framework.backendUrl}/backend-api/v2/usage/{${from} &rarr; ${to}}`;
 
     let allData = [];
     for (let date of dateArr) {

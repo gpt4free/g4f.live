@@ -79,6 +79,7 @@ let finish_storage = {};
 let usage_storage = {};
 let continue_storage = {};
 let reasoning_storage = {};
+let debug_response_counter = {}
 let title_ids_storage = {};
 let image_storage = {};
 let wakeLock = null;
@@ -1016,6 +1017,22 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         });
     } else if (message.type == "suggestions") {
         suggestions = message.suggestions;
+    } else if (["request", "response"].includes(message.type)) {
+        debug_response_counter[message_id] = (debug_response_counter[message_id] || 0) + 1;
+        let details = document.createElement("details");
+        let summary = document.createElement("summary");
+        summary.textContent = `${message.type[0].toUpperCase() + message.type.slice(1)} ${message_id} #${debug_response_counter[message_id]}`;
+        details.appendChild(summary);
+        let pre = document.createElement("pre");
+        let code = document.createElement("code");
+        code.classList.add("language-json");
+        code.textContent = JSON.stringify(message[message.type], null, 2);
+        pre.appendChild(code)
+        details.appendChild(pre);
+        logStorage.appendChild(details);
+        if (window.hljs) {
+            hljs.highlightElement(code);
+        }
     }
 }
 

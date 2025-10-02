@@ -2619,19 +2619,19 @@ async function on_load() {
 
 const load_provider_option = (input, provider_name) => {
     if (input.checked) {
-        providerSelect.querySelectorAll(`option[value="${provider_name}"]`).forEach(
+        providerSelect.querySelectorAll(`option[value="${provider_name}"]:not([data-live="true"])`).forEach(
             (el) => el.removeAttribute("disabled")
         );
-        providerSelect.querySelectorAll(`option[data-parent="${provider_name}"]`).forEach(
+        providerSelect.querySelectorAll(`option[data-parent="${provider_name}"]:not([data-live="true"])`).forEach(
             (el) => el.removeAttribute("disabled")
         );
         settings.querySelector(`.field:has(#${provider_name}-api_key)`)?.classList.remove("hidden");
         settings.querySelector(`.field:has(#${provider_name}-api_base)`)?.classList.remove("hidden");
     } else {
-        providerSelect.querySelectorAll(`option[value="${provider_name}"]`).forEach(
+        providerSelect.querySelectorAll(`option[value="${provider_name}"]:not([data-live="true"])`).forEach(
             (el) => el.setAttribute("disabled", "disabled")
         );
-        providerSelect.querySelectorAll(`option[data-parent="${provider_name}"]`).forEach(
+        providerSelect.querySelectorAll(`option[data-parent="${provider_name}"]:not([data-live="true"])`).forEach(
             (el) => el.setAttribute("disabled", "disabled")
         );
     }

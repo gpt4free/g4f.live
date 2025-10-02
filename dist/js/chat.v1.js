@@ -963,9 +963,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         } else if (document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
-            const pre = document.createElement("pre");
-            pre.appendChild(document.createTextNode(message.content));
-            content_map.inner.appendChild(pre);
+            content_map.inner.appendChild(document.createTextNode(message.content));
         } else if (message.content) {
             update_message(content_map, message_id, null);
         }
@@ -4412,6 +4410,8 @@ async function initClient() {
         options.baseUrl = "https://g4f.dev/api/azure";
     } else if (provider == "Audio") {
         options.baseUrl = "https://g4f.dev/api/audio";
+    } else if (provider == "Grok") {
+        options.baseUrl = "https://g4f.dev/api/grok";
     }
 
     if (!window.providers[provider]) {

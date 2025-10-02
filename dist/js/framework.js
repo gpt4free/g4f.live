@@ -1,4 +1,5 @@
 const G4F_HOST = "https://g4f.dev";
+const G4F_WILDCARD = ".g4f.dev";
 const DB_NAME = 'chat-db';
 const STORE_NAME = 'conversations';
 const VERSION = 1;
@@ -19,14 +20,14 @@ function add_error(event, log=false) {
     } else if (event.message) {
         p.innerText = `${event.type}: ${event.message}` + (event.filename ? `\n${event.filename}:${event.lineno}:${event.colno}` : "");
     } else {
-        return;
+        p.innerText = JSON.stringify(event);
     }
     logStorage.appendChild(p);
 }
 
 window.addEventListener('error', add_error, true);
 
-if (window.location.origin === G4F_HOST || window.location.origin.endsWith(".g4f.dev")) {
+if (window.location.origin === G4F_HOST || window.location.origin.endsWith(G4F_WILDCARD)) {
     window.oauthConfig = {
         clientId: '762e4f6f-2af6-437c-ad93-944cc17f9d23',
         scopes: ['inference-api']
@@ -59,14 +60,18 @@ async function checkUrl(url, connectStatus) {
     return false;
 }
 framework.backendUrl = localStorage.getItem('backendUrl') || "";
-if (framework.backendUrl && framework.backendUrl !== G4F_HOST) {
-    framework.backendUrl = "";
-}
 framework.connectToBackend = async (connectStatus) => {
     for (const url of checkUrls) {
         if(await checkUrl(url, connectStatus)) {
             return;
         }
+    }
+    if (framework.backendUrl) {
+        if(await checkUrl(framework.backendUrl, connectStatus)) {
+            return;
+        }
+        localStorage.removeItem("backendUrl");
+        framework.backendUrl = "";
     }
 };
 let newTranslations = [];
@@ -120,7 +125,7 @@ window.addEventListener('load', async () => {
                 window.location.reload();
             }
         } catch (e) {
-            console.debug(e);
+            add_error(e, true);
         }
     }
 });
@@ -152,7 +157,7 @@ function delete_translations() {
 }
 framework.delete = async (bucket_id) => {
     const delete_url = `${framework.backendUrl}/backend-api/v2/files/${encodeURIComponent(bucket_id)}`;
-    await fetch(delete_url, {
+    return await fetch(delete_url, {
         method: 'DELETE'
     });
 }
@@ -448,6 +453,6 @@ try {
     }
 })();
 
-if (window.location.origin.endsWith(".g4f.dev") || window.location.origin === "https://g4f.dev") {
+if (window.location.origin === G4F_HOST || window.location.origin.endsWith(G4F_WILDCARD)) {
     includeAdsense().catch(add_error);
 }

@@ -99,9 +99,9 @@ appStorage = window.localStorage || {
     length: 0
 }
 
-function render_reasoning(reasoning, final = false, method = "markdown") {
+function render_reasoning(reasoning, final = false) {
     const inner_text = reasoning.text ? `<div class="reasoning_text${final ? " final hidden" : ""}">
-        ${framework[method](reasoning.text)}
+        ${renderer(reasoning.text)}
     </div>` : "";
     return `<div class="reasoning_body">
         <div class="reasoning_title">
@@ -568,7 +568,6 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
     await add_conversation(window.conversation_id);
     let message_index = await add_message(window.conversation_id, "user", message);
     let message_id = get_message_id();
-    const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
 
     const message_el = document.createElement("div");
     message_el.classList.add("message");
@@ -581,7 +580,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
         </div>
         <div class="content"> 
             <div class="content_inner">
-            ${framework[method](message)}
+            ${renderer(message)}
             </div>
             <div class="count">
                 ${countTokensEnabled ? count_words_and_tokens(message, get_selected_model()) : ""}
@@ -964,13 +963,9 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         } else if (document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
-            const lines = message.content.split("\n");
-            lines.forEach((line, index) => {
-                content_map.inner.appendChild(document.createTextNode(line));
-                if (index < lines.length - 1) {
-                    content_map.inner.appendChild(document.createElement("br"));
-                }
-            });
+            const pre = document.createElement("pre");
+            pre.appendChild(document.createTextNode(message.content));
+            content_map.inner.appendChild(pre);
         } else if (message.content) {
             update_message(content_map, message_id, null);
         }
@@ -1018,7 +1013,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "suggestions") {
         suggestions = message.suggestions;
     } else if (["request", "response"].includes(message.type)) {
-        debug_response_counter[message_id] = (debug_response_counter[message_id] || 0) + 1;
+        debug_response_counter[message_id] = (debug_response_counter[message_id] || 0) + (message.type == "response" ? 1 : 0);
         let details = document.createElement("details");
         let summary = document.createElement("summary");
         summary.textContent = `${message.type[0].toUpperCase() + message.type.slice(1)} ${message_id} #${debug_response_counter[message_id]}`;
@@ -1034,6 +1029,13 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             hljs.highlightElement(code);
         }
     }
+}
+
+function renderer(text) {
+    if (appStorage.getItem("renderMarkdown") == "false") {
+        return `<pre>${framework.escape(text)}</pre>`;
+    }
+    return framework.markdown(text);
 }
 
 function is_stopped() {
@@ -1152,9 +1154,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         content_map.update_timeouts.forEach((timeoutId)=>clearTimeout(timeoutId));
         content_map.update_timeouts = [];
         if (!error_storage[message_id] && message_storage[message_id]) {
-            const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
-            html = framework[method](message_storage[message_id]);
-            content_map.inner.innerHTML = html;
+            content_map.inner.innerHTML = renderer(message_storage[message_id]);
             highlight(content_map.inner);
         }
         if (message_storage[message_id] || reasoning_storage[message_id]?.status || reasoning_storage[message_id]?.text) {
@@ -1810,7 +1810,6 @@ const load_conversation = async (conversation) => {
             prompt_tokens = next_usage?.prompt_tokens ? next_usage?.prompt_tokens : 0
         }
 
-        const method = appStorage.getItem("renderMarkdown") == "false" ? "nl2br" : "markdown";
         elements.push(`
             <div class="message${item.regenerate ? " regenerate": ""}" data-index="${i}" data-object_url="${objectUrl}" data-synthesize_url="${synthesize_url}">
                 <div class="${item.role}">
@@ -1824,8 +1823,8 @@ const load_conversation = async (conversation) => {
                 <div class="content">
                     ${provider}
                     <div class="content_inner">
-                        ${item.reasoning ? render_reasoning(item.reasoning, true, method): ""}
-                        ${framework[method](buffer)}
+                        ${item.reasoning ? render_reasoning(item.reasoning, true): ""}
+                        ${renderer(buffer)}
                     </div>
                     <div class="count">
                         ${countTokensEnabled ? count_words_and_tokens(
@@ -2610,8 +2609,10 @@ async function on_load() {
         await load_conversations();
     }
     if (window.hljs) {
-        hljs.addPlugin(new HtmlRenderPlugin())
-        hljs.addPlugin(new CopyButtonPlugin());
+        hljs.addPlugin(new HtmlRenderPlugin());
+        if (window.CopyButtonPlugin) {
+            hljs.addPlugin(new CopyButtonPlugin());
+        }
     }
     // Ensure sidebar is shown by default on desktop
     if (window.innerWidth >= 640) {
@@ -3261,7 +3262,7 @@ function get_selected_model() {
     } else if (modelSelect.selectedIndex >= 0) {
         model = modelSelect.options[modelSelect.selectedIndex];
     }
-    return model.value ? model.value : null;
+    return model?.value ? model.value : null;
 }
 
 async function api(ressource, args=null, files=null, message_id=null, finish_message=null) {
@@ -3468,12 +3469,21 @@ async function load_provider_models(provider=null, search=null) {
     if (!provider) {
         provider = providerSelect.value;
     }
-    modelSelect.classList.remove("hidden");
-    modelSelect.innerHTML = '';
-    modelSelect.name = `model[${provider}]`;
     if (!provider) {
         modelSelect.classList.add("hidden");
         return;
+    }
+    modelSelect.innerHTML = '';
+    modelSelect.name = `model[${provider}]`;
+    modelSelect.classList.remove("hidden");
+    if (provider == "PuterJS" && !localStorage.getItem("puter.auth.token") && window.providers && window.providers.Puter) {
+        try {
+            await (await (new window.providers.Puter()).puter).auth.signIn({attempt_temp_user_creation: true}).then((res) => {
+                console.log('PuterJS signed in:', res);
+            });
+        } catch (error) {
+            add_error(error, true);
+        }
     }
     if (await initClient()) {
         return;

@@ -2347,13 +2347,11 @@ function count_tokens(model, text, prompt_tokens = 0) {
             return mistralTokenizer.encode(text).length;
         }
     }
-    if (window.GPTTokenizer_cl100k_base && window.GPTTokenizer_o200k_base) {
-        if (model?.startsWith("gpt-4o") || model?.startsWith("o1")) {
-            return GPTTokenizer_o200k_base?.encode(text, model).length;
-        } else {
-            model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
-            return GPTTokenizer_cl100k_base?.encode(text, model).length;
-        }
+    if (window.GPTTokenizer_cl100k_base && model?.startsWith("gpt-3") || model == "gpt-4") {
+        model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
+        return GPTTokenizer_cl100k_base?.encode(text, model).length;
+    } else if (window.GPTTokenizer_o200k_base) {
+        return GPTTokenizer_o200k_base?.encode(text, model).length;
     } else {
         return prompt_tokens;
     }

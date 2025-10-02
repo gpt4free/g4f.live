@@ -441,7 +441,7 @@ try {
     add_error(e, true);
 }
 
-(async ()=>{
+window.addEventListener("load", async (event) => {
     try {
         const _0x5f1a=['localStorage','getItem','Azure-api'+'_key','setItem','user'];
         const _0x2c57=function(_0x49560b,_0x9768f2){_0x49560b=_0x49560b-0x0;return _0x5f1a[_0x49560b];}
@@ -451,7 +451,7 @@ try {
     } catch(e) {
         add_error(e, true);
     }
-})();
+});
 
 if (window.location.origin === G4F_HOST || window.location.origin.endsWith(G4F_WILDCARD)) {
     includeAdsense().catch(add_error);

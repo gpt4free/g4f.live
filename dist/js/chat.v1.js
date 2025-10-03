@@ -345,7 +345,7 @@ const register_message_buttons = async () => {
                     chatBody.removeChild(message_el);
                 }
             }
-            await safe_load_conversation(window.conversation_id, false);
+            await safe_load_conversation(window.conversation_id);
         });
     });
 
@@ -603,7 +603,7 @@ const handle_ask = async (do_ask_gpt = true, message = null) => {
             await ask_gpt(message_id, -1, false, null, null, "next", message);
         }
     } else {
-        await safe_load_conversation(window.conversation_id, true);
+        await safe_load_conversation(window.conversation_id);
         await load_conversations();
     }
 };
@@ -650,7 +650,7 @@ stop_generating.addEventListener("click", async () => {
             }
         }
     }
-    await safe_load_conversation(window.conversation_id, false);
+    await safe_load_conversation(window.conversation_id);
 });
 
 document.querySelector(".media-player .fa-x").addEventListener("click", ()=>{
@@ -1331,6 +1331,23 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     content_data_storage[message_id] = `data:audio/mpeg;base64,${audio.data}`;
                 }
             } else {
+                if (searchButton.classList.contains("active") && provider != "CachedSearch") {
+                    let query = message.split(":");
+                    query = query.length > 1 ? query[1].trim() : message;
+                    query = query.split("\n")[0].trim();
+                    const searchUrl = `${framework.backendUrl}/backend-api/v2/create?provider=CachedSearch&prompt=${encodeURIComponent(query)}`;
+                    const response = await fetch(searchUrl);
+                    if (response.ok) {
+                        const result = await response.text();
+                        if (result) {
+                            const new_message = `<details><summary>${framework.translate("Web search:")} ${query}</summary>\n\n\n${result}</details>`;
+                            await add_message(window.conversation_id, "user", new_message);
+                            await safe_load_conversation(window.conversation_id);
+                            messages = messages.slice(0, -1).concat([{role: "user", content: new_message}, messages.slice(-1)[0]]);
+                        }
+                    }
+                }
+
                 // Handle chat completion (existing logic)
                 const stream = await client.chat.completions.create({
                     model: selectedModel,
@@ -3872,8 +3889,13 @@ function logRequestResponse(event, messageId, count=0) {
     details.appendChild(summary);
     let pre = document.createElement("pre");
     let code = document.createElement("code");
-    code.classList.add("language-json");
-    code.textContent = JSON.stringify(event.response || event.request, null, 2);
+    if (typeof event.response === 'string' || event.response instanceof String) {
+        code.classList.add("language-plaintext");
+        code.textContent = event.response;
+    } else {
+        code.classList.add("language-json");
+        code.textContent = JSON.stringify(event.response || event.request, null, 2);
+    }
     pre.appendChild(code)
     details.appendChild(pre);
     logStorage.appendChild(details);

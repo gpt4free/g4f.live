@@ -231,7 +231,7 @@ const renderMarkdown = (content) => {
         .replaceAll('href="/media/', `src="${framework.backendUrl}/media/`)
     if (window.sanitizeHtml) {
         content = window.sanitizeHtml(content, {
-            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'audio', 'video']),
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'audio', 'video', 'details', 'summary']),
             allowedAttributes: {
                 a: [ 'href', 'title', 'target', 'data-width', 'data-height' ],
                 i: [ 'class' ],

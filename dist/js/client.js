@@ -115,6 +115,9 @@ class Client {
                 if (this.referrer) {
                     params.referrer = this.referrer;
                 }
+                if (params.stream && !params.stream_options) {
+                    params.stream_options = {include_usage: true};
+                }
                 this.logCallback && this.logCallback({request: params, type: 'chat'});
                 const requestOptions = {
                     method: 'POST',

@@ -65,8 +65,8 @@ small{color:var(--muted);}
 <div class="table" id="table"><div>Loading...</div></div>
 <script>
 (async function(){
-  const providersUrl = "https://host.g4f.dev/backend-api/v2/providers";
-  const modelsUrl = "https://host.g4f.dev/backend-api/v2/models";
+  const providersUrl = "https://g4f.dev/backend-api/v2/providers";
+  const modelsUrl = "https://g4f.dev/backend-api/v2/models";
   const modelTags = { image: "🎨", vision: "👓", audio: "🎧", video: "🎥" };
   function iconsFor(p){
     return (p.image?modelTags.image:"")+(p.vision?modelTags.vision:"")+(p.audio?modelTags.audio:"")+(p.video?modelTags.video:"");

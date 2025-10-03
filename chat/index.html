@@ -335,12 +335,12 @@
                     <i class="fa-solid fa-terminal" aria-hidden="true"></i>
                 </button>
                 <script async>
-                if (localStorage.getItem("showLog") === "true") {
-                    let button = document.head.querySelector('.chat-top-panel .show_log');
+                if (localStorage.getItem("debugMode") === "true") {
+                    let button = document.querySelector('.chat-top-panel .show_log');
                     if (button) {
                         button.classList.remove('hidden');
                     }
-                    button = document.head.querySelector('.chat-top-panel .new_convo_icon');
+                    button = document.querySelector('.chat-top-panel .new_convo_icon');
                     if (button) {
                         button.classList.add('hidden');
                     }

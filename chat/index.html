@@ -44,26 +44,7 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js" defer></script>
     <script src="../dist/js/sanitize-html.js" async></script>
-
-    <script type="module" defer>
-      import { Client, Custom, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } from "../dist/js/client.js?v={{ v }}";
-      window.providers = {
-        "gpt-oss-120b": Client,
-        Azure: Client,
-        Audio,
-        Grok: Client,
-        Ollama: Client,
-        PollinationsAI,
-        ApiAirforce: Client,
-        AnonDrop: Client,
-        Worker: Worker,
-        Gemini: Client,
-        DeepInfra,
-        Puter,
-        HuggingFace,
-        Custom
-      };
-    </script>
+    <script src="../dist/js/providers.js" type="module" defer></script>
 
     <!-- MathJax Config -->
     <script>
@@ -123,7 +104,7 @@
     <div class="gradient" aria-hidden="true"></div>
 
     <div class="container">
-        <a href="sr.html" class="hidden">View Screen Reader Optimized Version</a>
+        <a href="sr.html" class="hidden">Open Screen Reader Optimized Version</a>
         <aside class="sidebar" aria-label="Primary sidebar navigation">
             <div class="sidebar-container">
                 <header class="sidebar-header">

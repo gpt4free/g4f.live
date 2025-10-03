@@ -2836,11 +2836,11 @@ async function on_api() {
 
     const optgroup = document.createElement("optgroup");
     optgroup.label = framework.translate('Live Providers');
-    Object.entries(window.providers || {}).forEach(([name, _]) => {
+    Object.entries(window.providers || {}).forEach(([name, config]) => {
         let option = document.createElement("option");
         option.value = name;
         option.dataset.live = "true";
-        option.text = name;
+        option.text = `${name} ${config.tags}`;
         optgroup.appendChild(option);
     });
     providerSelect.appendChild(optgroup);
@@ -3501,9 +3501,9 @@ async function load_provider_models(provider=null, search=null) {
     modelSelect.innerHTML = '';
     modelSelect.name = `model[${provider}]`;
     modelSelect.classList.remove("hidden");
-    if (provider == "PuterJS" && !localStorage.getItem("puter.auth.token") && window.providers && window.providers.Puter) {
+    if (provider == "PuterJS" && !localStorage.getItem("puter.auth.token") && window.providers && window.providers.puter.class) {
         try {
-            await (await (new window.providers.Puter()).puter).auth.signIn({attempt_temp_user_creation: true}).then((res) => {
+            await (await (new window.providers.puter.class()).puter).auth.signIn({attempt_temp_user_creation: true}).then((res) => {
                 console.log('PuterJS signed in:', res);
             });
         } catch (error) {
@@ -4470,33 +4470,13 @@ async function initClient() {
     if (appStorage.getItem("debugMode") == "true") {
         options.logCallback = logCallback;
     }
-
-    if (provider == "ApiAirforce") {
-        options.baseUrl = "https://api.airforce/v1";
-    } else if (provider == "AnonDrop") {
-        options.baseUrl = "https://anondrop.net/v1";
-    } else if (provider == "gpt-oss-120b") {
-        options.baseUrl = "https://g4f.dev/api/gpt-oss-120b";
-    } else if (provider == "Azure") {
-        options.baseUrl = "https://g4f.dev/api/azure";
-    } else if (provider == "Audio") {
-        options.baseUrl = "https://g4f.dev/api/audio";
-    } else if (provider == "Grok") {
-        options.baseUrl = "https://g4f.dev/api/grok";
-    }else if (provider == "Grok") {
-        options.baseUrl = "https://g4f.dev/api/grok";
-    } else if (provider == "Ollama") {
-        options.baseUrl = "https://g4f.dev/api/ollama";
-    } else if (provider == "Gemini") {
-        options.baseUrl = "https://g4f.dev/api/gemini";
-    }
-
     if (!window.providers[provider]) {
         console.error(`No client class found for provider: ${provider}`);
         return;
     }
-
-    client = new window.providers[provider](options);
+    const config = window.providers[provider];
+    options.baseUrl = config.baseUrl;
+    client = new config.class(options);
     await loadClientModels();
     return true;
 }

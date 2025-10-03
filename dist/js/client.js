@@ -57,6 +57,7 @@ class Client {
         this.apiEndpoint = options.apiEndpoint || `${this.baseUrl}/chat/completions`;
         this.imageEndpoint = options.imageEndpoint || `${this.baseUrl}/images/generations`;
         this.defaultModel = options.defaultModel;
+        this.useModelName = options.useModelName || false;
         this.apiKey = options.apiKey;
         this.referrer = options.referrer;
         this.logCallback = options.logCallback;
@@ -150,8 +151,7 @@ class Client {
           let data = await response.json();
           data = data.data || data.result || data.models || data;
           data = data.map((model) => {
-            if (model.name) {
-                model._id = model.id;
+            if (!model.id || this.useModelName) {
                 model.id = model.name;
             }
             model.label = model.id.replace('models/', '');
@@ -480,8 +480,8 @@ class Custom extends Client {
 class DeepInfra extends Client {
     constructor(options = {}) {
         super({
-            baseUrl: 'https://api.deepinfra.com/v1/openai',
-            ...options
+            ...options,
+            baseUrl: 'https://api.deepinfra.com/v1/openai'
         });
     }
 
@@ -512,6 +512,7 @@ class Worker extends Client {
     constructor(options = {}) {
         super({
             baseUrl: 'https://g4f.dev/api/worker',
+            useModelName: true,
             ...options
         });
     }
@@ -739,6 +740,7 @@ class Puter {
     constructor(options = {}) {
         this.defaultModel = options.defaultModel || 'gpt-5';
         this.puter = options.puter || this._injectPuter();
+        this.logCallback = options.logCallback;
     }
 
     get chat() {
@@ -834,8 +836,6 @@ class HuggingFace extends Client {
                 options.apiKey = process.env.HUGGINGFACE_API_KEY;
             } else if (typeof localStorage !== "undefined" && localStorage.getItem("HuggingFace-api_key")) {
                 options.apiKey = localStorage.getItem("HuggingFace-api_key");
-            } else {
-                throw new Error("HuggingFace API key is required. Set it in the options or as an environment variable HUGGINGFACE_API_KEY.");
             }
         }
         super({
@@ -918,6 +918,9 @@ class HuggingFace extends Client {
         return {
             completions: {
                 create: async (params) => {
+                    if (!this.apiKey) {
+                        throw new Error("HuggingFace API key is required. Set it in the options or as an environment variable HUGGINGFACE_API_KEY.");
+                    }
                     let { model, ...options } = params;
 
                     if (!model) {
@@ -938,6 +941,8 @@ class HuggingFace extends Client {
                         let apiPath;
                         if (providerKey === "novita")
                             apiPath = "novita/v3/openai";
+                        else if (providerKey === "groq")
+                            apiPath = "groq/openai/v1";
                         else if (providerKey === "hf-inference")
                             apiPath = `${providerKey}/models/${model}/v1`;
                         else

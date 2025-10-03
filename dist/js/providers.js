@@ -11,6 +11,7 @@ window.providers = {
     "grok": {class: Client, baseUrl: "https://g4f.dev/api/grok", tags: ""},
     "hugging-face": {class: HuggingFace, tags: ""},
     "ollama": {class: Client, baseUrl: "https://g4f.dev/api/ollama", tags: ""},
+    "openrouter": {class: Client, baseUrl: "https://g4f.dev/api/openrouter", tags: "👓"},
     "pollinations-ai": {class: PollinationsAI, baseUrl: "https://g4f.dev/api/pollinations.ai", tags: "🎨 👓"},
     "puter": {class: Puter, tags: "👓"},
     "worker": {class: Worker, baseUrl: "https://g4f.dev/api/worker", tags: "🎨"}

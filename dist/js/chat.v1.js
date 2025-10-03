@@ -42,7 +42,7 @@ const translationSnipptes = [
     "Importing conversations...", "New version:", "Providers API key", "Providers (Enable/Disable)",
     "Get API key", "Uploading files...", "Invalid link", "Loading...", "Live Providers",
     "Search Off", "Search On", "Recognition On", "Recognition Off", "Delete Conversation",
-    "Favorite Models:", "Stop Recording", "Record Audio", "Upload Audio",
+    "Favorite Models:", "Stop Recording", "Record Audio", "Upload Audio", "No Title", "Copy",
 ];
 
 let login_urls_storage = {
@@ -963,7 +963,17 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         } else if (document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
-            content_map.inner.appendChild(document.createTextNode(message.content));
+            let cursorDiv = content_map.inner.querySelector(".cursor");
+            message.content.split("\n").forEach((line, index, array) => {
+                if (line.trim().length > 0) {
+                    let span = document.createElement("span");
+                    span.innerText = line;
+                    content_map.inner.insertBefore(span, cursorDiv);
+                }
+                if (index < array.length - 1) {
+                    content_map.inner.insertBefore(document.createElement("br"), cursorDiv);
+                }
+            });
         } else if (message.content) {
             update_message(content_map, message_id, null);
         }
@@ -1012,20 +1022,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         suggestions = message.suggestions;
     } else if (["request", "response"].includes(message.type)) {
         debug_response_counter[message_id] = (debug_response_counter[message_id] || 0) + (message.type == "response" ? 1 : 0);
-        let details = document.createElement("details");
-        let summary = document.createElement("summary");
-        summary.textContent = `${message.type[0].toUpperCase() + message.type.slice(1)} ${message_id} #${debug_response_counter[message_id]}`;
-        details.appendChild(summary);
-        let pre = document.createElement("pre");
-        let code = document.createElement("code");
-        code.classList.add("language-json");
-        code.textContent = JSON.stringify(message[message.type], null, 2);
-        pre.appendChild(code)
-        details.appendChild(pre);
-        logStorage.appendChild(details);
-        if (window.hljs) {
-            hljs.highlightElement(code);
-        }
+        logRequestResponse(message, message_id, debug_response_counter[message_id]);
     }
 }
 
@@ -1304,6 +1301,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const selectedModel = get_selected_model() || client.defaultModel;
         const modelType = selectedOption?.dataset.type || 'chat';
+        const modelSeed = selectedOption?.dataset.seed;
         const isAudio = selectedOption?.dataset.audio == "true";
         try {
             // Conditionally call the correct client method based on model type.
@@ -1314,7 +1312,8 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 const response = await client.images[method]({
                     model: selectedModel,
                     prompt: message,
-                    ...(regenerate ? { seed: Math.floor(Date.now() / 1000) } : {}),
+                    ...(modelSeed && regenerate ? { seed: Math.floor(Date.now() / 1000) } : {}),
+                    ...(!modelSeed ? { response_format: 'b64_json' } : {}),
                     ...(image && image.url ? { image: image.url } : {})
                 });
                 const imageUrl = response.data[0].b64_json ? `data:image/png;base64,${response.data[0].b64_json}` : response.data[0].url;
@@ -1420,6 +1419,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             messages: messages,
             action: action,
             download_media: downloadMedia,
+            debug_mode: appStorage.getItem("debugMode") == "true",
             api_key: apiKey,
             api_base: apiBase,
             ignored: ignored,
@@ -1576,6 +1576,32 @@ const on_delete_conversation = async (conversation_id) => {
     await load_conversations();
     return done;
 };
+
+const on_star_conversation = async (conversation_id, target) => {
+    const conversation = await get_conversation(conversation_id);
+    if (conversation.star) {
+        target.classList.remove("active");
+    } else {
+        target.classList.add("active");
+    }
+    await save_conversation(update_conversation({
+        ...conversation,
+        star: !conversation.star
+    }));
+    await load_conversations();
+};
+
+const on_preset_conversation = async (conversation_id) => {
+    const conversation = await get_conversation(conversation_id);
+    delete conversation.data;
+    delete conversation.share;
+    delete conversation.star;
+    conversation.id = generateUUID();
+    conversation.items = conversation.items.slice(0, 2);
+    conversation.title = `${framework.translate("Copy")}: ${conversation.title || framework.translate("No Title")}`;
+    await save_conversation(update_conversation(conversation));
+    await set_conversation(conversation.id);
+}
 
 const set_conversation = async (conversation_id) => {
     if (title_ids_storage[conversation_id]) {
@@ -2080,7 +2106,7 @@ const toLocaleDateString = (date) => {
 
 const load_conversations = async () => {
     let conversations = await list_conversations();
-    conversations.sort((a, b) => (b.updated||0)-(a.updated||0));
+    conversations.sort((a, b) => (b.updated || b.added) - (a.updated || a.added));
     await clear_conversations();
     conversations.forEach((conversation) => {
         // const length = conversation.items.map((item) => (
@@ -2093,6 +2119,7 @@ const load_conversations = async () => {
         //     return;
         // }
         const shareIcon = conversation.share ? '<i class="fa-solid fa-qrcode"></i>': '';
+        const starIcon = conversation.star ? `<i onclick="on_preset_conversation('${conversation.id}', this); return false;" class="fa-solid fa-star" style="margin-right: 12px;"></i>`: '';
         let convo = document.createElement("div");
         convo.classList.add("convo");
         convo.id = `convo-${conversation.id}`;
@@ -2105,6 +2132,7 @@ const load_conversations = async () => {
             choise = `
                 <i onclick="show_option('${conversation.id}')" class="fa-solid fa-ellipsis-vertical" id="conv-${conversation.id}"></i>
                 <div id="cho-${conversation.id}" class="choise" style="display:none;">
+                    <i onclick="on_star_conversation('${conversation.id}', this)" class="fa-solid fa-star ${conversation.star ? 'active' : ''}"></i>
                     <i onclick="on_delete_conversation('${conversation.id}')" class="fa-solid fa-trash"></i>
                     <i onclick="hide_option('${conversation.id}')" class="fa-regular fa-x"></i>
                 </div>
@@ -2115,6 +2143,7 @@ const load_conversations = async () => {
                 <i class="fa-regular fa-comments"></i>
                 <span class="datetime">${conversation.updated ? toLocaleDateString(conversation.updated) : ""}</span>
                 <span class="convo-title">${shareIcon} ${framework.escape(conversation.new_title ? conversation.new_title : conversation.title)}</span>
+                ${starIcon}
             </a>
             ${choise}
         `;
@@ -3354,7 +3383,7 @@ async function api(ressource, args=null, files=null, message_id=null, finish_mes
         }
     } else if (args) {
         if (ressource == "log" ||  ressource == "usage") {
-            if (ressource == "log" && !document.getElementById("report_error").checked) {
+            if (ressource == "log" && !document.getElementById("reportError").checked) {
                 return;
             }
         }
@@ -3545,6 +3574,9 @@ modelSelect.addEventListener("change", () => {
         option.value = modelSelect.value;
         if (selectedOption.dataset.type) {
             option.dataset.type = selectedOption.dataset.type;
+        }
+        if (selectedOption.dataset.seed) {
+            option.dataset.seed = "true";
         }
         if (selectedOption.dataset.audio) {
             option.dataset.audio = "true";
@@ -3820,11 +3852,35 @@ if (SpeechRecognition) {
     });
 }
 
-document.getElementById("showLog") && document.getElementById("showLog").addEventListener("click", ()=> {
+function showLog() {
     logStorage.classList.remove("hidden");
     settings.classList.add("hidden");
     logStorage.scrollTop = logStorage.scrollHeight;
-});
+    chat.classList.add("hidden");
+}
+
+function hideLog() {
+    logStorage.classList.add("hidden");
+    chat.classList.remove("hidden");
+}
+
+function logRequestResponse(event, messageId, count=0) {
+    const eventType = event.response ? "response" : "request";
+    let details = document.createElement("details");
+    let summary = document.createElement("summary");
+    summary.textContent = `${eventType[0].toUpperCase() + eventType.slice(1)} ${messageId} #${count}`;
+    details.appendChild(summary);
+    let pre = document.createElement("pre");
+    let code = document.createElement("code");
+    code.classList.add("language-json");
+    code.textContent = JSON.stringify(event.response || event.request, null, 2);
+    pre.appendChild(code)
+    details.appendChild(pre);
+    logStorage.appendChild(details);
+    if (window.hljs) {
+        hljs.highlightElement(code);
+    }
+}
 
 // Mobile Experience Enhancements
 
@@ -4396,9 +4452,24 @@ async function initClient() {
         client = null;
         return;
     }
+    let messageId = null;
+    let count = 0;
+    function logCallback(event) {
+        if (event.request) {
+            messageId = generateUUID();
+            count = 0;
+        }
+        if (event.response || event.request) {
+            logRequestResponse(event, messageId, count);
+            count += 1;
+        }
+    }
     const provider = providerSelect.value;
     const apiKey = get_api_key_by_provider(provider);
     const options = apiKey ? { apiKey } : {};
+    if (appStorage.getItem("debugMode") == "true") {
+        options.logCallback = logCallback;
+    }
 
     if (provider == "ApiAirforce") {
         options.baseUrl = "https://api.airforce/v1";
@@ -4412,6 +4483,12 @@ async function initClient() {
         options.baseUrl = "https://g4f.dev/api/audio";
     } else if (provider == "Grok") {
         options.baseUrl = "https://g4f.dev/api/grok";
+    }else if (provider == "Grok") {
+        options.baseUrl = "https://g4f.dev/api/grok";
+    } else if (provider == "Ollama") {
+        options.baseUrl = "https://g4f.dev/api/ollama";
+    } else if (provider == "Gemini") {
+        options.baseUrl = "https://g4f.dev/api/gemini";
     }
 
     if (!window.providers[provider]) {
@@ -4435,7 +4512,7 @@ async function loadClientModels() {
             }
             const opt = document.createElement('option');
             opt.value = model.id;
-            opt.textContent = model.id + get_modelTags(model);
+            opt.textContent = (model.label || model.id) + get_modelTags(model);
             if (model.type) {
                 opt.dataset.type = model.type;
             }

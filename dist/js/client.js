@@ -59,7 +59,8 @@ class Client {
         this.defaultModel = options.defaultModel;
         this.apiKey = options.apiKey;
         this.referrer = options.referrer;
-        
+        this.logCallback = options.logCallback;
+
         this.extraHeaders = {
             'Content-Type': 'application/json',
             ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
@@ -114,6 +115,7 @@ class Client {
                 if (this.referrer) {
                     params.referrer = this.referrer;
                 }
+                this.logCallback && this.logCallback({request: params, type: 'chat'});
                 const requestOptions = {
                     method: 'POST',
                     headers: this.extraHeaders,
@@ -143,12 +145,13 @@ class Client {
           }
 
           let data = await response.json();
-          data = data.data || data.result || data;
+          data = data.data || data.result || data.models || data;
           data = data.map((model) => {
             if (model.name) {
                 model._id = model.id;
                 model.id = model.name;
             }
+            model.label = model.id.replace('models/', '');
             if (!model.type) {
               if (model.task?.name == "Text Generation") {
                 model.type = 'chat';
@@ -162,6 +165,10 @@ class Client {
                 model.type = 'image';
               } else if (model.task?.name) {
                 model.type = "unknown";
+              } else if (model.id.includes("embedding")) {
+                model.type = "embedding";
+              } else if (model.id.includes("generate")) {
+                model.type = "image";
               }
             }
             return model;
@@ -217,7 +224,9 @@ class Client {
         if (!response.ok) {
             throw new Error(`Status ${response.status}: ${await response.text()}`);
         }
-        return await response.json();
+        const data = await response.json();
+        this.logCallback && this.logCallback({response: data, type: 'chat'});
+        return data;
     }
 
     async *_streamCompletion(response) {
@@ -226,16 +235,6 @@ class Client {
       }
       if (!response.body) {
         throw new Error('Streaming not supported in this environment');
-      }
-      if (response.headers.get('Content-Type').startsWith('application/json')) {
-            const data = await response.json();
-            if (data.choices && data.choices[0]?.message) {
-                data.choices[0].delta = data.choices[0].message;
-            } else if (data.output && data.output[0].content) {
-                data.choices = [{delta: {content: data.output[0].content[0].text}}];
-            }
-            yield data;
-            return;
       }
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -259,7 +258,22 @@ class Client {
                     data.choices[0].delta.reasoning = data.choices[0].delta.reasoning_content;
                 }
                 yield data;
-              }
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
+              } else if (response.headers.get('Content-Type').startsWith('application/json')) {
+                const data = JSON.parse(part);
+                if (data.choices && data.choices[0]?.message) {
+                    data.choices[0].delta = data.choices[0].message;
+                } else if (data.output && data.output[0].content) {
+                    data.choices = [{delta: {content: data.output[0].content[0].text}}];
+                } else if (data.message) {
+                    data.choices = [{delta: data.message}];
+                }
+                if (data.model) {
+                    data.model = data.model.replace('models/', '');
+                }
+                yield data;
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
+            }
             } catch (err) {
               console.error('Error parsing chunk:', part, err);
             }
@@ -282,10 +296,12 @@ class Client {
             params.height = params.size.split('x')[1];
             delete params.size;
         }
+        this.logCallback && this.logCallback({request: {prompt, ...params}, type: 'image'});
         const encodedParams = new URLSearchParams(params);
         let url = imageEndpoint.replace('{prompt}', prompt);
         url += '?' + encodedParams.toString();
         const response = await fetch(url, requestOptions);
+        this.logCallback && this.logCallback({response: response, type: 'image'});
         if (!response.ok) {
             throw new Error(`Status ${response.status}: ${await response.text()}`);
         }
@@ -298,12 +314,14 @@ class Client {
             body: JSON.stringify(params),
             ...requestOptions
         });
+        this.logCallback && this.logCallback({request: params, type: 'image'});
         if (!response.ok) {
             const errorBody = await response.text();
             throw new Error(`Status ${response.status}: ${errorBody}`);
         }
         if (response.headers.get('Content-Type').startsWith('application/json')) {
             const data = await response.json();
+            this.logCallback && this.logCallback({response: data, type: 'image'});
             if (data?.error?.message) {
                 throw new Error(`Image generation failed: ${data.error.message}`);
             }
@@ -378,7 +396,7 @@ class PollinationsAI extends Client {
                     return model
                 }),
                 ...imageModelsResponse.map(model => {
-                    return { id: this.swapAliases[model]  || model, type: 'image'};
+                    return { id: this.swapAliases[model]  || model, type: 'image', seed: true};
                 })
             ];
             return this._models;
@@ -431,6 +449,7 @@ class Audio extends Client {
                 };
                 try {
                     const response = await fetch(this.apiEndpoint, requestOptions);
+                    this.logCallback && this.logCallback({request: params, type: 'chat'});
                     return await this._regularCompletion(response);
                 } catch(e) {
                     params.model = originalModel;
@@ -731,6 +750,7 @@ class Puter {
                         return this._streamCompletion(options.model, messages, options);
                     }
                     const response = await (await this.puter).ai.chat(messages, false, options);
+                    this.logCallback && this.logCallback({response: response, type: 'chat'});
                     if (response.choices == undefined && response.message !== undefined) {
                         return {
                             ...response,
@@ -786,6 +806,7 @@ class Puter {
     }
 
     async *_streamCompletion(model, messages, options = {}) {
+        this.logCallback && this.logCallback({request: {messages, ...options}, type: 'chat'});
         for await (const item of await ((await this.puter).ai.chat(messages, false, options))) {
           item.model = model;
           if (item.choices == undefined && item.text !== undefined) {

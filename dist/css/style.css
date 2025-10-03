@@ -693,7 +693,8 @@ input-count .text {
 .file-label:has(> input:valid),
 .file-label.selected,
 .micro-label.recognition,
-#search.active i {
+#search.active i,
+.choise i.active {
     color: var(--accent);
 }
 
@@ -1621,7 +1622,8 @@ form textarea {
         display: none;
     }
 }
-.chat-top-panel .new_convo_icon {
+
+.chat-top-panel .new_convo_icon, .chat-top-panel .show_log {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1635,8 +1637,13 @@ form textarea {
     font-size: 16px;
 }
 
+.chat-top-panel .show_log.hidden {
+    display: none;
+}
+
 .chat-top-panel .mobile-sidebar-toggle:hover,
-.chat-top-panel .new_convo_icon:hover {
+.chat-top-panel .new_convo_icon:hover,
+.chat-top-panel .show_log:hover {
     background-color: var(--button-hover);
 }
 
@@ -1940,6 +1947,7 @@ form textarea {
   .stop_generating, 
   .regenerate, 
   .new_convo_icon,
+  .show_log,
   .chat-buttons button {
     z-index: 950; /* Below sidebar and overlay */
   }

@@ -52,10 +52,12 @@
         Azure: Client,
         Audio,
         Grok: Client,
+        Ollama: Client,
         PollinationsAI,
         ApiAirforce: Client,
         AnonDrop: Client,
         Worker: Worker,
+        Gemini: Client,
         DeepInfra,
         Puter,
         HuggingFace,
@@ -196,29 +198,23 @@
                       <label for="disableGradient" class="toogle" title="Disable gradient background"></label>
                   </div>
                   <div class="field">
-                      <span class="label">Disable Conversation History</span>
-                      <input type="checkbox" id="history" />
-                      <label for="history" class="toogle" title="Improve response time or fix large conversation issues"></label>
+                      <span class="label">Render Markdown</span>
+                      <input type="checkbox" id="renderMarkdown" checked />
+                      <label for="renderMarkdown" class="toogle" title="Enable rendering of Markdown content"></label>
                   </div>
                   <div class="field">
                       <span class="label">Hide System Prompt</span>
                       <input type="checkbox" id="hide-systemPrompt" />
                       <label for="hide-systemPrompt" class="toogle" title="Hide system prompt for more space on phones"></label>
                   </div>
-                  <div class="field">
-                      <span class="label">Download Generated Media</span>
-                      <input type="checkbox" id="download_media" checked />
-                      <label for="download_media" class="toogle" title="Download and save generated images, audios, and videos"></label>
+                  <div class="field box">
+                      <label for="userInput-height" class="label" title="Set maximum height of input box">Input Max Height (px)</label>
+                      <input type="number" id="userInput-height" value="200" min="100" max="500" />
                   </div>
                   <div class="field">
-                      <span class="label">Refine Files with spaCy</span>
-                      <input type="checkbox" id="refine" />
-                      <label for="refine" class="toogle" title="Enable file refinement with spaCy"></label>
-                  </div>
-                  <div class="field">
-                      <span class="label">Report Errors</span>
-                      <input type="checkbox" id="report_error" checked />
-                      <label for="report_error" class="toogle" title="Send error reports"></label>
+                      <span class="label">Disable Conversation History</span>
+                      <input type="checkbox" id="history" />
+                      <label for="history" class="toogle" title="Improve response time or fix large conversation issues"></label>
                   </div>
                   <div class="field">
                       <span class="label">Count Words and Tokens</span>
@@ -226,30 +222,39 @@
                       <label for="countTokens" class="toogle" title="Enable word and token counting"></label>
                   </div>
                   <div class="field">
-                      <span class="label">Render Markdown</span>
-                      <input type="checkbox" id="renderMarkdown" checked />
-                      <label for="renderMarkdown" class="toogle" title="Enable rendering of Markdown content"></label>
+                      <span class="label">Download Generated Media</span>
+                      <input type="checkbox" id="download_media" checked />
+                      <label for="download_media" class="toogle" title="Download and save generated images, audios, and videos"></label>
                   </div>
                   <div class="field">
                       <span class="label">Automatic Orientation (16:9 or 9:16)</span>
                       <input type="checkbox" id="automaticOrientation" checked />
                       <label for="automaticOrientation" class="toogle" title="Auto-orient generated media"></label>
                   </div>
+                  <div class="field hidden">
+                      <span class="label">Refine Files with spaCy</span>
+                      <input type="checkbox" id="refine" />
+                      <label for="refine" class="toogle" title="Enable file refinement with spaCy"></label>
+                  </div>
+                  <div class="field">
+                      <span class="label">Report Errors</span>
+                      <input type="checkbox" id="reportError" checked />
+                      <label for="reportError" class="toogle" title="Send error reports"></label>
+                  </div>
+                  <div class="field">
+                      <span class="label">Debug Mode</span>
+                      <input type="checkbox" id="debugMode" />
+                      <label for="debugMode" class="toogle" title="Enable debug mode"></label>
+                  </div>
                   <div class="field box">
                       <label for="systemPrompt" class="label">System Prompt</label>
                       <textarea id="systemPrompt" placeholder="You are a helpful assistant." aria-describedby="systemPrompt-desc" data-example="You can use this prompt to customize AI behavior, e.g., to enable image generation by using specified syntax."></textarea>
-                      <small id="systemPrompt-desc">Customize the AI's system prompt to personalize responses or enable features like image generation.</small>
-                  </div>
-                  <div class="field box">
-                      <label for="userInput-height" class="label" title="Set maximum height of input box">Input Max Height (px)</label>
-                      <input type="number" id="userInput-height" value="200" min="100" max="500" />
+                      <small id="systemPrompt-desc" class="sr-only">Customize the AI's system prompt to personalize responses or enable features like image generation.</small>
                   </div>
                   <div class="field box">
                       <label for="recognition-language" class="label" title="Set preferred language for speech recognition">Speech Recognition Language</label>
                       <input type="text" id="recognition-language" value="" placeholder="Default: navigator.language" />
                   </div>
-
-                  <!-- Hidden advanced options -->
                   <div class="field mem0 hidden">
                       <span class="label">Enable Memory with Mem0</span>
                       <input type="checkbox" id="mem0" />
@@ -275,7 +280,6 @@
                       <label for="BingCreateImages-api_key" class="label">Microsoft Designer Bing Cookie (_U)</label>
                       <input type="text" id="BingCreateImages-api_key" name="BingCreateImages[api_key]" placeholder="&quot;_U&quot; cookie" autocomplete="off" />
                   </div>
-
                   <div class="bottom_buttons">
                       <button type="button" onclick="delete_conversations()" aria-label="Clear all conversations">
                           <i class="fa-solid fa-trash" aria-hidden="true"></i>
@@ -298,7 +302,7 @@
                           <i class="fa-solid fa-trash" aria-hidden="true"></i>
                           <span>Delete Translations</span>
                       </button>
-                      <button id="showLog" type="button" aria-label="Show log">
+                      <button id="showLog" type="button" aria-label="Show log" onclick="window.showLog()">
                           <i class="fa-solid fa-terminal" aria-hidden="true"></i>
                           <span>Show log</span>
                       </button>
@@ -327,6 +331,21 @@
                 <button class="new_convo_icon" onclick="new_conversation()" aria-label="Start new conversation">
                     <i class="fa-regular fa-plus" aria-hidden="true"></i>
                 </button>
+                <button class="show_log hidden" onclick="showLog()" aria-label="Show log">
+                    <i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                </button>
+                <script async>
+                if (localStorage.getItem("showLog") === "true") {
+                    let button = document.head.querySelector('.chat-top-panel .show_log');
+                    if (button) {
+                        button.classList.remove('hidden');
+                    }
+                    button = document.head.querySelector('.chat-top-panel .new_convo_icon');
+                    if (button) {
+                        button.classList.add('hidden');
+                    }
+                }
+                </script>
             </header>
 
             <label for="chatPrompt" class="sr-only">System prompt textarea</label>
@@ -509,7 +528,7 @@
         <!-- Logs -->
         <section class="log hidden" aria-label="Application logs" tabindex="-1">
             <header class="log-top-bar">
-                <button class="log-back-button" onclick="open_settings();" aria-label="Back to settings">
+                <button class="log-back-button" onclick="window.hideLog();" aria-label="Back to settings">
                     <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
                 </button>
                 <h2>Logs</h2>

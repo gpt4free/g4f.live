@@ -254,6 +254,7 @@ class Client {
             try {
               if (part.startsWith('data: ')) {
                 const data = JSON.parse(part.slice(6));
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 if (data.response) {
                     data.choices = [{delta: {content: data.response}}];
                 }
@@ -261,9 +262,9 @@ class Client {
                     data.choices[0].delta.reasoning = data.choices[0].delta.reasoning_content;
                 }
                 yield data;
-                this.logCallback && this.logCallback({response: data, type: 'chat'});
               } else if (response.headers.get('Content-Type').startsWith('application/json')) {
                 const data = JSON.parse(part);
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 if (data.choices && data.choices[0]?.message) {
                     data.choices[0].delta = data.choices[0].message;
                 } else if (data.output && data.output[0].content) {
@@ -275,7 +276,6 @@ class Client {
                     data.model = data.model.replace('models/', '');
                 }
                 yield data;
-                this.logCallback && this.logCallback({response: data, type: 'chat'});
             }
             } catch (err) {
               console.error('Error parsing chunk:', part, err);
@@ -812,6 +812,7 @@ class Puter {
         this.logCallback && this.logCallback({request: {messages, ...options}, type: 'chat'});
         for await (const item of await ((await this.puter).ai.chat(messages, false, options))) {
           item.model = model;
+          this.logCallback && this.logCallback({response: item, type: 'chat'});
           if (item.choices == undefined && item.text !== undefined) {
             yield {
                 ...item,
@@ -951,7 +952,7 @@ class HuggingFace extends Client {
                         model = providerMapping[providerKey].providerId;
                         break;
                     }
-
+                    this.logCallback && this.logCallback({request: {baseUrl: apiBase, model, ...options}, type: 'chat'});
                     const requestOptions = {
                         method: 'POST',
                         headers: this.extraHeaders,

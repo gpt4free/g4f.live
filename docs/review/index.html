@@ -414,7 +414,7 @@
                 .then(markdown => {
                     const html = renderMarkdown(markdown);
                     document.querySelector('main').innerHTML = html;
-                    highlight(document.querySelector('main'));
+                    hljs.highlightElement(document.querySelector('main'));
                     generateTableOfContents();
                     window.scrollTo(0, 0);
                 })

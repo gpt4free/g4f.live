@@ -2576,7 +2576,7 @@ Example: [
         prompt += `\nRespond in ${navigator.language}.`;
     }
     try {
-        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 2)});
+        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 8)});
         startup_questions = await response.json()
         startup_questions = startup_questions.questions || startup_questions;
     } catch (e) {

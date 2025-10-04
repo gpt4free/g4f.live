@@ -1402,6 +1402,11 @@ form textarea {
     padding: var(--inner-gap) var(--inner-gap) var(--inner-gap) 0;
 }
 
+.settings .field.row {
+    display: flex;
+    flex-direction: column;
+}
+
 .settings, .log, form {
     overflow: auto;
     display: flex;
@@ -1438,6 +1443,10 @@ form textarea {
     font-size: 15px;
     width: 100%;
     color: var(--colour-3);
+}
+
+.settings .row input, .settings .row textarea {
+        margin-left: var(--inner-gap);
 }
 
 .settings input:focus, form input:focus, .chat-body input:focus {

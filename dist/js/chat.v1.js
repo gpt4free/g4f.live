@@ -1224,6 +1224,9 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 }
                 api("usage", usage);
             }
+            if (action === "next") {
+                load_follow_up_questions(messages, final_message);
+            }
         }
         // Update controller storage
         if (controller_storage[message_id]) {
@@ -2567,16 +2570,21 @@ function render_startup_questions() {
 }
 async function load_startup_questions() {
     let prompt = `Generate a JSON-formatted list of engaging and diverse questions I can ask you at the start of a new conversation.
-Example: [
-  "🤖 What are the latest advancements in AI?",
-  "🗾✈️ Can you help me plan a trip to Japan?",
-  "🥗🍎 What are some healthy meal ideas?"
-]`;
+Example: 
+\`\`\`json
+{
+    "questions": [
+        "🤖 What are the latest advancements in AI?",
+        "🗾✈️ Can you help me plan a trip to Japan?",
+        "🥗🍎 What are some healthy meal ideas?"
+    ]
+}
+\`\`\``;
     if (localStorage.getItem(framework.translationKey)) {
         prompt += `\nRespond in ${navigator.language}.`;
     }
     try {
-        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 8)});
+        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 4)});
         startup_questions = await response.json()
         startup_questions = startup_questions.questions || startup_questions;
     } catch (e) {
@@ -2584,6 +2592,47 @@ Example: [
     }
 }
 load_startup_questions();
+async function load_follow_up_questions(messages, new_response) {
+    if (suggestions) {
+        return;
+    }
+    messages = messages.filter((msg) => !Array.isArray(msg.content) && msg.content && msg.role === "user");
+    let prompt = `Suggest 3-4 follow-up questions that sound like they come from the user.
+    Use first-person language and reflect the user's intent, curiosity, or goals.
+    Stay relevant, avoid generic questions, and help deepen the conversation naturally.
+    Generate a short conversation title with emojis. Keep it natural and relevant. Return as JSON with "questions" and "title" keys.`;
+    prompt += `
+\`\`\`json
+{
+  "title": "✨ 🧠 The Next Steps",
+  "questions": [
+    "🛠️ Can you help me brainstorm ideas for a weekend project?",
+    "🇩🇪 What are some interesting facts about Germany I might not know?",
+    "🌙 How do I stay productive when working late at night?",
+    "😌 What are some relaxing things to do before bed?"
+  ]
+}
+\`\`\``;
+    if (localStorage.getItem(framework.translationKey)) {
+        prompt += `\n\nRespond in language ${navigator.language}.`;
+    }
+    const new_messages = [{role: "assistant", content: new_response}, {role: "user", content: prompt}];
+    console.log("Loading follow up questions with messages:", new_messages);
+    try {
+        const response = await fetch("https://g4f.dev/ai/?json=true", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+            messages: messages.concat(new_messages)
+        })});
+        const follow_up_questions = await response.json()
+        suggestions = follow_up_questions.questions || follow_up_questions;
+        const conversation = await get_conversation(window.conversation_id);
+        conversation.title = follow_up_questions.title || conversation.title || "";
+        await save_conversation(conversation);
+        await load_conversations();
+        await safe_load_conversation(window.conversation_id);
+    } catch (e) {
+        add_error("Failed to parse follow up questions:", e);
+    }
+}
 window.addEventListener('DOMContentLoaded', async function () {
     await on_load();
     await on_api();

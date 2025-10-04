@@ -139,8 +139,9 @@ framework.translateAll = async () =>{
     for (const text of newTranslations) {
         allTranslations[text] = "";
     }
-    console.log("newTranslations", newTranslations);
-    console.log("allTranslations", allTranslations);
+    for (var key in allTranslations) {
+        allTranslations[key] = "";
+    }
     const json_translations = "\n\n```json\n" + JSON.stringify(allTranslations, null, 4) + "\n```";
     const json_language = "`" + navigator.language + "`";
     const prompt = `Translate the following text snippets in a JSON object to ${json_language} (iso code): ${json_translations}`;

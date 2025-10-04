@@ -85,6 +85,7 @@ let image_storage = {};
 let wakeLock = null;
 let countTokensEnabled = true;
 let suggestions = null;
+let startup_questions = [];
 let lastUpdated = null;
 let mediaRecorder = null;
 let stopRecognition = ()=>{};
@@ -1398,10 +1399,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
         const downloadMedia = document.getElementById("download_media")?.checked;
         let apiBase;
         if (provider == "Custom") {
-            apiBase = document.getElementById("api_base")?.value;
-            if (!apiBase) {
-                provider = "";
-            }
+            apiBase = appStorage.getItem("Custom-api_base");
         }
         const ignored = Array.from(settings.querySelectorAll("input.provider:not(:checked)")).map((el)=>el.value);
         const extraBody = {};
@@ -1637,7 +1635,7 @@ const set_conversation = async (conversation_id) => {
 
 const new_conversation = async (private = false) => {
     if (window.location.hash) {
-        add_url_to_history(private ? "#private" : "#new");
+        add_url_to_history(private ? "#private" : window.location.pathname);
     }
     window.conversation_id = private ? null : generateUUID();
     document.title = window.title || document.title;
@@ -1651,6 +1649,7 @@ const new_conversation = async (private = false) => {
     load_conversations();
     hide_sidebar(true);
     say_hello();
+    render_startup_questions();
 };
 
 function merge_messages(message1, message2) {
@@ -2391,7 +2390,7 @@ function count_tokens(model, text, prompt_tokens = 0) {
             return mistralTokenizer.encode(text).length;
         }
     }
-    if (window.GPTTokenizer_cl100k_base && model?.startsWith("gpt-3") || model == "gpt-4") {
+    if (window.GPTTokenizer_cl100k_base && (model?.startsWith("gpt-3") || model == "gpt-4")) {
         model = model?.startsWith("gpt-3") ? "gpt-3.5-turbo" : "gpt-4"
         return GPTTokenizer_cl100k_base?.encode(text, model).length;
     } else if (window.GPTTokenizer_o200k_base) {
@@ -2549,6 +2548,42 @@ window.addEventListener("hashchange", (event) => {
         new_conversation();
     }
 });
+function render_startup_questions() {
+    console.log("Rendering startup questions:", startup_questions);
+    const used_startup_questions = startup_questions.sort(() => .5 - Math.random()).slice(0, 4);
+    const suggestions_el = document.createElement("div");
+    suggestions_el.classList.add("suggestions");
+    used_startup_questions.forEach((suggestion)=> {
+        const el = document.createElement("button");
+        el.classList.add("suggestion");
+        el.innerHTML = `<span>${framework.escape(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
+        el.onclick = async () => {
+            startup_questions = startup_questions.filter((q) => q != suggestion);
+            await handle_ask(true, suggestion);
+        }
+        suggestions_el.appendChild(el);
+    });
+    chatBody.appendChild(suggestions_el);
+}
+async function load_startup_questions() {
+    let prompt = `Generate a JSON-formatted list of engaging and diverse questions I can ask you at the start of a new conversation.
+Example: [
+  "🤖 What are the latest advancements in AI?",
+  "🗾✈️ Can you help me plan a trip to Japan?",
+  "🥗🍎 What are some healthy meal ideas?"
+]`;
+    if (localStorage.getItem(framework.translationKey)) {
+        prompt += `\nRespond in ${navigator.language}.`;
+    }
+    try {
+        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 2)});
+        startup_questions = await response.json()
+        startup_questions = startup_questions.questions || startup_questions;
+    } catch (e) {
+        add_error("Failed to parse startup questions:", e);
+    }
+}
+load_startup_questions();
 window.addEventListener('DOMContentLoaded', async function () {
     await on_load();
     await on_api();
@@ -2623,6 +2658,18 @@ window.addEventListener('pywebviewready', async function() {
     await on_api();
 });
 
+window.addEventListener("load", (event) => {
+    if (window.hljs) {
+        hljs.addPlugin(new HtmlRenderPlugin());
+        if (window.CopyButtonPlugin) {
+            hljs.addPlugin(new CopyButtonPlugin());
+        }
+    }
+    if (!window.location.hash.replace("#", "")) {
+        render_startup_questions();
+    }
+});
+
 async function on_load() {
     translationSnipptes.forEach((snippet)=>this.framework.translate(snippet));
     count_input();
@@ -2649,12 +2696,6 @@ async function on_load() {
         await new_conversation(window.location.hash == "#private");
     } else {
         await load_conversations();
-    }
-    if (window.hljs) {
-        hljs.addPlugin(new HtmlRenderPlugin());
-        if (window.CopyButtonPlugin) {
-            hljs.addPlugin(new CopyButtonPlugin());
-        }
     }
     // Ensure sidebar is shown by default on desktop
     if (window.innerWidth >= 640) {
@@ -3445,8 +3486,11 @@ async function read_response(response, message_id, provider, finish_message) {
 function get_api_key_by_provider(provider) {
     let api_key = null;
     if (provider) {
-        if (["Azure", "gpt-oss-120b"].includes(provider)) {
+        if (["gpt-oss-120b"].includes(provider)) {
             return appStorage.getItem("Azure-api_key");
+        }
+        if (["custom"].includes(provider)) {
+            return appStorage.getItem("Custom-api_key");
         }
         if (provider == "AnyProvider") {
             return {
@@ -4492,13 +4536,12 @@ async function initClient() {
     if (appStorage.getItem("debugMode") == "true") {
         options.logCallback = logCallback;
     }
-    if (!window.providers[provider]) {
-        console.error(`No client class found for provider: ${provider}`);
+    try {
+        client = window.createClient(provider, options);
+    } catch (error) {
+        console.error('Failed to create client:', error);
         return;
     }
-    const config = window.providers[provider];
-    options.baseUrl = config.baseUrl;
-    client = new config.class(options);
     await loadClientModels();
     return true;
 }

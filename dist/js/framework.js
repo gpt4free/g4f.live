@@ -8,6 +8,11 @@ const logStorage = document.querySelector(".log");
 let privateConversation = null;
 
 function add_error(event, log=false) {
+    if (log instanceof Error) {
+        log.message = event;
+        event = log;
+        log = true;
+    }
     if (log) {
         console.error(event);
     }
@@ -165,18 +170,11 @@ async function query(prompt, options={ json: false, cache: true }) {
     if (options === true || options === false) {
         options = { json: options, cache: true };
     }
-    const params = {};
-    if (options.json) {
-        params.json = true;
-    }
-    if (options.model) {
-        params.model = options.model;
-    }
-    let encodedParams = (new URLSearchParams(params)).toString();
+    let encodedParams = (new URLSearchParams(options)).toString();
     if (encodedParams) {
         encodedParams = "?" + encodedParams
     }
-    let twoPartyUrl = `https://g4f.dev/api/pollinations.ai/${encodeURIComponent(prompt)}${encodedParams}`;
+    let twoPartyUrl = `https://g4f.dev/ai/${encodeURIComponent(prompt)}${encodedParams}`;
     const response = await fetch(twoPartyUrl);
     if (!response.ok) {
         let firstPartyUrl = `https://text.pollinations.ai/${encodeURIComponent(prompt)}${encodedParams}`;

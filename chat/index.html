@@ -44,7 +44,11 @@
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js" defer></script>
     <script src="../dist/js/sanitize-html.js" async></script>
-    <script src="../dist/js/providers.js" type="module" defer></script>
+    <script type="module" defer>
+        import providers, { createClient }  from "../dist/js/providers.js";
+        window.providers = providers;
+        window.createClient = createClient;
+    </script>
 
     <!-- MathJax Config -->
     <script>

@@ -1690,6 +1690,7 @@ form textarea {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+    margin-top: auto;
 }
 .suggestions .suggestion {
     background: var(--blur-bg);

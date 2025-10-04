@@ -467,16 +467,6 @@ class Audio extends Client {
     }
 }
 
-class Custom extends Client {
-    constructor(options = {}) {
-        super({
-            baseUrl: localStorage ? localStorage.getItem("Custom-api_base") : undefined,
-            apiKey: localStorage ? localStorage.getItem("Custom-api_key") : undefined,
-            ...options
-        });
-    }
-}
-
 class DeepInfra extends Client {
     constructor(options = {}) {
         super({
@@ -979,5 +969,5 @@ class HuggingFace extends Client {
 }
 
 
-export { Client, Custom, PollinationsAI, DeepInfra, Together, Puter, HuggingFace, Worker, Audio };
+export { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace, Worker, Audio };
 export default Client;

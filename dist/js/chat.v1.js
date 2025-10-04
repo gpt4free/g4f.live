@@ -963,13 +963,15 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             content_map.inner.appendChild(div);
             let cursorDiv = content_map.inner.querySelector(".cursor");
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
-        } else if (document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
+        } else if (true || document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
             let cursorDiv = content_map.inner.querySelector(".cursor");
             message.content.split("\n").forEach((line, index, array) => {
                 if (line.trim().length > 0) {
-                    let span = document.createElement("span");
-                    span.innerText = line;
-                    content_map.inner.insertBefore(span, cursorDiv);
+                    line.split('').forEach((char) => {
+                        let span = document.createElement("span");
+                        span.innerText = char;
+                        content_map.inner.insertBefore(span, cursorDiv);
+                    });
                 }
                 if (index < array.length - 1) {
                     content_map.inner.insertBefore(document.createElement("br"), cursorDiv);

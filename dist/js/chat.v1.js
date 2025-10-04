@@ -194,8 +194,16 @@ class HtmlRenderPlugin {
     }
 }
 let typesetPromise = Promise.resolve();
+let hljs_loaded = false;
 const highlight = (container) => {
     if (window.hljs) {
+        if (window.hljs && !hljs_loaded) {
+            hljs.addPlugin(new HtmlRenderPlugin());
+            if (typeof CopyButtonPlugin === 'function') {
+                hljs.addPlugin(new CopyButtonPlugin());
+                hljs_loaded = true;
+            }
+        }
         container.querySelectorAll('code:not(.hljs').forEach((el) => {
             if (el.className != "hljs") {
                 hljs.highlightElement(el);
@@ -2717,12 +2725,6 @@ window.addEventListener('pywebviewready', async function() {
 });
 
 window.addEventListener("load", (event) => {
-    if (window.hljs) {
-        hljs.addPlugin(new HtmlRenderPlugin());
-        if (window.CopyButtonPlugin) {
-            hljs.addPlugin(new CopyButtonPlugin());
-        }
-    }
     if (!window.location.hash.replace("#", "")) {
         render_startup_questions();
     }

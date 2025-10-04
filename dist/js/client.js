@@ -125,7 +125,7 @@ class Client {
                     headers: this.extraHeaders,
                     body: JSON.stringify(params)
                 };
-                const response = await fetch(this.apiEndpoint, requestOptions);
+                const response = await fetch(this.apiEndpoint.replace("{now}", Date.now()), requestOptions);
                 if (params.stream) {
                     return this._streamCompletion(response);
                 } else {

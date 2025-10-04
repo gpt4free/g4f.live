@@ -1,7 +1,7 @@
 import { Client, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } from "/dist/js/client.js";
 
 const providers = {
-    "auto": {class: Client, baseUrl: "https://g4f.dev/api/auto", apiEndpoint: "https://g4f.dev/ai/{now}", tags: ""},
+    "default": {class: Client, baseUrl: "https://g4f.dev/api/auto", apiEndpoint: "https://g4f.dev/ai/{now}", tags: ""},
     "api-airforce": {class: Client, baseUrl: "https://api.airforce/v1", tags: "🎨 👓"},
     "anon-drop": {class: Client, baseUrl: "https://anondrop.net/v1", tags: ""},
     "audio": {class: Audio, baseUrl: "https://g4f.dev/api/audio", tags: "🎧"},

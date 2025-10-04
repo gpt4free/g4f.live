@@ -1921,6 +1921,8 @@ const load_conversation = async (conversation) => {
             el.innerHTML = `<span>${framework.escape(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
             el.onclick = async () => {
                 suggestions = null;
+                suggestions_el = chatBody.querySelector('.suggestions');
+                suggestions_el ? suggestions_el.remove() : null;
                 await handle_ask(true, suggestion);
             }
             suggestions_el.appendChild(el);

@@ -1113,8 +1113,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
     message_storage[message_id] = "";
     stop_generating.classList.remove("stop_generating-hidden");
 
-    let suggestions_el = chatBody.querySelector('.suggestions');
-    suggestions_el ? suggestions_el.remove() : null;
+    chatBody.querySelectorAll('.suggestions').forEach((suggestions_el) => suggestions_el.remove());
     if (countTokensEnabled) {
         let count_total = chatBody.querySelector('.count_total');
         count_total ? count_total.parentElement.removeChild(count_total) : null;
@@ -1919,8 +1918,6 @@ const load_conversation = async (conversation) => {
     });
 
     if (suggestions) {
-        let suggestions_el = chatBody.querySelector('.suggestions');
-        suggestions_el ? suggestions_el.remove() : null;
         suggestions_el = document.createElement("div");
         suggestions_el.classList.add("suggestions");
         suggestions.forEach((suggestion)=> {
@@ -1935,6 +1932,7 @@ const load_conversation = async (conversation) => {
             }
             suggestions_el.appendChild(el);
         });
+        chatBody.querySelectorAll('.suggestions').forEach((suggestions_el) => suggestions_el.remove());
         chatBody.appendChild(suggestions_el);
     } else if (countTokensEnabled && window.GPTTokenizer_cl100k_base) {
         let filtered = prepare_messages(messages, null, true, false);
@@ -2580,6 +2578,7 @@ function render_startup_questions() {
         }
         suggestions_el.appendChild(el);
     });
+    chatBody.querySelectorAll('.suggestions').forEach((suggestions_el) => suggestions_el.remove());
     chatBody.appendChild(suggestions_el);
 }
 async function load_startup_questions() {
@@ -2962,6 +2961,11 @@ async function on_api() {
         option.value = name;
         option.dataset.live = "true";
         option.text = `${name} ${config.tags}`;
+        fetch(`https://g4f.dev/ai/${name}/Response%20with%20ok`, {seed: Math.floor(Date.now() / 1000 / 3600 / 4)}).then((response) => {
+            if (response.ok) {
+                option.text += " 🟢";
+            }
+        });
         optgroup.appendChild(option);
     });
     providerSelect.appendChild(optgroup);
@@ -3922,14 +3926,16 @@ if (SpeechRecognition) {
         buffer = "";
     };
     recognition.onend = function() {
+        if (buffer) {
+            userInput.value += `${startValue ? startValue + "\n" : ""}${buffer}`;
+            buffer = "";
+            count_input();
+        }
         if (microLabel.classList.contains("recognition")) {
             recognition.start();
         } else {
             userInput.readOnly = false;
-            if (buffer) {
-                userInput.value = `${startValue ? startValue + "\n" : ""}${buffer}`;
-                userInput.focus();
-            }
+            userInput.focus();
         }
     };
     recognition.onresult = function(event) {
@@ -3957,7 +3963,6 @@ if (SpeechRecognition) {
         if (microLabel.classList.contains("recognition")) {
             microLabel.classList.remove("recognition");
             recognition.stop();
-            userInput.value = `${startValue ? startValue + "\n" : ""}${buffer}`;
             count_input();
             return true;
         }

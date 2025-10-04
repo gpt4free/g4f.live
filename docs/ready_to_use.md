@@ -1,38 +1,62 @@
 ## Documentation: API endpoints and usage
 
-Overview
+### Overview
 - This collection exposes multiple base URLs (providers) for chat-style completions. Each entry in the table lists a base URL (with /models removed) and whether an API key is required.
 - Base URL extraction: remove /models from the URL in your table to get the API base_url you should use in requests.
 
+### Base URLs Table
 | Base URLs | API key | Notes |
 | --- | --- | --- |
 | [https://localhost:1337/v1](https://localhost:1337/v1/models) | none required | use it locally |
-| [https://g4f.dev/api/gpt-oss-120b](https://g4f.dev/api/gpt-oss-120b/models) | none required | use gpt-oss-120b for free |
-| [https://g4f.dev/api/groq](https://g4f.dev/api/groq/models) | none required | Use Groq provder |
+| [https://g4f.dev/api/groq](https://g4f.dev/api/groq/models) | none required | Use Groq provider |
 | [https://g4f.dev/api/ollama](https://g4f.dev/api/ollama/models) | none required | Use Ollama provider |
 | [https://g4f.dev/api/pollinations.ai](https://g4f.dev/api/pollinations.ai/models) | none required | Proxy for pollinations.ai |
 | [https://g4f.dev/api/nvidia](https://g4f.dev/api/nvidia/models) | none required | Use Nvidia provider |
-| [https://g4f.dev/api/Azure](https://g4f.dev/api/Azure/models) | provided by [g4f.dev/api_key](https://g4f.dev/api_key.html) | Use Azure on my bill
-| [https://host.g4f.dev/v1](https://host.g4f.dev/v1/models) | provided by [g4f.dev/api_key](https://g4f.dev/api_key.html) | Hosted instance, many models
+| [https://g4f.dev/api/grok](https://g4f.dev/ai/grok) | none required | Hosted Grok provider |
+| [https://g4f.dev/api/gemini](https://g4f.dev/ai/gemini) | none required | Hosted Gemini provider |
+| [https://g4f.dev/api/gpt-oss-120b](https://g4f.dev/api/gpt-oss-120b/models) | required | now requires API key from [g4f.dev/api_key](https://g4f.dev/api_key.html) |
+| [https://g4f.dev/api/Azure](https://g4f.dev/api/Azure/models) | required | Use Azure on my bill, get key from [g4f.dev/api_key](https://g4f.dev/api_key.html) |
+| [https://g4f.dev/v1](https://g4f.dev/v1/models) | required | Hosted instance, many models, get key from [g4f.dev/api_key](https://g4f.dev/api_key.html) |
 
-How to choose a base URL
+### Also Supported API Routes:
+- **Nvidia**: https://integrate.api.nvidia.com/v1
+- **DeepInfra**: https://api.deepinfra.com/v1
+- **OpenRouter**: https://openrouter.ai/api/v1
+- **Google Gemini**: https://generativelanguage.googleapis.com/v1beta/openai
+- **xAI**: https://api.x.ai/v1
+- **Together**: https://api.together.xyz/v1
+- **OpenAI**: https://api.openai.com/v1
+- **Strinable Inf**: https://stringableinf.com/api/v1
+- **TypeGPT**: https://typegpt.ai/api
+- **Grok**: https://api.grok.com/v1
+- **ApiAirforce**: baseUrl: https://api.airforce/v1, apiEndpoint: https://stringableinf.com/api/v1/chat/completions
+- **Auto Provider & Model Selection**: apiEndpoint: https://g4f.dev/ai/{now}
+
+### Individual clients available for:
+- Pollinations AI
+- Puter AI  
+- HuggingFace
+- Ollama
+
+### How to choose a base URL
 - If you want a local or self-hosted instance, you can use:
   - https://localhost:1337/v1
-- If you want a free or public provider, you can use one of the g4f.dev endpoints (e.g., gpt-oss-120b, groq, ollama, pollinations.ai, nvidia).
-- If you want an Azure-backed usage, use:
-  - https://g4f.dev/api/Azure (you’ll need an API key from https://g4f.dev/api_key.html)
+- If you want a free or public provider, you can use one of the g4f.dev endpoints (e.g., groq, ollama, pollinations.ai, nvidia, grok).
+- If you want Azure-backed usage or hosted instances, use:
+  - https://g4f.dev/api/Azure (requires API key)
+  - https://g4f.dev/v1 (requires API key)
 
-API usage basics
-- Endpoints: All chat-style interactions use the chat completions endpoint at {base_url}/chat/completions
-- Authentication:
+### API usage basics
+- **Endpoints**: All chat-style interactions use the chat completions endpoint at `{base_url}/chat/completions`
+- **Authentication**:
   - If the table entry says "none required", you do not need to pass an API key.
-  - If an API key is required (Azure or hosted instances), supply api_key in your client configuration or request headers as dictated by your client library (see examples).
-- Payload shape (typical):
+  - If an API key is required (Azure, hosted instances, or gpt-oss-120b), supply api_key in your client configuration or request headers.
+- **Payload shape** (typical):
   - model: string (e.g., gpt-oss-120b, gpt-4o, etc.)
   - temperature: number (optional)
   - messages: array of { role: "system" | "user" | "assistant", content: string }
 
-Example payload
+### Example payload
 ```json
 {
   "model": "gpt-4o",
@@ -41,9 +65,9 @@ Example payload
 }
 ```
 
-Examples
+### Examples
 
-1) Python requests (local example)
+#### 1) Python requests (local example)
 - Sends a chat completion to the local endpoint at /v1/chat/completions
 
 ```python
@@ -64,7 +88,7 @@ else:
     print("Response:", response.text)
 ```
 
-2) Python with OpenAI client (custom base_url)
+#### 2) Python with OpenAI client (custom base_url)
 - Use the OpenAI Python client but point it at your chosen base URL
 
 ```python
@@ -83,18 +107,18 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-3) JavaScript (HTML/JS client)
-- Basic usage in a browser-like environment using GPT4Free.js
+#### 3) JavaScript (HTML/JS client)
+- Basic usage in a browser-like environment
 
 ```html
 <script type="module">
     import Client from 'https://g4f.dev/dist/js/client.js';
 
     // Initialize a client with a base URL and optional API key
-    const client = new Client({ baseUrl: 'http://localhost:1337/v1', apiKey: 'secret' });
+    const client = new Client({ baseUrl: 'https://g4f.dev/api/grok', apiKey: 'secret' });
 
     const result = await client.chat.completions.create({
-        model: 'gpt-4.1',
+        model: 'grok-4-fast-non-reasoning',
         messages: [
             { role: 'system', content: 'You are a helpful assistant.' },
             { role: 'user', content: 'Tell me a joke.' }
@@ -103,7 +127,9 @@ print(response.choices[0].message.content)
 </script>
 ```
 
-Notes and quick tips
-- If you use a hosted instance (host.g4f.dev or Azure-based), you’ll likely need an API key. Retrieve it from the referenced API key resource (g4f.dev/api_key.html) and configure your client accordingly.
-- The examples assume a chat-style completions API where you pass messages and receive a response containing the assistant’s content.
-- The base_url is always the URL without the trailing /models segment.
+### Notes and quick tips
+- **API Key Changes**: The gpt-oss-120b endpoint now requires an API key. Retrieve it from [g4f.dev/api_key.html](https://g4f.dev/api_key.html).
+- **Hosted Instance URL**: Updated from host.g4f.dev/v1 to g4f.dev/v1
+- **New Grok Provider**: Use https://g4f.dev/api/grok for hosted Grok access without API key
+- The examples assume a chat-style completions API where you pass messages and receive a response containing the assistant's content.
+- The base_url is always the URL without the trailing /models segment

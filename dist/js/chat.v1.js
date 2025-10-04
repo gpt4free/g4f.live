@@ -1911,7 +1911,9 @@ const load_conversation = async (conversation) => {
     });
 
     if (suggestions) {
-        const suggestions_el = document.createElement("div");
+        let suggestions_el = chatBody.querySelector('.suggestions');
+        suggestions_el ? suggestions_el.remove() : null;
+        suggestions_el = document.createElement("div");
         suggestions_el.classList.add("suggestions");
         suggestions.forEach((suggestion)=> {
             const el = document.createElement("button");
@@ -2595,6 +2597,9 @@ Example:
 }
 load_startup_questions();
 async function load_follow_up_questions(messages, new_response) {
+    if (appStorage.getItem("aiFeatures") === "false") {
+        return;
+    }
     if (suggestions) {
         return;
     }

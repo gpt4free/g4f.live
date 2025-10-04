@@ -1219,7 +1219,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             delete synthesize_storage[message_id];
             delete title_storage[message_id];
             delete finish_storage[message_id];
-            delete usage_storage[message_id];
+
             // Send usage to the server
             if (!usage_storage[message_id] || !usage_storage[message_id].prompt_tokens) {
                 usage = {
@@ -1233,6 +1233,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                 }
                 api("usage", usage);
             }
+            delete usage_storage[message_id];
             if (action === "next") {
                 load_follow_up_questions(messages, final_message);
             }

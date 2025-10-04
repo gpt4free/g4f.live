@@ -228,6 +228,9 @@ class Client {
             throw new Error(`Status ${response.status}: ${await response.text()}`);
         }
         const data = await response.json();
+        if (response.headers.get('x-provider')) {
+            data.provider = response.headers.get('x-provider');
+        }
         this.logCallback && this.logCallback({response: data, type: 'chat'});
         return data;
     }
@@ -254,17 +257,19 @@ class Client {
             try {
               if (part.startsWith('data: ')) {
                 const data = JSON.parse(part.slice(6));
-                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 if (data.response) {
                     data.choices = [{delta: {content: data.response}}];
                 }
                 if (data.choices && data.choices[0]?.delta?.reasoning_content) {
                     data.choices[0].delta.reasoning = data.choices[0].delta.reasoning_content;
                 }
+                if (response.headers.get('x-provider')) {
+                    data.provider = response.headers.get('x-provider');
+                }
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 yield data;
               } else if (response.headers.get('Content-Type').startsWith('application/json')) {
                 const data = JSON.parse(part);
-                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 if (data.choices && data.choices[0]?.message) {
                     data.choices[0].delta = data.choices[0].message;
                 } else if (data.output && data.output[0].content) {
@@ -275,6 +280,10 @@ class Client {
                 if (data.model) {
                     data.model = data.model.replace('models/', '');
                 }
+                if (response.headers.get('x-provider')) {
+                    data.provider = response.headers.get('x-provider');
+                }
+                this.logCallback && this.logCallback({response: data, type: 'chat'});
                 yield data;
             }
             } catch (err) {

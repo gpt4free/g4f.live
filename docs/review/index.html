@@ -30,16 +30,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/dist/img/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/dist/img/favicon-16x16.png" />
     <link rel="manifest" href="/dist/img/site.webmanifest" />
-
-    <!-- GitHub Primer CSS & styles -->
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/light-74231a1f3bbb.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/dark-8a995f0bacd4.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-primitives-225433424a87.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/primer-b8b91660c29d.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/global-205098e9fedd.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet" href="https://github.githubassets.com/assets/code-177d21388df8.css" />
-
-    
+    <link rel="stylesheet" href="../../dist/css/dracula.min.css" />
     <style>
         :root {
             --accent: #8b3dff;
@@ -415,7 +406,11 @@
                 .then(markdown => {
                     const html = renderMarkdown(markdown);
                     document.querySelector('main').innerHTML = html;
-                    hljs.highlightElement(document.querySelector('main'));
+                    document.querySelectorAll('main code:not(.hljs)').forEach((el) => {
+                        if (el.className != "hljs") {
+                            hljs.highlightElement(el);
+                        }
+                    });
                     generateTableOfContents();
                     window.scrollTo(0, 0);
                 })
@@ -439,10 +434,9 @@
                 <li><a href="/" aria-label="Return to main site">🏠 G4F Home</a></li>
             </ul>
         </nav>
-        <a href="react.md" onclick="loadMarkdown(event)">React Documentation</a>
-        <a href="context.md" onclick="loadMarkdown(event)">Context Management</a>
         <main role="main" class="entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
-            Hello
+            <a href="https://g4f.dev/docs/review/react.md" onclick="loadMarkdown(event)">React Documentation</a>
+            <a href="https://g4f.dev/docs/review/context.md" onclick="loadMarkdown(event)">Context Management</a>
         </main>
     </div>
 

@@ -404,6 +404,7 @@
     <script src="../../dist/js/framework.js" defer></script>
     <script src="../../dist/js/highlight.min.js" async></script>
     <script src="../../dist/js/highlightjs-copy.min.js" async></script>
+    <script src="../../dist/js/sanitize-html.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js" defer></script>
     <script>
         function loadMarkdown(event) {
@@ -440,7 +441,9 @@
         </nav>
         <a href="react.md" onclick="loadMarkdown(event)">React Documentation</a>
         <a href="context.md" onclick="loadMarkdown(event)">Context Management</a>
-        <main role="main" class="markdown-body entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle"></main>
+        <main role="main" class="entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
+            Hello
+        </main>
     </div>
 
     

@@ -111,6 +111,96 @@ body:not(.white) a:visited{
     border: 1px solid var(--blur-border);
 }
 
+.liquid {
+    --colour-1: rgba(255, 255, 255, 0.15); /* base glass color */
+    --colour-2: rgba(255, 255, 255, 0.25);
+    --colour-3: #ffffffde;
+    --colour-4: rgba(255, 255, 255, 0.10); 
+    --colour-5: rgba(0, 0, 0, 0.5);
+    --colour-6: rgba(0, 0, 0, 0.2);
+
+    --accent: #90caf9; /* gentle blue accent */
+    --blur-bg: rgba(255, 255, 255, 0.08); /* translucent glass panel */
+    --blur-border: rgba(255, 255, 255, 0.3);
+    --user-input: #e3f2fd;
+    --conversations: rgba(255, 255, 255, 0.4);
+    --conversations-hover: rgba(255, 255, 255, 0.25);
+    --scrollbar: var(--colour-3);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+
+    --gradient-1: radial-gradient(circle at 20% 80%, rgba(144, 202, 249, 0.4), transparent);
+    --gradient-2: radial-gradient(circle at 80% 20%, rgba(255, 176, 189, 0.3), transparent);
+
+    --font-1: "Inter", sans-serif;
+    --border-radius-1: 16px; /* more rounded edges */
+}
+
+.liquid body {
+    background: linear-gradient(135deg, rgba(30, 30, 45, 0.95), rgba(15, 15, 25, 0.95)),
+                var(--gradient-1),
+                var(--gradient-2);
+    background-size: 200% 200%;
+    animation: liquidFlow 12s ease infinite;
+    color: var(--colour-3);
+}
+
+/* Animate gradient background for liquid feel */
+@keyframes liquidFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Apply more liquid glass look */
+.liquid .box,.liquid .sidebar,.liquid .chat-footer, .liquid .chat-top-panel,.liquid .message,.liquid .chat-buttons button {
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    background-color: var(--blur-bg);
+    border: 1px solid var(--blur-border);
+    border-radius: var(--border-radius-1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0.5px rgba(255,255,255,0.4);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Hover states are glossy and luminous */
+.liquid .chat-buttons button:hover, .liquid .new_convo:hover, .liquid .suggestion:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(144, 202, 249, 0.4);
+}
+
+/* Gradient animated glow on avatar or icons */
+.liquid .message .user img, .liquid .message .assistant img {
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 12px rgba(144, 202, 249, 0.5);
+}
+
+/* Inputs are rounded glass tubes */
+.liquid #userInput, .liquid #chatPrompt, .liquid #systemPrompt, .liquid .chat-footer input {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--border-radius-1);
+    padding: 12px 20px;
+    color: #fff;
+}
+
+/* Gradient swipe effect for buttons */
+.liquid button {
+    background: linear-gradient(135deg, rgba(144, 202, 249, 0.3), rgba(255, 176, 189, 0.3));
+    background-size: 200% 200%;
+    animation: liquidGlow 8s ease infinite;
+}
+
+.liquid .chat-top-panel, .liquid #chatPrompt, .liquid .message {
+    margin-bottom: var(--inner-gap);
+}
+
+@keyframes liquidGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .new_version {
   position: absolute;
   right: 0;

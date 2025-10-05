@@ -96,6 +96,9 @@
 </head>
 <body>
     <script async>
+      if (localStorage.getItem("liquid") === "true") {
+        document.body.classList.add("liquid");
+      }
       if (localStorage.getItem("darkMode") === "false") {
         document.body.classList.add("white");
       }
@@ -178,6 +181,11 @@
                       <label for="darkMode" class="toogle" title="Toggle Dark Mode"></label>
                   </div>
                   <div class="field">
+                      <span class="label">Enable Liquid Mode</span>
+                      <input type="checkbox" id="liquid" />
+                      <label for="liquid" class="toogle" title="Toggle Liquid Mode"></label>
+                  </div>
+                  <div class="field">
                       <span class="label">Disable Gradient Background</span>
                       <input type="checkbox" id="disableGradient" />
                       <label for="disableGradient" class="toogle" title="Disable gradient background"></label>
@@ -194,7 +202,7 @@
                   </div>
                   <div class="field">
                       <span class="label">AI Features</span>
-                      <input type="checkbox" id="aiFeatures" checked />
+                      <input type="checkbox" id="aiFeatures" />
                       <label for="aiFeatures" class="toogle" title="Enable providing Follow Ups and Title Generation"></label>
                   </div>
                   <div class="field">

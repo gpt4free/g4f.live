@@ -1477,7 +1477,7 @@ setInterval(() => {
 }, 500);
 
 chatBody.addEventListener('scroll', () => {
-    const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 10;
+    const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 40;
     autoScrollEnabled = atBottom && chatBody.clientHeight > 0;
 });
 
@@ -2956,7 +2956,7 @@ async function on_api() {
     optgroup.label = framework.translate('Live Providers');
     Object.entries(window.providers || {}).forEach(([name, config]) => {
         let option = document.createElement("option");
-        if (name === "auto") {
+        if (name === "default") {
             option.selected = true;
         }
         option.value = name;
@@ -3007,6 +3007,16 @@ async function on_api() {
                 document.body.classList.remove("white");
             } else {
                 document.body.classList.add("white");
+            }
+        });
+    }
+    const liquid = document.getElementById("liquid");
+    if (liquid) {
+        liquid.addEventListener('change', async (event) => {
+            if (event.target.checked) {
+                document.body.classList.add("liquid");
+            } else {
+                document.body.classList.remove("liquid");
             }
         });
     }

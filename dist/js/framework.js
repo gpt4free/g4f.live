@@ -9,7 +9,7 @@ let privateConversation = null;
 
 function add_error(event, log=false) {
     if (log instanceof Error) {
-        log.message = event;
+        log.message = event + " " + (log.message || "") ;
         event = log;
         log = true;
     }
@@ -25,7 +25,7 @@ function add_error(event, log=false) {
     } else if (event.message) {
         p.innerText = `${event.type}: ${event.message}` + (event.filename ? `\n${event.filename}:${event.lineno}:${event.colno}` : "");
     } else {
-        p.innerText = JSON.stringify(event);
+        p.innerText = typeof event === 'string' ? event : JSON.stringify(event);
     }
     logStorage.appendChild(p);
 }

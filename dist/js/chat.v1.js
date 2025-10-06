@@ -959,6 +959,9 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             await register_message_images();
         }
     } else if (message.type == "content") {
+        if (!message_storage[message_id]) {
+            content_map.inner.innerHTML = "";
+        }
         message_storage[message_id] += message.content;
         if (message.data) {
             content_data_storage[message_id] = message.data;
@@ -973,18 +976,26 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
             if (cursorDiv) cursorDiv.parentNode.removeChild(cursorDiv);
         } else if (true || document.body.classList.contains("screen-reader") || appStorage.getItem("renderMarkdown") == "false") {
             let cursorDiv = content_map.inner.querySelector(".cursor");
-            message.content.split("\n").forEach((line, index, array) => {
-                if (line.trim().length > 0) {
-                    line.split('').forEach((char) => {
-                        let span = document.createElement("span");
-                        span.innerText = char;
-                        content_map.inner.insertBefore(span, cursorDiv);
-                    });
-                }
-                if (index < array.length - 1) {
+            let firstLine = true;
+            for (line of message.content.split("\n")) {
+                if (firstLine) {
+                    firstLine = false;
+                } else {
                     content_map.inner.insertBefore(document.createElement("br"), cursorDiv);
                 }
-            });
+                if (line.length > 0) {
+                    let firstToken = true;
+                    for (token of line.split(' ')) {
+                        if (firstToken) {
+                            firstToken = false;
+                        } else {
+                            token = ' ' + token
+                        }
+                        await new Promise(resolve => setTimeout(resolve, (Math.random() * (20 - 40) + 20)))
+                        content_map.inner.insertBefore(document.createTextNode(token), cursorDiv);
+                    }
+                }
+            };
         } else if (message.content) {
             update_message(content_map, message_id, null);
         }
@@ -1387,12 +1398,12 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     if (chunk.choices) {
                         if (chunk.choices[0]?.delta?.reasoning_content) {
                             delta = chunk.choices[0].delta.reasoning_content;
-                            add_message_chunk({type: "reasoning", token: delta}, message_id);
+                            await add_message_chunk({type: "reasoning", token: delta}, message_id);
                         } else {
                             delta = chunk.choices[0]?.delta?.content || '';
                             delta = delta.replaceAll("/media/", baseUrl + "/media/");
                             delta = delta.replaceAll("/thumbnail/", baseUrl + "/thumbnail/");
-                            add_message_chunk({type: "content", content: delta}, message_id);
+                            await add_message_chunk({type: "content", content: delta}, message_id);
                         }
                     }
                 }
@@ -2565,7 +2576,10 @@ window.addEventListener("hashchange", (event) => {
     }
 });
 function render_startup_questions() {
-    console.log("Rendering startup questions:", startup_questions);
+    add_error("Rendering startup questions:" + JSON.stringify(startup_questions));
+    if (!Array.isArray(startup_questions) || !startup_questions.length) {
+        return;
+    }
     const used_startup_questions = startup_questions.sort(() => .5 - Math.random()).slice(0, 4);
     const suggestions_el = document.createElement("div");
     suggestions_el.classList.add("suggestions");
@@ -2599,6 +2613,9 @@ Example:
     }
     try {
         const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 4)});
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         startup_questions = await response.json()
         startup_questions = startup_questions.questions || startup_questions;
     } catch (e) {
@@ -2962,7 +2979,7 @@ async function on_api() {
         option.value = name;
         option.dataset.live = "true";
         option.text = `${name} ${config.tags}`;
-        fetch(`https://g4f.dev/ai/${name}/Response%20with%20ok`, {seed: Math.floor(Date.now() / 1000 / 3600 / 4)}).then((response) => {
+        fetch(`https://g4f.dev/ai/${name}/Response%20with%20ok`, {seed: Math.floor(Date.now() / 1000 / 3600 / 24)}).then((response) => {
             if (response.ok) {
                 option.text += " 🟢";
             }
@@ -3552,7 +3569,7 @@ async function read_response(response, message_id, provider, finish_message) {
                 continue;
             }
             try {
-                add_message_chunk(JSON.parse(buffer + line), message_id, provider, finish_message);
+                await add_message_chunk(JSON.parse(buffer + line), message_id, provider, finish_message);
                 buffer = "";
             } catch {
                 buffer += line

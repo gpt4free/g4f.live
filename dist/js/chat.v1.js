@@ -2642,7 +2642,7 @@ async function load_follow_up_questions(messages, new_response) {
 \`\`\`json
 {
   "title": "✨ 🧠 The Next Steps",
-  "questions": [
+  "q": [
     "🛠️ Can you help me brainstorm ideas for a weekend project?",
     "🇩🇪 What are some interesting facts about Germany I might not know?",
     "🌙 How do I stay productive when working late at night?",
@@ -2660,7 +2660,7 @@ async function load_follow_up_questions(messages, new_response) {
             messages: messages.concat(new_messages)
         })});
         const follow_up_questions = await response.json()
-        suggestions = follow_up_questions.questions || follow_up_questions;
+        suggestions = follow_up_questions.q || follow_up_questions.questions || follow_up_questions;
         const conversation = await get_conversation(window.conversation_id);
         conversation.title = follow_up_questions.title || conversation.title || "";
         await save_conversation(conversation);

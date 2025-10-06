@@ -955,16 +955,18 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
                 img.onerror = () => img.src = backup;
             }
         } else {
-            content_map.inner.innerHTML = framework.markdown(message.preview);
+            content_map.inner.innerHTML = framework.markdown(message.preview + ' <span class="cursor"></span>');
             await register_message_images();
         }
     } else if (message.type == "content") {
-        if (!message_storage[message_id]) {
-            content_map.inner.innerHTML = "";
-        }
-        message_storage[message_id] += message.content;
-        if (message.data) {
-            content_data_storage[message_id] = message.data;
+        if (message.content) {
+            if (!message_storage[message_id]) {
+                content_map.inner.innerHTML = "";
+            }
+            message_storage[message_id] += message.content;
+            if (message.data) {
+                content_data_storage[message_id] = message.data;
+            }
         }
         if (message.urls) {
             content_alt_storage[message_id] = message.alt;

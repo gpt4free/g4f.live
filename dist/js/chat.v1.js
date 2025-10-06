@@ -2576,32 +2576,35 @@ window.addEventListener("hashchange", (event) => {
     }
 });
 function render_startup_questions() {
-    add_error("Rendering startup questions:" + JSON.stringify(startup_questions));
     if (!Array.isArray(startup_questions) || !startup_questions.length) {
         return;
     }
-    const used_startup_questions = startup_questions.sort(() => .5 - Math.random()).slice(0, 4);
-    const suggestions_el = document.createElement("div");
-    suggestions_el.classList.add("suggestions");
-    used_startup_questions.forEach((suggestion)=> {
-        const el = document.createElement("button");
-        el.classList.add("suggestion");
-        el.innerHTML = `<span>${framework.escape(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
-        el.onclick = async () => {
-            startup_questions = startup_questions.filter((q) => q != suggestion);
-            await handle_ask(true, suggestion);
-        }
-        suggestions_el.appendChild(el);
-    });
-    chatBody.querySelectorAll('.suggestions').forEach((suggestions_el) => suggestions_el.remove());
-    chatBody.appendChild(suggestions_el);
+    try {
+        const used_startup_questions = startup_questions.sort(() => .5 - Math.random()).slice(0, 4);
+        const suggestions_el = document.createElement("div");
+        suggestions_el.classList.add("suggestions");
+        used_startup_questions.forEach((suggestion)=> {
+            const el = document.createElement("button");
+            el.classList.add("suggestion");
+            el.innerHTML = `<span>${framework.escape(suggestion)}</span> <i class="fa-solid fa-turn-up"></i>`;
+            el.onclick = async () => {
+                startup_questions = startup_questions.filter((q) => q != suggestion);
+                await handle_ask(true, suggestion);
+            }
+            suggestions_el.appendChild(el);
+        });
+        chatBody.querySelectorAll('.suggestions').forEach((suggestions_el) => suggestions_el.remove());
+        chatBody.appendChild(suggestions_el);
+    } catch (e) {
+        add_error("Failed to render startup questions:", e);
+    }
 }
 async function load_startup_questions() {
     let prompt = `Generate a JSON-formatted list of engaging and diverse questions I can ask you at the start of a new conversation.
 Example: 
 \`\`\`json
 {
-    "questions": [
+    "q": [
         "🤖 What are the latest advancements in AI?",
         "🗾✈️ Can you help me plan a trip to Japan?",
         "🥗🍎 What are some healthy meal ideas?"
@@ -2612,19 +2615,19 @@ Example:
         prompt += `\nRespond in ${navigator.language}.`;
     }
     try {
-        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 4)});
+        const response = await framework.query(prompt, {json: true, seed: Math.floor(Date.now() / 1000 / 3600 / 24)});
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP ${response.status}: ${await response.text()}`);
         }
         startup_questions = await response.json()
-        startup_questions = startup_questions.questions || startup_questions;
+        startup_questions = startup_questions.q || startup_questions.questions || startup_questions;
     } catch (e) {
         add_error("Failed to parse startup questions:", e);
     }
 }
 load_startup_questions();
 async function load_follow_up_questions(messages, new_response) {
-    if (appStorage.getItem("aiFeatures") === "false") {
+    if (appStorage.getItem("aiFeatures") !== "true") {
         return;
     }
     if (suggestions) {

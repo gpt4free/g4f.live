@@ -234,6 +234,7 @@ const renderMarkdown = (content) => {
             allowedAttributes: {
                 a: [ 'href', 'title', 'target', 'data-width', 'data-height' ],
                 i: [ 'class' ],
+                span: [ 'class' ],
                 code: [ 'class' ],
                 img: [ 'src', 'alt', 'width', 'height' ],
                 iframe: [ 'src', 'type', 'frameborder', 'allow', 'height', 'width' ],

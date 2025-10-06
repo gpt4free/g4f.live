@@ -79,6 +79,7 @@ let finish_storage = {};
 let usage_storage = {};
 let continue_storage = {};
 let reasoning_storage = {};
+let variant_storage = {};
 let debug_response_counter = {}
 let title_ids_storage = {};
 let image_storage = {};
@@ -714,9 +715,9 @@ const prepare_messages = (messages, message_index = -1, do_continue = false, do_
     // console.log(2, messages);
 
     // Insert system prompt as first message
-    let final_messages = [];
+    let last_steps_messages = [];
     if (chatPrompt?.value) {
-        final_messages.push({
+        last_steps_messages.push({
             "role": "system",
             "content": chatPrompt.value
         });
@@ -756,12 +757,27 @@ const prepare_messages = (messages, message_index = -1, do_continue = false, do_
             new_message = {role: new_message.role, content: new_message.content};
             // Append message to new messages
             if (do_filter && !new_message.regenerate) {
-                final_messages.push(new_message)
+                last_steps_messages.push(new_message)
             } else if (!do_filter) {
-                final_messages.push(new_message)
+                last_steps_messages.push(new_message)
             }
         }
     });
+
+    // Remove multiple assistant messages
+    let has_assistant = false;
+    let final_messages = [];
+    for (let new_message of last_steps_messages.reverse()) {
+        if (new_message.role == "assistant") {
+            if (has_assistant) {
+                continue;
+            }
+            has_assistant = true;
+        }
+        final_messages.push(new_message);
+    }
+    final_messages = final_messages.reverse();
+
     console.debug("Final messages:", final_messages)
 
     return final_messages;
@@ -947,6 +963,10 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
         logStorage.appendChild(p);
         await api("log", {...message, provider: provider_storage[message_id]});
     } else if (message.type == "preview") {
+        if (message_storage[message_id]) {
+            variant_storage[message_id] = message.preview;
+            return;
+        }
         let img;
         if (img = content_map.inner.querySelector("img")) {
             if (img.complete) {
@@ -988,12 +1008,14 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
                 if (line.length > 0) {
                     let firstToken = true;
                     for (token of line.split(' ')) {
+                        if (token) {
+                            await new Promise(resolve => setTimeout(resolve, (Math.random() * (20 - 40) + 20)))
+                        }
                         if (firstToken) {
                             firstToken = false;
                         } else {
                             token = ' ' + token
                         }
-                        await new Promise(resolve => setTimeout(resolve, (Math.random() * (20 - 40) + 20)))
                         content_map.inner.insertBefore(document.createTextNode(token), cursorDiv);
                     }
                 }
@@ -1232,7 +1254,18 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             delete synthesize_storage[message_id];
             delete title_storage[message_id];
             delete finish_storage[message_id];
-
+            if (variant_storage[message_id]) {
+                message_index = await add_message(
+                    window.conversation_id,
+                    "assistant",
+                    variant_storage[message_id],
+                    {...message_provider, modelLabel: message_provider.variantLabel, modelUrl: message_provider.variantUrl},
+                    message_index,
+                    null,
+                    true
+                );
+                delete variant_storage[message_id];
+            }
             // Send usage to the server
             if (!usage_storage[message_id] || !usage_storage[message_id].prompt_tokens) {
                 usage = {
@@ -1260,9 +1293,6 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
             if(await safe_load_conversation(window.conversation_id)) {
                 play_last_message(content_data_storage[message_id]); // Play last message async
                 delete content_data_storage[message_id];
-                if (message_index == -1) {
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                }
             }
         }
         let cursorDiv = message_el.querySelector(".cursor");
@@ -1770,11 +1800,11 @@ const load_conversation = async (conversation) => {
         let next_i = parseInt(i) + 1;
         let next_provider = item.provider ? item.provider : (messages.length > next_i ? messages[next_i].provider : null);
         let provider_label = item.provider?.label ? item.provider.label : item.provider?.name;
-        let provider_link = item.provider?.name ? `<a href="${item.provider.url}" target="_blank">${provider_label}</a>` : "";
+        let provider_link = item.provider?.name ? `<a href="${item.provider.modelUrl || item.provider.url}" target="_blank">${provider_label}</a>` : "";
         let provider = provider_link ? `
             <div class="provider" data-provider="${item.provider.name}">
                 ${provider_link}
-                ${item.provider.model ? ' ' + framework.translate('with') + ' ' + item.provider.model : ''}
+                ${item.provider.model ? ' ' + framework.translate('with') + ' ' + (item.provider.modelLabel || item.provider.model) : ''}
             </div>
         ` : "";
         let synthesize_url = "";

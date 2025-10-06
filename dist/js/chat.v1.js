@@ -2805,6 +2805,9 @@ const load_provider_option = (input, provider_name) => {
 };
 
 function get_modelTags(model, add_vision = true) {
+    if (model.tags) {
+        return " " + model.tags.join(" ")
+    }
     const parts = []
     if (modelTags[model.type]) {
         parts.push(` ${modelTags[model.type]}`);

@@ -135,6 +135,10 @@ body:not(.white) a:visited{
     --border-radius-1: 16px; /* more rounded edges */
 }
 
+.liquid:not(.white) {
+    --colour-1: #000000;
+}
+
 .liquid body {
     background: linear-gradient(135deg, rgba(30, 30, 45, 0.95), rgba(15, 15, 25, 0.95)),
                 var(--gradient-1),
@@ -175,15 +179,6 @@ body:not(.white) a:visited{
     box-shadow: 0 0 12px rgba(144, 202, 249, 0.5);
 }
 
-/* Inputs are rounded glass tubes */
-.liquid #userInput, .liquid #chatPrompt, .liquid #systemPrompt, .liquid .chat-footer input {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--border-radius-1);
-    padding: 12px 20px;
-    color: #fff;
-}
-
 /* Gradient swipe effect for buttons */
 .liquid button {
     background: linear-gradient(135deg, rgba(144, 202, 249, 0.3), rgba(255, 176, 189, 0.3));
@@ -191,8 +186,12 @@ body:not(.white) a:visited{
     animation: liquidGlow 8s ease infinite;
 }
 
-.liquid .chat-top-panel, .liquid #chatPrompt, .liquid .message {
-    margin-bottom: var(--inner-gap);
+.liquid .chat-buttons {
+    margin-bottom: 0;
+}
+
+.liquid .chat-top-panel, .liquid #chatPrompt, .liquid .message, .liquid .suggestions {
+    margin-bottom: 10px;
 }
 
 @keyframes liquidGlow {

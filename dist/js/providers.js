@@ -6,19 +6,19 @@ const providers = {
     "anon-drop": {class: Client, baseUrl: "https://anondrop.net/v1", tags: ""},
     "audio": {class: Audio, baseUrl: "https://g4f.dev/api/audio", tags: "🎧"},
     "azure": {class: Client, baseUrl: "https://g4f.dev/api/azure", tags: "👓"},
-    "custom": {class: Client, tags: ""},
-    "deep-infra": {class: DeepInfra, tags: "🎨 👓"},
-    "gemini": {class: Client, baseUrl: "https://g4f.dev/api/gemini", tags: "👓"},
+    "custom": {class: Client, tags: "", localStorageApiKey: "Custom-api_key"},
+    "deep-infra": {class: DeepInfra, tags: "🎨 👓", localStorageApiKey: "DeepInfra-api_key"},
+    "gemini": {class: Client, baseUrl: "https://g4f.dev/api/gemini", tags: "👓", localStorageApiKey: "GeminiPro-api_key"},
     "gpt-oss-120b": {class: Client, baseUrl: "https://g4f.dev/api/gpt-oss-120b", tags: ""},
     "grok": {class: Client, baseUrl: "https://g4f.dev/api/grok", tags: ""},
-    "hugging-face": {class: HuggingFace, tags: ""},
-    "ollama": {class: Client, baseUrl: "https://g4f.dev/api/ollama", tags: ""},
-    "openrouter": {class: Client, baseUrl: "https://g4f.dev/api/openrouter", tags: "👓"},
-    "pollinations-ai": {class: PollinationsAI, baseUrl: "https://g4f.dev/api/pollinations.ai", tags: "🎨 👓"},
+    "hugging-face": {class: HuggingFace, tags: "", localStorageApiKey: "HuggingFace-api_key"},
+    "ollama": {class: Client, baseUrl: "https://g4f.dev/api/ollama", tags: "", localStorageApiKey: "Ollama-api_base"},
+    "openrouter": {class: Client, baseUrl: "https://g4f.dev/api/openrouter", tags: "👓", localStorageApiKey: "OpenRouter-api_key"},
+    "pollinations-ai": {class: PollinationsAI, baseUrl: "https://g4f.dev/api/pollinations.ai", tags: "🎨 👓", localStorageApiKey: "PollinationsAI-api_key"},
     "puter": {class: Puter, tags: "👓"},
     "stringable-inf": {class: Client, baseUrl: "https://stringableinf.com/api", apiEndpoint: "https://stringableinf.com/api/v1/chat/completions", tags: "", extraHeaders: {"HTTP-Referer": "https://g4f.dev/", "X-Title": "G4F Chat"}},
     "typegpt": {class: Client, baseUrl: "https://g4f.dev/api/typegpt", tags: ""},
-    "together": {class: Client, tags: "👓"},
+    "together": {class: Together, tags: "👓", localStorageApiKey: "Together-api_key"},
     "worker": {class: Worker, baseUrl: "https://g4f.dev/api/worker", tags: "🎨"}
 };
 
@@ -28,10 +28,22 @@ function createClient(provider, options = {}) {
     if (!config) {
         throw new Error(`Provider "${provider}" not found.`);
     }
+
+    // Set baseUrl
+    if (typeof localStorage !== "undefined" && config.localStorageApiKey && localStorage.getItem(config.localStorageApiKey)) {
+        options.apiKey = localStorage.getItem(config.localStorageApiKey);
+    }
     
     // Set baseUrl
-    if (provider === "custom" && typeof localStorage !== "undefined" && localStorage.getItem("Custom-api_base")) {
-        options.baseUrl = localStorage.getItem("Custom-api_base");
+    if (provider === "custom") {
+        if (!options.baseUrl) {
+            if (typeof localStorage !== "undefined" && localStorage.getItem("Custom-api_base")) {
+                options.baseUrl = localStorage.getItem("Custom-api_base");
+            }
+            if (!options.baseUrl) {
+                throw new Error("Custom provider requires a baseUrl to be set in options or in localStorage under 'Custom-api_base'.");
+            }
+        }
     } else if (config.baseUrl) {
         options.baseUrl = config.baseUrl;
     }

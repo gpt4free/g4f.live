@@ -60,6 +60,7 @@ class ConversationManager:
             response = await self.client.chat.completions.create(
                 messages=message
             )
+        if response.conversation is not None:
             self.conversation = response.conversation
         
         return response.choices[0].message.content

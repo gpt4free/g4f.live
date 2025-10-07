@@ -30,80 +30,348 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/dist/img/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/dist/img/favicon-16x16.png" />
     <link rel="manifest" href="/dist/img/site.webmanifest" />
-<style>
-:root{
-  --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2;
-}
-body{margin:0;min-height:100vh;background:linear-gradient(180deg,#061021 0%, #07112a 60%);
-  font-family:sans-serif;color:#e6eef8;padding:20px;}
-h1{margin:0 0 10px;}
-small{color:var(--muted);}
-.table{background:var(--card);padding:10px;border-radius:8px;}
-.row{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;
-  padding:8px;border-bottom:1px solid rgba(255,255,255,0.05);}
-.row:hover{background:rgba(255,255,255,0.02);}
-.provider{display:flex;align-items:center;gap:10px;}
-.logo{width:40px;height:40px;background:linear-gradient(#0ea5e9,#60a5fa);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;}
-.badges{font-size:14px;}
-.models-preview,.models-list{display:flex;flex-wrap:wrap;gap:5px;}
-.model-pill {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 6px;
-    border-radius: 999px;
-    font-size: 12px;
-    height: 14px;
-}
-.models-list{display:none;padding-top:5px;}
-.models-list.visible{display:flex;}
-.button{background:#0ea5e9;border:none;border-radius:5px;padding:5px 8px;color:white;cursor:pointer;}
-</style>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #9aa4b2;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #061021 0%, #07112a 60%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: #e6eef8;
+            padding: 20px;
+        }
+        h1, h2 {
+            margin: 0 0 10px;
+        }
+        small {
+            color: var(--muted);
+        }
+        .table {
+            background: var(--card);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 10px;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .provider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(#0ea5e9, #60a5fa);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .badges {
+            font-size: 14px;
+        }
+        .models-preview, .models-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .model-pill {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 6px;
+            border-radius: 999px;
+            font-size: 12px;
+            height: 14px;
+        }
+        .models-list {
+            display: none;
+            padding-top: 5px;
+        }
+        .models-list.visible {
+            display: flex;
+        }
+        .button {
+            background: #0ea5e9;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 8px;
+            color: white;
+            cursor: pointer;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 <body>
-<h1>Providers & Models</h1>
-<small>Loaded from API: badges + model type icons 🎨👓🎧🎥</small>
-<div class="table" id="table"><div>Loading...</div></div>
-<script>
-(async function(){
-  const providersUrl = "https://g4f.dev/backend-api/v2/providers";
-  const modelsUrl = "https://g4f.dev/backend-api/v2/models";
-  const modelTags = { image: "🎨", vision: "👓", audio: "🎧", video: "🎥" };
-  function iconsFor(p){
-    return (p.image?modelTags.image:"")+(p.vision?modelTags.vision:"")+(p.audio?modelTags.audio:"")+(p.video?modelTags.video:"");
-  }
-  function badgesFor(p){
-    return (p.hf_space?" 🤗":"")+(p.nodriver?" 🌐":"")+(!p.nodriver&&p.auth?" 🔑":"")+(p.live?" 🟢":"");
-  }
-  const table=document.getElementById("table"); table.innerHTML="";
-  try{
-    const [providers, models] = await Promise.all([fetch(providersUrl).then(r=>r.json()), fetch(modelsUrl).then(r=>r.json())]);
-    providers.sort((a,b)=>(a.label||a.name).localeCompare(b.label||b.name));
-    providers.forEach(p=>{
-      const row=document.createElement("div"); row.className="row";
-      const prov=document.createElement("div"); prov.className="provider";
-      const logo=document.createElement("div"); logo.className="logo"; img=new Image(40, 40); img.src='/prompt/Create a logo for '+(p.label||p.name).replace('Meta', 'Facebook').replace('Aria', '').replace('OpenAI', 'ChatGPT').replace('Video', 'TV AI').replace('Nvidia', 'GeForce').replace('Phi-4', 'Windows').replace('(Text Generation)', '').replace('Glhf', 'AI').replace('Gemini', '').replace('API', '').replace('-2.5M', '').replace('Qwen-3', '')+'?width=256&height=256&nologo=true&model=flux'; logo.appendChild(img);
-      const meta=document.createElement("div");
-      meta.innerHTML="<div>"+(p.label||p.name)+(p.label.split(" ")[0]!=p.name?` (${p.name})`:"")+"</div><small>"+iconsFor(p)+badgesFor(p)+"</small>";
-      prov.appendChild(logo); prov.appendChild(meta);
-      const tags=document.createElement("div"); tags.className="badges";
-      const preview=document.createElement("div"); preview.className="models-preview";
-      const modelList=models[p.name]||models[p.label]||[];
-      modelList.slice(0,5).forEach(m=>{let pill=document.createElement("div");pill.className="model-pill";pill.textContent=m;preview.appendChild(pill);});
-      if(modelList.length>5){let more=document.createElement("div");more.className="model-pill";more.textContent="…+"+(modelList.length-5);preview.appendChild(more);}
-      const actions=document.createElement("div");
-      const btn=document.createElement("button"); btn.className="button"; btn.textContent="Show";
-      actions.appendChild(btn);
-      row.appendChild(prov); row.appendChild(tags); row.appendChild(preview); row.appendChild(actions);
-      const modelDiv=document.createElement("div"); modelDiv.className="models-list";
-      modelList.forEach(m=>{let pill=document.createElement("div");pill.className="model-pill";pill.textContent=m;modelDiv.appendChild(pill);});
-      btn.addEventListener("click",()=>{modelDiv.classList.toggle("visible"); btn.textContent=modelDiv.classList.contains("visible")?"Hide":"Show";});
-      table.appendChild(row); table.appendChild(modelDiv);
-    });
-  }catch(e){
-    table.innerHTML="<div style='color:red'>Error loading data: "+e+"</div>";
-    console.error(e);
-  }
-})();
-</script>
+    <div class="section">
+        <h1>JS Providers</h1>
+        <small>JavaScript client library providers with integrated functionality</small>
+        <div class="table" id="js-providers-table">
+            <div>Loading JS Providers...</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Core Providers</h2>
+        <small>Loaded from API: badges + model type icons 🎨👓🎧🎥</small>
+        <div class="table" id="core-providers-table">
+            <div>Loading Core Providers...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import providers from 'https://g4f.dev/dist/js/providers.js';
+        import { createClient } from 'https://g4f.dev/dist/js/providers.js';
+
+        // Model type icons
+        const modelTags = { image: "🎨", vision: "👓", audio: "🎧", video: "🎥" };
+
+        // Generate badges for provider
+        function badgesFor(p) {
+            return (p.hf_space ? " 🤗" : "") + 
+                   (p.nodriver ? " 🌐" : "") + 
+                   (!p.nodriver && p.auth ? " 🔑" : "") + 
+                   (p.live ? " 🟢" : "");
+        }
+
+        // Generate icons for provider capabilities
+        function iconsFor(p) {
+            return (p.image ? modelTags.image : "") + 
+                   (p.vision ? modelTags.vision : "") + 
+                   (p.audio ? modelTags.audio : "") + 
+                   (p.video ? modelTags.video : "");
+        }
+
+        function getImage(key) {
+          const img = new Image(40, 40);
+          const gen = 'https://image.pollinations.ai';
+          img.src=gen+'/prompt/Create a logo for ' +
+            key.replace(
+              'Meta', 'Facebook').replace(
+              'Aria', '').replace(
+              'OpenAI', 'ChatGPT').replace(
+              'Video', 'TV AI').replace(
+              'Nvidia', 'GeForce').replace(
+              'Phi-4', 'Windows').replace(
+              '(Text Generation)', '').replace(
+              'Glhf', 'AI').replace(
+              'Gemini', '').replace(
+              'API', '').replace(
+              '-2.5M', '').replace(
+              'grok', 'xAI').replace(
+              'Qwen-3', '').replace(
+              'Yupp', 'ai win').replace(
+              'anon-', 'anonymous ')+'?width=256&height=256&nologo=true';
+          return img;
+        }
+
+        // Create table for JS Providers
+        async function renderJSTable() {
+            const table = document.getElementById('js-providers-table');
+            table.innerHTML = '';
+            for (const [key, p] of Object.entries(providers)) {
+                try {
+                    const client = createClient(key);
+                    p.models = await client.models.list();
+                    p.models = p.models.map(m => m.id);
+                    console.log(`Models for provider "${key}":`, p.models);
+                } catch (error) {
+                    p.models = [];
+                    console.error(`Error fetching models for provider "${key}":`, error);
+                }
+
+                if(p.models.length === 0) continue;
+              
+                const row = document.createElement('div');
+                row.className = 'row';
+                
+                // Provider info with logo
+                const prov = document.createElement('div');
+                prov.className = 'provider';
+                
+                const logo = document.createElement('div');
+                logo.className = 'logo';
+                // Simplified logo for JS providers
+                logo.appendChild(getImage(key));
+                
+                const meta = document.createElement('div');
+                meta.innerHTML = `<div>${key}</div><small>${p.tags}</small>`;
+                
+                prov.appendChild(logo);
+                prov.appendChild(meta);
+                
+                // Badges
+                const tags = document.createElement('div');
+                tags.className = 'badges';
+                
+                // Models preview
+                const preview = document.createElement('div');
+                preview.className = 'models-preview';
+                
+                p.models.slice(0, 5).forEach(m => {
+                    const pill = document.createElement('div');
+                    pill.className = 'model-pill';
+                    pill.textContent = m;
+                    preview.appendChild(pill);
+                });
+                
+                if (p.models.length > 5) {
+                    const more = document.createElement('div');
+                    more.className = 'model-pill';
+                    more.textContent = `…+${p.models.length - 5}`;
+                    preview.appendChild(more);
+                }
+                
+                // Action button
+                const actions = document.createElement('div');
+                const btn = document.createElement('button');
+                btn.className = 'button';
+                btn.textContent = 'Show';
+                
+                actions.appendChild(btn);
+                
+                // Full models list
+                const modelDiv = document.createElement('div');
+                modelDiv.className = 'models-list';
+                
+                p.models.forEach(m => {
+                    const pill = document.createElement('div');
+                    pill.className = 'model-pill';
+                    pill.textContent = m;
+                    modelDiv.appendChild(pill);
+                });
+                
+                // Toggle show/hide
+                btn.addEventListener('click', () => {
+                    modelDiv.classList.toggle('visible');
+                    btn.textContent = modelDiv.classList.contains('visible') ? 'Hide' : 'Show';
+                });
+                
+                // Assemble row
+                row.appendChild(prov);
+                row.appendChild(tags);
+                row.appendChild(preview);
+                row.appendChild(actions);
+                
+                table.appendChild(row);
+                table.appendChild(modelDiv);
+            }
+        }
+
+        // Render JS providers table immediately
+        renderJSTable();
+
+        // Function to load and render Core Providers (from API)
+        async function loadCoreProviders() {
+            const providersUrl = "https://g4f.dev/backend-api/v2/providers";
+            const modelsUrl = "https://g4f.dev/backend-api/v2/models";
+            
+            const table = document.getElementById("core-providers-table");
+            
+            try {
+                const [providers, models] = await Promise.all([
+                    fetch(providersUrl).then(r => r.json()),
+                    fetch(modelsUrl).then(r => r.json())
+                ]);
+                
+                providers.sort((a, b) => (a.label || a.name).localeCompare(b.label || b.name));
+                table.innerHTML = "";
+                
+                providers.forEach(p => {
+                    const row = document.createElement("div");
+                    row.className = "row";
+                    
+                    const prov = document.createElement("div");
+                    prov.className = "provider";
+                    
+                    const logo = document.createElement("div");
+                    logo.className = "logo";
+                    logo.appendChild(getImage(p.label || p.name));
+                    
+                    const meta = document.createElement("div");
+                    meta.innerHTML = `<div>${p.label || p.name}${p.label && p.label.split(" ")[0] !== p.name ? ` (${p.name})` : ""}</div><small>${iconsFor(p)}${badgesFor(p)}</small>`;
+                    
+                    prov.appendChild(logo);
+                    prov.appendChild(meta);
+                    
+                    const tags = document.createElement("div");
+                    tags.className = "badges";
+                    
+                    const preview = document.createElement("div");
+                    preview.className = "models-preview";
+                    
+                    const modelList = models[p.name] || models[p.label] || [];
+                    modelList.slice(0, 5).forEach(m => {
+                        const pill = document.createElement("div");
+                        pill.className = "model-pill";
+                        pill.textContent = m;
+                        preview.appendChild(pill);
+                    });
+                    
+                    if (modelList.length > 5) {
+                        const more = document.createElement("div");
+                        more.className = "model-pill";
+                        more.textContent = `…+${modelList.length - 5}`;
+                        preview.appendChild(more);
+                    }
+                    
+                    const actions = document.createElement("div");
+                    const btn = document.createElement("button");
+                    btn.className = "button";
+                    btn.textContent = "Show";
+                    actions.appendChild(btn);
+                    
+                    row.appendChild(prov);
+                    row.appendChild(tags);
+                    row.appendChild(preview);
+                    row.appendChild(actions);
+                    
+                    const modelDiv = document.createElement("div");
+                    modelDiv.className = "models-list";
+                    
+                    modelList.forEach(m => {
+                        const pill = document.createElement("div");
+                        pill.className = "model-pill";
+                        pill.textContent = m;
+                        modelDiv.appendChild(pill);
+                    });
+                    
+                    btn.addEventListener("click", () => {
+                        modelDiv.classList.toggle("visible");
+                        btn.textContent = modelDiv.classList.contains("visible") ? "Hide" : "Show";
+                    });
+                    
+                    table.appendChild(row);
+                    table.appendChild(modelDiv);
+                });
+            } catch (e) {
+                table.innerHTML = `<div style='color:red'>Error loading data: ${e}</div>`;
+                console.error(e);
+            }
+        }
+        
+        // Load Core Providers from API
+        loadCoreProviders();
+    </script>
 </body>
 </html>

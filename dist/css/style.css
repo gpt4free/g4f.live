@@ -1620,12 +1620,10 @@ form textarea {
 }
 
 #userInput {
-    min-height: 90px;
-    height: 100px;
+    height: 106px;
     flex: 1;
     padding: 10px 30px;
     color: var(--colour-3);
-    max-height: 200px;
     outline: none;
     font-size: 14px;
     width: calc(100% - 88px);
@@ -2191,14 +2189,6 @@ form textarea {
     padding: 4px;
   }
   
-  .user-input {
-    max-height: 80px;
-  }
-  
-  #userInput {
-    max-height: 60px;
-  }
-  
   .message {
     padding: 8px;
   }
@@ -2308,11 +2298,6 @@ form textarea {
     .chat-top-panel .convo-title {
         font-size: 14px;
         max-width: 60%;
-    }
-    
-    #userInput {
-        min-height: 60px;
-        max-height: 120px;
     }
     
     .message {

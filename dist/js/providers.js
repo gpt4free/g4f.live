@@ -1,4 +1,4 @@
-import { Client, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } from "/dist/js/client.js";
+import { Client, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } from "./client.js";
 
 const providers = {
     "default": {class: Client, baseUrl: "https://g4f.dev/api/auto", apiEndpoint: "https://g4f.dev/ai/{now}", tags: ""},
@@ -18,6 +18,7 @@ const providers = {
     "puter": {class: Puter, tags: "👓"},
     "stringable-inf": {class: Client, baseUrl: "https://stringableinf.com/api", apiEndpoint: "https://stringableinf.com/api/v1/chat/completions", tags: "", extraHeaders: {"HTTP-Referer": "https://g4f.dev/", "X-Title": "G4F Chat"}},
     "typegpt": {class: Client, baseUrl: "https://g4f.dev/api/typegpt", tags: ""},
+    "together": {class: Client, tags: "👓"},
     "worker": {class: Worker, baseUrl: "https://g4f.dev/api/worker", tags: "🎨"}
 };
 
@@ -29,8 +30,8 @@ function createClient(provider, options = {}) {
     }
     
     // Set baseUrl
-    if (provider === "custom") {
-        options.baseUrl = appStorage.getItem("Custom-api_base");
+    if (provider === "custom" && typeof localStorage !== "undefined" && localStorage.getItem("Custom-api_base")) {
+        options.baseUrl = localStorage.getItem("Custom-api_base");
     } else if (config.baseUrl) {
         options.baseUrl = config.baseUrl;
     }

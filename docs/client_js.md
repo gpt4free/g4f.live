@@ -129,6 +129,39 @@ const result = await client.chat.completions.create({
 const models = await client.models.list();
 models.forEach(m => console.log(m.id, m.type));
 ```
+
+---
+
+### **List All Models for All Providers**
+
+You can also iterate through every available provider and fetch their supported models in one go:
+
+```js
+import providers from '@gpt4free/g4f.dev/providers';
+import { createClient } from '@gpt4free/g4f.dev/providers';
+
+// Example usage: Fetch and log models for each provider
+const providerModels = {};
+for (const key of Object.keys(providers)) {
+    console.log('Provider:', key, providers[key]);
+    try {
+        const client = createClient(key);
+        providerModels[key] = await client.models.list();
+        console.log(`Models for provider "${key}":`, providerModels[key].map(m => m.id));
+    } catch (error) {
+        console.error(`Error fetching models for provider "${key}":`, error);
+    }
+}
+
+export { providers, createClient, providerModels };
+```
+
+This snippet will:
+- Loop through all built-in providers.
+- Create a client for each provider.
+- Fetch and list all models they support.
+- Store results in a `providerModels` object for later use.
+
 ---
 
 ## Multi-Provider Web UI Example

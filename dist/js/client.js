@@ -520,7 +520,7 @@ class Worker extends Client {
 class Together extends Client {
     constructor(options = {}) {
         if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
-            if (localStorage && localStorage.getItem("Together-api_key")) {
+            if (typeof localStorage !== "undefined" && localStorage.getItem("Together-api_key")) {
                 options.apiKey = localStorage.getItem("Together-api_key");
             } else {
                 throw new Error('Together requires a "apiKey" to be set.');
@@ -738,8 +738,10 @@ class Together extends Client {
 class Puter {
     constructor(options = {}) {
         this.defaultModel = options.defaultModel || 'gpt-5';
-        this.puter = options.puter || this._injectPuter();
         this.logCallback = options.logCallback;
+        if (typeof window !== 'undefined') {
+            this.puter = options.puter || this._injectPuter();
+        }
     }
 
     get chat() {
@@ -810,6 +812,9 @@ class Puter {
     }
 
     async *_streamCompletion(model, messages, options = {}) {
+        if (typeof window === 'undefined') {
+            throw new Error('Puter can only be used in a browser environment');
+        }
         this.logCallback && this.logCallback({request: {messages, ...options}, type: 'chat'});
         for await (const item of await ((await this.puter).ai.chat(messages, false, options))) {
           item.model = model;

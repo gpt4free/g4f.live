@@ -510,6 +510,33 @@
 <div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">const</span> <span class="pl-s1">models</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span><span class="pl-kos">.</span><span class="pl-c1">models</span><span class="pl-kos">.</span><span class="pl-en">list</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-s1">models</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-s1">m</span> <span class="pl-c1">=&gt;</span> <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s1">m</span><span class="pl-kos">.</span><span class="pl-c1">id</span><span class="pl-kos">,</span> <span class="pl-s1">m</span><span class="pl-kos">.</span><span class="pl-c1">type</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div>
 <hr>
+<h3><strong>List All Models for All Providers</strong></h3>
+<p>You can also iterate through every available provider and fetch their supported models in one go:</p>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">providers</span> <span class="pl-k">from</span> <span class="pl-s">'@gpt4free/g4f.dev/providers'</span><span class="pl-kos">;</span>
+<span class="pl-k">import</span> <span class="pl-kos">{</span> <span class="pl-s1">createClient</span> <span class="pl-kos">}</span> <span class="pl-k">from</span> <span class="pl-s">'@gpt4free/g4f.dev/providers'</span><span class="pl-kos">;</span>
+
+<span class="pl-c">// Example usage: Fetch and log models for each provider</span>
+<span class="pl-k">const</span> <span class="pl-s1">providerModels</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+<span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-s1">key</span> <span class="pl-k">of</span> <span class="pl-v">Object</span><span class="pl-kos">.</span><span class="pl-en">keys</span><span class="pl-kos">(</span><span class="pl-s1">providers</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'Provider:'</span><span class="pl-kos">,</span> <span class="pl-s1">key</span><span class="pl-kos">,</span> <span class="pl-s1">providers</span><span class="pl-kos">[</span><span class="pl-s1">key</span><span class="pl-kos">]</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">try</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-en">createClient</span><span class="pl-kos">(</span><span class="pl-s1">key</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">providerModels</span><span class="pl-kos">[</span><span class="pl-s1">key</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span><span class="pl-kos">.</span><span class="pl-c1">models</span><span class="pl-kos">.</span><span class="pl-en">list</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`Models for provider "<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">key</span><span class="pl-kos">}</span></span>":`</span><span class="pl-kos">,</span> <span class="pl-s1">providerModels</span><span class="pl-kos">[</span><span class="pl-s1">key</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-en">map</span><span class="pl-kos">(</span><span class="pl-s1">m</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">m</span><span class="pl-kos">.</span><span class="pl-c1">id</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span> <span class="pl-k">catch</span> <span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">`Error fetching models for provider "<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">key</span><span class="pl-kos">}</span></span>":`</span><span class="pl-kos">,</span> <span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-k">export</span> <span class="pl-kos">{</span> <span class="pl-s1">providers</span><span class="pl-kos">,</span> <span class="pl-s1">createClient</span><span class="pl-kos">,</span> <span class="pl-s1">providerModels</span> <span class="pl-kos">}</span><span class="pl-kos">;</span></pre></div>
+<p>This snippet will:</p>
+<ul>
+<li>Loop through all built-in providers.</li>
+<li>Create a client for each provider.</li>
+<li>Fetch and list all models they support.</li>
+<li>Store results in a <code class="notranslate">providerModels</code> object for later use.</li>
+</ul>
+<hr>
 <h2>Multi-Provider Web UI Example</h2>
 <p>You can create a browser-based chat UI supporting multiple providers and models. See <a href="../chat/pro.html"><code class="notranslate">pro.html</code></a> for a working example.</p>
 <h3>Features:</h3>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Documentation: API endpoints and usage | GPT4Free Documentation</title>
+    <title>Documentation: API endpoints and usage</title>
 
     <meta name="description" content="GPT4Free documentation for Documentation: API endpoints and usage. Complete guides, examples, and API reference for free AI endpoints, code generation, and AI model integration." />
     <meta name="keywords" content="GPT4Free, G4F, AI documentation, free AI API, OpenAI alternative, JavaScript AI client, Python AI library, AI integration, code generation, Documentation: API endpoints and usage" />
@@ -421,12 +421,13 @@
         </nav>
 
         <main role="main" class="markdown-body entry-content" itemprop="text" itemscope itemtype="https://schema.org/TechArticle">
-            <h2>Documentation: API endpoints and usage</h2>
-<p>Overview</p>
+<h2>Documentation: API endpoints and usage</h2>
+<h3>Overview</h3>
 <ul>
 <li>This collection exposes multiple base URLs (providers) for chat-style completions. Each entry in the table lists a base URL (with /models removed) and whether an API key is required.</li>
 <li>Base URL extraction: remove /models from the URL in your table to get the API base_url you should use in requests.</li>
 </ul>
+<h3>Base URLs Table</h3>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -442,14 +443,9 @@
 <td>use it locally</td>
 </tr>
 <tr>
-<td><a href="https://g4f.dev/api/gpt-oss-120b/models" rel="nofollow">https://g4f.dev/api/gpt-oss-120b</a></td>
-<td>none required</td>
-<td>use gpt-oss-120b for free</td>
-</tr>
-<tr>
 <td><a href="https://g4f.dev/api/groq/models" rel="nofollow">https://g4f.dev/api/groq</a></td>
 <td>none required</td>
-<td>Use Groq provder</td>
+<td>Use Groq provider</td>
 </tr>
 <tr>
 <td><a href="https://g4f.dev/api/ollama/models" rel="nofollow">https://g4f.dev/api/ollama</a></td>
@@ -467,41 +463,79 @@
 <td>Use Nvidia provider</td>
 </tr>
 <tr>
-<td><a href="https://g4f.dev/api/Azure/models" rel="nofollow">https://g4f.dev/api/Azure</a></td>
-<td>provided by <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key</a></td>
-<td>Use Azure on my bill</td>
+<td><a href="https://g4f.dev/ai/grok" rel="nofollow">https://g4f.dev/api/grok</a></td>
+<td>none required</td>
+<td>Hosted Grok provider</td>
 </tr>
 <tr>
-<td><a href="https://host.g4f.dev/v1/models" rel="nofollow">https://host.g4f.dev/v1</a></td>
-<td>provided by <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key</a></td>
-<td>Hosted instance, many models</td>
+<td><a href="https://g4f.dev/ai/gemini" rel="nofollow">https://g4f.dev/api/gemini</a></td>
+<td>none required</td>
+<td>Hosted Gemini provider</td>
+</tr>
+<tr>
+<td><a href="https://g4f.dev/api/gpt-oss-120b/models" rel="nofollow">https://g4f.dev/api/gpt-oss-120b</a></td>
+<td>required</td>
+<td>now requires API key from <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key</a></td>
+</tr>
+<tr>
+<td><a href="https://g4f.dev/api/Azure/models" rel="nofollow">https://g4f.dev/api/Azure</a></td>
+<td>required</td>
+<td>Use Azure on my bill, get key from <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key</a></td>
+</tr>
+<tr>
+<td><a href="https://g4f.dev/v1/models" rel="nofollow">https://g4f.dev/v1</a></td>
+<td>required</td>
+<td>Hosted instance, many models, get key from <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key</a></td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p>How to choose a base URL</p>
+<h3>Also Supported API Routes:</h3>
+<ul>
+<li><strong>Nvidia</strong>: <a href="https://integrate.api.nvidia.com/v1" rel="nofollow">https://integrate.api.nvidia.com/v1</a></li>
+<li><strong>DeepInfra</strong>: <a href="https://api.deepinfra.com/v1" rel="nofollow">https://api.deepinfra.com/v1</a></li>
+<li><strong>OpenRouter</strong>: <a href="https://openrouter.ai/api/v1" rel="nofollow">https://openrouter.ai/api/v1</a></li>
+<li><strong>Google Gemini</strong>: <a href="https://generativelanguage.googleapis.com/v1beta/openai" rel="nofollow">https://generativelanguage.googleapis.com/v1beta/openai</a></li>
+<li><strong>xAI</strong>: <a href="https://api.x.ai/v1" rel="nofollow">https://api.x.ai/v1</a></li>
+<li><strong>Together</strong>: <a href="https://api.together.xyz/v1" rel="nofollow">https://api.together.xyz/v1</a></li>
+<li><strong>OpenAI</strong>: <a href="https://api.openai.com/v1" rel="nofollow">https://api.openai.com/v1</a></li>
+<li><strong>Strinable Inf</strong>: <a href="https://stringableinf.com/api/v1" rel="nofollow">https://stringableinf.com/api/v1</a></li>
+<li><strong>TypeGPT</strong>: <a href="https://typegpt.ai/api" rel="nofollow">https://typegpt.ai/api</a></li>
+<li><strong>Grok</strong>: <a href="https://api.grok.com/v1" rel="nofollow">https://api.grok.com/v1</a></li>
+<li><strong>ApiAirforce</strong>: baseUrl: <a href="https://api.airforce/v1" rel="nofollow">https://api.airforce/v1</a>, apiEndpoint: <a href="https://stringableinf.com/api/v1/chat/completions" rel="nofollow">https://stringableinf.com/api/v1/chat/completions</a></li>
+<li><strong>Auto Provider &amp; Model Selection</strong>: apiEndpoint: <a href="https://g4f.dev/ai/%7Bnow%7D" rel="nofollow">https://g4f.dev/ai/{now}</a></li>
+</ul>
+<h3>Individual clients available for:</h3>
+<ul>
+<li>Pollinations AI</li>
+<li>Puter AI</li>
+<li>HuggingFace</li>
+<li>Ollama</li>
+</ul>
+<h3>How to choose a base URL</h3>
 <ul>
 <li>If you want a local or self-hosted instance, you can use:
 <ul>
 <li><a href="https://localhost:1337/v1" rel="nofollow">https://localhost:1337/v1</a></li>
 </ul>
 </li>
-<li>If you want a free or public provider, you can use one of the g4f.dev endpoints (e.g., gpt-oss-120b, groq, ollama, pollinations.ai, nvidia).</li>
-<li>If you want an Azure-backed usage, use:
+<li>If you want a free or public provider, you can use one of the g4f.dev endpoints (e.g., groq, ollama, pollinations.ai, nvidia, grok).</li>
+<li>If you want Azure-backed usage or hosted instances, use:
 <ul>
-<li><a href="https://g4f.dev/api/Azure" rel="nofollow">https://g4f.dev/api/Azure</a> (you’ll need an API key from <a href="https://g4f.dev/api_key.html" rel="nofollow">https://g4f.dev/api_key.html</a>)</li>
+<li><a href="https://g4f.dev/api/Azure" rel="nofollow">https://g4f.dev/api/Azure</a> (requires API key)</li>
+<li><a href="https://g4f.dev/v1" rel="nofollow">https://g4f.dev/v1</a> (requires API key)</li>
 </ul>
 </li>
 </ul>
-<p>API usage basics</p>
+<h3>API usage basics</h3>
 <ul>
-<li>Endpoints: All chat-style interactions use the chat completions endpoint at {base_url}/chat/completions</li>
-<li>Authentication:
+<li><strong>Endpoints</strong>: All chat-style interactions use the chat completions endpoint at <code class="notranslate">{base_url}/chat/completions</code></li>
+<li><strong>Authentication</strong>:
 <ul>
 <li>If the table entry says "none required", you do not need to pass an API key.</li>
-<li>If an API key is required (Azure or hosted instances), supply api_key in your client configuration or request headers as dictated by your client library (see examples).</li>
+<li>If an API key is required (Azure, hosted instances, or gpt-oss-120b), supply api_key in your client configuration or request headers.</li>
 </ul>
 </li>
-<li>Payload shape (typical):
+<li><strong>Payload shape</strong> (typical):
 <ul>
 <li>model: string (e.g., gpt-oss-120b, gpt-4o, etc.)</li>
 <li>temperature: number (optional)</li>
@@ -509,16 +543,14 @@
 </ul>
 </li>
 </ul>
-<p>Example payload</p>
+<h3>Example payload</h3>
 <div class="highlight highlight-source-json"><pre class="notranslate">{
   <span class="pl-ent">"model"</span>: <span class="pl-s"><span class="pl-pds">"</span>gpt-4o<span class="pl-pds">"</span></span>,
   <span class="pl-ent">"temperature"</span>: <span class="pl-c1">0.9</span>,
   <span class="pl-ent">"messages"</span>: [{<span class="pl-ent">"role"</span>: <span class="pl-s"><span class="pl-pds">"</span>user<span class="pl-pds">"</span></span>, <span class="pl-ent">"content"</span>: <span class="pl-s"><span class="pl-pds">"</span>Hello, how are you?<span class="pl-pds">"</span></span>}]
 }</pre></div>
-<p>Examples</p>
-<ol>
-<li>Python requests (local example)</li>
-</ol>
+<h3>Examples</h3>
+<h4>1) Python requests (local example)</h4>
 <ul>
 <li>Sends a chat completion to the local endpoint at /v1/chat/completions</li>
 </ul>
@@ -537,9 +569,7 @@
 <span class="pl-k">else</span>:
     <span class="pl-en">print</span>(<span class="pl-s">f"Request failed with status code <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">response</span>.<span class="pl-c1">status_code</span><span class="pl-kos">}</span></span>"</span>)
     <span class="pl-en">print</span>(<span class="pl-s">"Response:"</span>, <span class="pl-s1">response</span>.<span class="pl-c1">text</span>)</pre></div>
-<ol start="2">
-<li>Python with OpenAI client (custom base_url)</li>
-</ol>
+<h4>2) Python with OpenAI client (custom base_url)</h4>
 <ul>
 <li>Use the OpenAI Python client but point it at your chosen base URL</li>
 </ul>
@@ -556,33 +586,33 @@
 )
 
 <span class="pl-en">print</span>(<span class="pl-s1">response</span>.<span class="pl-c1">choices</span>[<span class="pl-c1">0</span>].<span class="pl-c1">message</span>.<span class="pl-c1">content</span>)</pre></div>
-<ol start="3">
-<li>JavaScript (HTML/JS client)</li>
-</ol>
+<h4>3) JavaScript (HTML/JS client)</h4>
 <ul>
-<li>Basic usage in a browser-like environment using GPT4Free.js</li>
+<li>Basic usage in a browser-like environment</li>
 </ul>
 <div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-kos">&lt;</span><span class="pl-ent">script</span> <span class="pl-c1">type</span>="<span class="pl-s">module</span>"<span class="pl-kos">&gt;</span>
     <span class="pl-k">import</span> <span class="pl-v">Client</span> <span class="pl-k">from</span> <span class="pl-s">'https://g4f.dev/dist/js/client.js'</span><span class="pl-kos">;</span>
 
     <span class="pl-c">// Initialize a client with a base URL and optional API key</span>
-    <span class="pl-k">const</span> <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Client</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">baseUrl</span>: <span class="pl-s">'http://localhost:1337/v1'</span><span class="pl-kos">,</span> <span class="pl-c1">apiKey</span>: <span class="pl-s">'secret'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Client</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">baseUrl</span>: <span class="pl-s">'https://g4f.dev/api/grok'</span><span class="pl-kos">,</span> <span class="pl-c1">apiKey</span>: <span class="pl-s">'secret'</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
     <span class="pl-k">const</span> <span class="pl-s1">result</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">client</span><span class="pl-kos">.</span><span class="pl-c1">chat</span><span class="pl-kos">.</span><span class="pl-c1">completions</span><span class="pl-kos">.</span><span class="pl-en">create</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
-        <span class="pl-c1">model</span>: <span class="pl-s">'gpt-4.1'</span><span class="pl-kos">,</span>
+        <span class="pl-c1">model</span>: <span class="pl-s">'grok-4-fast-non-reasoning'</span><span class="pl-kos">,</span>
         <span class="pl-c1">messages</span>: <span class="pl-kos">[</span>
             <span class="pl-kos">{</span> <span class="pl-c1">role</span>: <span class="pl-s">'system'</span><span class="pl-kos">,</span> <span class="pl-c1">content</span>: <span class="pl-s">'You are a helpful assistant.'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
             <span class="pl-kos">{</span> <span class="pl-c1">role</span>: <span class="pl-s">'user'</span><span class="pl-kos">,</span> <span class="pl-c1">content</span>: <span class="pl-s">'Tell me a joke.'</span> <span class="pl-kos">}</span>
         <span class="pl-kos">]</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span></pre></div>
-<p>Notes and quick tips</p>
+<h3>Notes and quick tips</h3>
 <ul>
-<li>If you use a hosted instance (host.g4f.dev or Azure-based), you’ll likely need an API key. Retrieve it from the referenced API key resource (g4f.dev/api_key.html) and configure your client accordingly.</li>
-<li>The examples assume a chat-style completions API where you pass messages and receive a response containing the assistant’s content.</li>
-<li>The base_url is always the URL without the trailing /models segment.</li>
+<li><strong>API Key Changes</strong>: The gpt-oss-120b endpoint now requires an API key. Retrieve it from <a href="https://g4f.dev/api_key.html" rel="nofollow">g4f.dev/api_key.html</a>.</li>
+<li><strong>Hosted Instance URL</strong>: Updated from host.g4f.dev/v1 to g4f.dev/v1</li>
+<li><strong>New Grok Provider</strong>: Use <a href="https://g4f.dev/api/grok" rel="nofollow">https://g4f.dev/api/grok</a> for hosted Grok access without API key</li>
+<li>The examples assume a chat-style completions API where you pass messages and receive a response containing the assistant's content.</li>
+<li>The base_url is always the URL without the trailing /models segment</li>
 </ul>
-        </main>
+</main>
     </div>
 
     

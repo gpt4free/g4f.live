@@ -164,14 +164,14 @@
 
         function getImage(key) {
           const img = new Image(40, 40);
-          const gen = 'https://image.pollinations.ai';
+          const gen = 'https://g4f.dev';
           img.src=gen+'/prompt/Create a logo for ' +
             key.replace(
               'Meta', 'Facebook').replace(
               'Aria', '').replace(
               'OpenAI', 'ChatGPT').replace(
               'Video', 'TV AI').replace(
-              'Nvidia', 'GeForce').replace(
+              'Nvidia', 'GPU').replace(
               'Phi-4', 'Windows').replace(
               '(Text Generation)', '').replace(
               'Glhf', 'AI').replace(
@@ -180,7 +180,7 @@
               '-2.5M', '').replace(
               'grok', 'xAI').replace(
               'Qwen-3', '').replace(
-              'Yupp', 'ai win').replace(
+              'Yupp', 'with yupp').replace(
               'anon-', 'anonymous ')+'?width=256&height=256&nologo=true';
           return img;
         }
@@ -306,7 +306,7 @@
                     
                     const logo = document.createElement("div");
                     logo.className = "logo";
-                    logo.appendChild(getImage(p.label || p.name));
+                    logo.appendChild(getImage(p.name));
                     
                     const meta = document.createElement("div");
                     meta.innerHTML = `<div>${p.label || p.name}${p.label && p.label.split(" ")[0] !== p.name ? ` (${p.name})` : ""}</div><small>${iconsFor(p)}${badgesFor(p)}</small>`;

@@ -2,7 +2,7 @@ import { Client, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } 
 
 const providers = {
     "default": {class: Client, baseUrl: "https://g4f.dev/api/auto", apiEndpoint: "https://g4f.dev/ai/{now}", tags: ""},
-    "api-airforce": {class: Client, baseUrl: "https://api.airforce/v1", tags: "🎨 👓"},
+    "api-airforce": {class: Client, baseUrl: "https://api.airforce/v1", tags: "🎨 👓", localStorageApiKey: "ApiAirforce-api_key"},
     "anon-drop": {class: Client, baseUrl: "https://anondrop.net/v1", tags: ""},
     "audio": {class: Audio, baseUrl: "https://g4f.dev/api/audio", tags: "🎧"},
     "azure": {class: Client, baseUrl: "https://g4f.dev/api/azure", tags: "👓"},
@@ -18,7 +18,7 @@ const providers = {
     "puter": {class: Puter, tags: "👓"},
     "stringable-inf": {class: Client, baseUrl: "https://stringableinf.com/api", apiEndpoint: "https://stringableinf.com/api/v1/chat/completions", tags: "", extraHeaders: {"HTTP-Referer": "https://g4f.dev/", "X-Title": "G4F Chat"}},
     "typegpt": {class: Client, baseUrl: "https://g4f.dev/api/typegpt", tags: ""},
-    "together": {class: Together, tags: "👓", localStorageApiKey: "Together-api_key"},
+    "together": {class: Client, baseUrl: "https://api.together.xyz/v1", tags: "👓", localStorageApiKey: "Together-api_key"},
     "worker": {class: Worker, baseUrl: "https://g4f.dev/api/worker", tags: "🎨"}
 };
 

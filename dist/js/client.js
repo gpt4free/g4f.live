@@ -548,15 +548,14 @@ class Puter {
     constructor(options = {}) {
         this.defaultModel = options.defaultModel || 'gpt-5';
         this.logCallback = options.logCallback;
-        if (typeof window !== 'undefined') {
-            this.puter = options.puter || this._injectPuter();
-        }
+        this.puter = null;
     }
 
     get chat() {
         return {
             completions: {
                 create: async (params) => {
+                    this.puter = this.puter || await this._injectPuter();
                     const { messages, ...options } = params;
                     if (!options.model && this.defaultModel) {
                         options.model = this.defaultModel;
@@ -564,7 +563,7 @@ class Puter {
                     if (options.stream) {
                         return this._streamCompletion(options.model, messages, options);
                     }
-                    const response = await (await this.puter).ai.chat(messages, false, options);
+                    const response = await this.puter.ai.chat(messages, false, options);
                     this.logCallback && this.logCallback({response: response, type: 'chat'});
                     if (response.choices === undefined && response.message !== undefined) {
                         return {
@@ -621,11 +620,8 @@ class Puter {
     }
 
     async *_streamCompletion(model, messages, options = {}) {
-        if (typeof window === 'undefined') {
-            throw new Error('Puter can only be used in a browser environment');
-        }
         this.logCallback && this.logCallback({request: {messages, ...options}, type: 'chat'});
-        for await (const item of await ((await this.puter).ai.chat(messages, false, options))) {
+        for await (const item of await this.puter.ai.chat(messages, false, options)) {
           item.model = model;
           this.logCallback && this.logCallback({response: item, type: 'chat'});
           if (item.choices == undefined && item.text !== undefined) {

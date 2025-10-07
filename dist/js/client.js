@@ -59,7 +59,7 @@ class Client {
         this.defaultModel = options.defaultModel;
         this.useModelName = options.useModelName || false;
         this.apiKey = options.apiKey;
-        this.referrer = options.referrer;
+        this.extraBody = options.extraBody || {};
         this.logCallback = options.logCallback;
 
         this.extraHeaders = {
@@ -113,8 +113,8 @@ class Client {
                 } else {
                     params.model = modelId;
                 }
-                if (this.referrer) {
-                    params.referrer = this.referrer;
+                if (this.extraBody) {
+                    params = { ...params, ...this.extraBody };
                 }
                 if (params.stream && !params.stream_options) {
                     params.stream_options = {include_usage: true};
@@ -304,7 +304,7 @@ class Client {
         prompt = encodeURIComponent(prompt).replaceAll('%20', '+');
         delete params.prompt;
         if (params.nologo === undefined) params.nologo = true;
-        if (this.referrer) params.referrer = this.referrer;
+        if (this.extraBody.referrer) params.referrer = this.extraBody.referrer;
         if (params.size) {
             params.width = params.size.split('x')[0];
             params.height = params.size.split('x')[1];
@@ -369,7 +369,10 @@ class PollinationsAI extends Client {
             apiEndpoint: 'https://text.pollinations.ai/openai',
             imageEndpoint: 'https://image.pollinations.ai/prompt/{prompt}',
             defaultModel: 'gpt-5-nano',
-            referrer: 'https://g4f.dev/',
+            extraBody: {
+                referrer: 'https://g4f.dev/',
+                seed: '10352102'
+            },
             modelAliases: {
                 "sdxl-turbo": "turbo",
                 "gpt-image": "gptimage",
@@ -431,7 +434,9 @@ class Audio extends Client {
     constructor(options = {}) {
         super({
             apiEndpoint: 'https://text.pollinations.ai/openai',
-            referrer: 'https://g4f.dev/',
+            extraBody: {
+                referrer: 'https://g4f.dev/'
+            },
             defaultModel: 'openai-audio',
             ...options
         });
@@ -443,8 +448,8 @@ class Audio extends Client {
             create: async (params) => {
                 const originalModel = params.model;
                 params.model = this.defaultModel;
-                if (this.referrer) {
-                    params.referrer = this.referrer;
+                if (this.extraBody) {
+                    params = { ...params, ...this.extraBody };
                 }
                 if (!params.audio) {
                     params.audio = {

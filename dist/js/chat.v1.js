@@ -3224,60 +3224,74 @@ audioButton.addEventListener('click', async (event) => {
     i.classList.add("fa-stop");
     t.innerText = framework.translate("Stop Recording");
 
-    stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-    });
-
-    if (modelSelect.options[modelSelect.selectedIndex].dataset.audio) {
-        mediaRecorder = new Recorder(stream);
-        mediaRecorder.start();
-        return;
-    }
-
-    if (!MediaRecorder.isTypeSupported('audio/webm')) {
-        console.warn('audio/webm is not supported');
-    }
-    mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm',
-    });
-    
-    mediaRecorder.addEventListener('dataavailable', async event => {
-        const loadingIndicator = document.createElement('div');
-        loadingIndicator.className = 'file-upload-loading';
-        loadingIndicator.innerHTML = `
-            <div class="upload-spinner"></div>
-            <p>${framework.translate("Uploading audio...")}</p>
-        `;
-        document.body.appendChild(loadingIndicator);
-        const formData = new FormData();
-        formData.append('files', event.data);
-        const bucket_id = generateUUID();
-        const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                "x-recognition-language": await get_recognition_language()
-            }
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            audio: true
         });
-        document.body.removeChild(loadingIndicator);
-        if (!response.ok) {
-            inputCount.innerText = framework.translate("Error uploading audio");
+
+        if (modelSelect.options[modelSelect.selectedIndex].dataset.audio) {
+            mediaRecorder = new Recorder(stream);
+            mediaRecorder.start();
             return;
         }
-        const result = await response.json()
-        if (result.media) {
-            const media = [];
-            result.media.forEach((part)=> {
-                part = part.name ? part : {name: part};
-                const url = `${framework.backendUrl}/files/${bucket_id}/media/${part.name}`;
-                media.push({bucket_id: bucket_id, url: url, ...part});
-            });
-            await handle_ask(false, media);
-        }
-        t.innerText = framework.translate("Record Audio");
-    });
 
-    mediaRecorder.start()
+        if (!MediaRecorder.isTypeSupported('audio/webm')) {
+            console.warn('audio/webm is not supported');
+        }
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'audio/webm',
+        });
+        
+        mediaRecorder.addEventListener('dataavailable', async event => {
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'file-upload-loading';
+            loadingIndicator.innerHTML = `
+                <div class="upload-spinner"></div>
+                <p>${framework.translate("Uploading audio...")}</p>
+            `;
+            document.body.appendChild(loadingIndicator);
+            try {
+                const formData = new FormData();
+                formData.append('files', event.data);
+                const bucket_id = generateUUID();
+                const response = await fetch(framework.backendUrl + "/backend-api/v2/files/" + bucket_id, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "x-recognition-language": await get_recognition_language()
+                    }
+                });
+            } finally {
+                document.body.removeChild(loadingIndicator);
+            }
+            if (!response.ok) {
+                inputCount.innerText = framework.translate("Error uploading audio");
+                return;
+            }
+            const result = await response.json()
+            if (result.media) {
+                const media = [];
+                result.media.forEach((part)=> {
+                    part = part.name ? part : {name: part};
+                    const url = `${framework.backendUrl}/files/${bucket_id}/media/${part.name}`;
+                    media.push({bucket_id: bucket_id, url: url, ...part});
+                });
+                await handle_ask(false, media);
+            }
+            t.innerText = framework.translate("Record Audio");
+        });
+
+        mediaRecorder.start()
+    } catch (err) {
+        console.error('Error accessing microphone:', err);
+        i.classList.remove("fa-stop");
+        i.classList.add("fa-microphone");
+        t.innerText = framework.translate("Record Audio");
+        if(mediaRecorder?.stream) {
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
+        mediaRecorder = null;
+    }
 });
 
 linkButton.addEventListener('click', async (event) => {

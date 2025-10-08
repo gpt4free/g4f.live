@@ -192,18 +192,6 @@
             const table = document.getElementById('js-providers-table');
             table.innerHTML = '';
             for (const [key, p] of Object.entries(providers)) {
-                try {
-                    const client = createClient(key);
-                    p.models = await client.models.list();
-                    p.models = p.models.map(m => m.id);
-                    console.log(`Models for provider "${key}":`, p.models);
-                } catch (error) {
-                    p.models = [];
-                    console.error(`Error fetching models for provider "${key}":`, error);
-                }
-
-                if(p.models.length === 0) continue;
-              
                 const row = document.createElement('div');
                 row.className = 'row';
                 
@@ -229,21 +217,7 @@
                 // Models preview
                 const preview = document.createElement('div');
                 preview.className = 'models-preview';
-                
-                p.models.slice(0, 5).forEach(m => {
-                    const pill = document.createElement('div');
-                    pill.className = 'model-pill';
-                    pill.textContent = m;
-                    preview.appendChild(pill);
-                });
-                
-                if (p.models.length > 5) {
-                    const more = document.createElement('div');
-                    more.className = 'model-pill';
-                    more.textContent = `…+${p.models.length - 5}`;
-                    preview.appendChild(more);
-                }
-                
+
                 // Action button
                 const actions = document.createElement('div');
                 const btn = document.createElement('button');
@@ -255,13 +229,42 @@
                 // Full models list
                 const modelDiv = document.createElement('div');
                 modelDiv.className = 'models-list';
-                
-                p.models.forEach(m => {
-                    const pill = document.createElement('div');
-                    pill.className = 'model-pill';
-                    pill.textContent = m;
-                    modelDiv.appendChild(pill);
-                });
+
+                (async () => {
+                    try {
+                        console.log(providers[key])
+                        const client = createClient(key);
+                        p.models = await client.models.list();
+                        p.models = p.models.map(m => m.id);
+                        console.log(`Models for provider "${key}":`, p.models);
+                    } catch (error) {
+                        p.models = [];
+                        console.error(`Error fetching models for provider "${key}":`, error);
+                    }
+
+                    if(p.models.length === 0) return;
+                    
+                    p.models.slice(0, 5).forEach(m => {
+                        const pill = document.createElement('div');
+                        pill.className = 'model-pill';
+                        pill.textContent = m;
+                        preview.appendChild(pill);
+                    });
+                    
+                    if (p.models.length > 5) {
+                        const more = document.createElement('div');
+                        more.className = 'model-pill';
+                        more.textContent = `…+${p.models.length - 5}`;
+                        preview.appendChild(more);
+                    }
+
+                    p.models.forEach(m => {
+                        const pill = document.createElement('div');
+                        pill.className = 'model-pill';
+                        pill.textContent = m;
+                        modelDiv.appendChild(pill);
+                    });
+                })();
                 
                 // Toggle show/hide
                 btn.addEventListener('click', () => {

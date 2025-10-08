@@ -28,6 +28,7 @@ const chat              = document.querySelector(".chat-container");
 const album             = document.querySelector(".images");
 const searchButton      = document.getElementById("search");
 const paperclip         = document.querySelector(".user-input .fa-paperclip");
+const userInputHeight   = document.getElementById("userInput-height");
 const hide_systemPrompt = document.getElementById("hide-systemPrompt")
 const slide_systemPrompt_icon = document.querySelector(".slide-header i");
 
@@ -1388,7 +1389,7 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     content_data_storage[message_id] = `data:audio/mpeg;base64,${audio.data}`;
                 }
             } else {
-                if (searchButton.classList.contains("active") && provider != "CachedSearch") {
+                if (framework.backendUrl && searchButton.classList.contains("active") && provider != "CachedSearch") {
                     let query = message.split(":");
                     query = query.length > 1 ? query[1].trim() : message;
                     query = query.split("\n")[0].trim();
@@ -2801,7 +2802,7 @@ async function on_load() {
     let chat_params = new URLSearchParams(window.location.search);
     if (chat_params.get("prompt")) {
         userInput.value = chat_params.get("prompt");
-        userInput.style.height = appStorage.getItem("userInput-height") ? appStorage.getItem("userInput-height")+"px" : "";
+        userInput.style.height = userInputHeight?.value + "px";
         userInput.focus();
     }
     if (!conversation_id) {
@@ -2966,7 +2967,7 @@ async function on_api() {
     });
     let timeoutBlur = null;
     userInput.addEventListener("focus", async (evt) => {
-        userInput.style.height = appStorage.getItem("userInput-height") ? appStorage.getItem("userInput-height")+"px" : "";
+        userInput.style.height = userInputHeight?.value + "px";
     });
     userInput.addEventListener("blur", async (evt) => {
         timeoutBlur = setTimeout(() => userInput.style.height = "", 200);
@@ -3051,9 +3052,9 @@ async function on_api() {
     hide_systemPrompt ? hide_systemPrompt.addEventListener('change', async (event) => {
         update_systemPrompt_icon(event.target.checked);
     }) : null;
-    const userInputHeight = appStorage.getItem("userInput-height");
-    if (userInputHeight) {
-        userInput.style.height = `${userInputHeight}px`;
+    const value = userInputHeight?.value;
+    if (value) {
+        userInput.style.height = `${value}px`;
     }
     const darkMode = document.getElementById("darkMode");
     if (darkMode) {
@@ -3926,6 +3927,7 @@ function add_pinned(selected_provider, selected_model, save=true) {
 }
 
 searchButton.addEventListener("click", async () => {
+    userInput.focus();
     searchButton.classList.toggle("active");
     (searchButton.querySelector("*")).innerText = (searchButton.classList.contains("active") ? framework.translate("Search On") : framework.translate("Search Off"));
 });

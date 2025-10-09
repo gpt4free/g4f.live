@@ -167,10 +167,11 @@
           const gen = 'https://g4f.dev';
           img.src=gen+'/prompt/Create a logo for ' +
             key.replace(
+              'MetaAIAccount', 'Facebook AI').replace(
               'MetaAI', 'Facebook AI').replace(
               'Aria', '').replace(
               'OpenAI', 'ChatGPT').replace(
-              'Video', 'TV AI').replace(
+              'Video', 'TV').replace(
               'Nvidia', 'GPU').replace(
               'Phi-4', 'Windows').replace(
               '(Text Generation)', '').replace(
@@ -183,7 +184,8 @@
               'grok', 'xAI').replace(
               'Qwen_Qwen_3', 'Qwen').replace(
               'Yupp', 'with yupp').replace(
-              'anon-', 'anonymous ')+'?width=256&height=256&nologo=true';
+              'anon-', 'anonymous ').replace(
+              'Stringable', 'String')+'?width=256&height=256&nologo=true';
           return img;
         }
 

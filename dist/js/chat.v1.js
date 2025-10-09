@@ -982,7 +982,7 @@ async function add_message_chunk(message, message_id, provider, finish_message=n
     } else if (message.type == "content") {
         if (message.content) {
             if (!message_storage[message_id]) {
-                content_map.inner.innerHTML = "";
+                content_map.inner.innerHTML = '<span class="cursor"></span><br><br>';
             }
             message_storage[message_id] += message.content;
             if (message.data) {
@@ -1406,11 +1406,14 @@ const ask_gpt = async (message_id, message_index = -1, regenerate = false, provi
                     }
                 }
 
+                controller_storage[message_id] = new AbortController();
+
                 // Handle chat completion (existing logic)
                 const stream = await client.chat.completions.create({
                     model: selectedModel,
                     messages,
-                    stream: true
+                    stream: true,
+                    signal: controller_storage[message_id].signal
                 });
 
                 const baseUrl = client.baseUrl ? client.baseUrl.split("/api/")[0] : "";
@@ -2838,7 +2841,7 @@ const load_provider_option = (input, provider_name) => {
 };
 
 function get_modelTags(model, add_vision = true) {
-    if (model.tags) {
+    if (model.tags && model.tags.length > 0) {
         return " " + model.tags.join(" ")
     }
     const parts = []
@@ -3033,9 +3036,10 @@ async function on_api() {
         load_provider_models(appStorage.getItem("provider"));
     }).catch(async (e)=>{
         console.log(e)
-        await load_provider_models(appStorage.getItem("provider"));
+        providerSelect.querySelectorAll("option:not([data-live])").forEach((el)=>el.remove());
         await load_provider_login_urls(providersListContainer);
         await load_settings(provider_options);
+        await load_provider_models(appStorage.getItem("provider"));
     });
 
     const update_systemPrompt_icon = (checked) => {
@@ -3927,7 +3931,7 @@ function add_pinned(selected_provider, selected_model, save=true) {
 }
 
 searchButton.addEventListener("click", async () => {
-    userInput.focus();
+    setTimeout(() => userInput.focus(), 100);
     searchButton.classList.toggle("active");
     (searchButton.querySelector("*")).innerText = (searchButton.classList.contains("active") ? framework.translate("Search On") : framework.translate("Search Off"));
 });

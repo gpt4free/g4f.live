@@ -12,7 +12,6 @@
 | [https://g4f.dev/api/ollama](https://g4f.dev/api/ollama/models) | none required | Use Ollama provider |
 | [https://g4f.dev/api/pollinations.ai](https://g4f.dev/api/pollinations.ai/models) | none required | Proxy for pollinations.ai |
 | [https://g4f.dev/api/nvidia](https://g4f.dev/api/nvidia/models) | none required | Use Nvidia provider |
-| [https://g4f.dev/api/grok](https://g4f.dev/ai/grok) | none required | Hosted Grok provider |
 | [https://g4f.dev/api/gemini](https://g4f.dev/ai/gemini) | none required | Hosted Gemini provider |
 | [https://g4f.dev/api/gpt-oss-120b](https://g4f.dev/api/gpt-oss-120b/models) | required | now requires API key from [g4f.dev/api_key](https://g4f.dev/api_key.html) |
 | [https://g4f.dev/api/Azure](https://g4f.dev/api/Azure/models) | required | Use Azure on my bill, get key from [g4f.dev/api_key](https://g4f.dev/api_key.html) |
@@ -130,6 +129,5 @@ print(response.choices[0].message.content)
 ### Notes and quick tips
 - **API Key Changes**: The gpt-oss-120b endpoint now requires an API key. Retrieve it from [g4f.dev/api_key.html](https://g4f.dev/api_key.html).
 - **Hosted Instance URL**: Updated from host.g4f.dev/v1 to g4f.dev/v1
-- **New Grok Provider**: Use https://g4f.dev/api/grok for hosted Grok access without API key
 - The examples assume a chat-style completions API where you pass messages and receive a response containing the assistant's content.
 - The base_url is always the URL without the trailing /models segment

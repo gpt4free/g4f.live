@@ -413,7 +413,7 @@ class PollinationsAI extends Client {
             const textModels = (textModelsResponse.data || textModelsResponse || []);
             this._models = [
                 ...textModels.map(model => {
-                    model.id = model.aliases ? model.aliases[0] : (this.swapAliases[model.name]  || model.name);
+                    model.id = model.aliases && model.aliases.length > 0 ? model.aliases[0] : (this.swapAliases[model.name]  || model.name);
                     this.modelAliases[model.id] = model.name;
                     model.type = model.type || 'chat';
                     return model

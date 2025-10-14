@@ -3021,7 +3021,7 @@ async function on_api() {
         option.value = name;
         option.dataset.live = "true";
         option.text = `${name} ${config.tags}`;
-        fetch(`https://g4f.dev/ai/${name}/Response%20with%20ok`, {seed: Math.floor(Date.now() / 1000 / 3600 / 24)}).then((response) => {
+        fetch(`https://g4f.dev/ai/${name}/Response%20with%20ok?seed=${Math.floor(Date.now() / 1000 / 3600 / 24)}`).then((response) => {
             if (response.ok) {
                 option.text += " 🟢";
             }

@@ -276,10 +276,10 @@ class Client {
                 yield data;
               } else if (response.headers.get('Content-Type').startsWith('application/json')) {
                 const data = JSON.parse(part);
-                if (data.choices === undefined) {
-                    if (data.choices && data.choices[0]?.message) {
+                if (data.choices && data.choices[0]?.message) {
                         data.choices[0].delta = data.choices[0].message;
-                    } else if (data.output && data.output[0].content) {
+                } else if (data.choices === undefined) {
+                    if (data.output && data.output[0].content) {
                         data.choices = [{delta: {content: data.output[0].content[0].text}}];
                     } else if (data.message) {
                         data.choices = [{delta: data.message}];

@@ -2,8 +2,8 @@ import { Client, PollinationsAI, DeepInfra, Puter, HuggingFace, Worker, Audio } 
 
 const providers = {
     "default": {class: Client, baseUrl: "https://g4f.dev/api/auto", apiEndpoint: "https://g4f.dev/ai/{now}", tags: ""},
-    "api-airforce": {class: Client, baseUrl: "https://api.airforce/v1", tags: "🎨 👓", localStorageApiKey: "ApiAirforce-api_key"},
-    "anon-drop": {class: Client, baseUrl: "https://anondrop.net/v1", tags: ""},
+    "api.airforce": {class: Client, baseUrl: "https://api.airforce/v1", tags: "🎨 👓", localStorageApiKey: "ApiAirforce-api_key"},
+    "anondrop.net": {class: Client, baseUrl: "https://anondrop.net/v1", tags: ""},
     "audio": {class: Audio, baseUrl: "https://g4f.dev/api/audio", tags: "🎧"},
     "azure": {class: Client, baseUrl: "https://g4f.dev/api/azure", tags: "👓"},
     "custom": {class: Client, tags: "", localStorageApiKey: "Custom-api_key"},
@@ -12,10 +12,11 @@ const providers = {
     "gpt-oss-120b": {class: Client, baseUrl: "https://g4f.dev/api/gpt-oss-120b", tags: ""},
     "gpt4free.pro": {class: Client, baseUrl: "https://gpt4free.pro/v1", tags: "", defaultModel: "deepseek-v3.2"},
     "grok": {class: Client, baseUrl: "https://g4f.dev/api/grok", tags: ""},
+    "groq": {class: Client, baseUrl: "https://g4f.dev/api/groq", tags: "", defaultModel: "openai/gpt-oss-120b"},
     "hugging-face": {class: HuggingFace, tags: "", localStorageApiKey: "HuggingFace-api_key"},
     "ollama": {class: Client, baseUrl: "https://g4f.dev/api/ollama", tags: "", localStorageApiKey: "Ollama-api_base"},
     // "openrouter": {class: Client, baseUrl: "https://g4f.dev/api/openrouter", tags: "👓", localStorageApiKey: "OpenRouter-api_key"},
-    "pollinations-ai": {class: PollinationsAI, tags: "🎨 👓", localStorageApiKey: "PollinationsAI-api_key"},
+    "pollinations.ai": {class: PollinationsAI, tags: "🎨 👓", localStorageApiKey: "PollinationsAI-api_key"},
     "puter": {class: Puter, tags: "👓"},
     // "stringable-inf": {class: Client, baseUrl: "https://stringableinf.com/api", apiEndpoint: "https://stringableinf.com/api/v1/chat/completions", tags: "", extraHeaders: {"HTTP-Referer": "https://g4f.dev/", "X-Title": "G4F Chat"}},
     "typegpt": {class: Client, baseUrl: "https://g4f.dev/api/typegpt", tags: ""},

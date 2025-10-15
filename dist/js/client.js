@@ -158,9 +158,9 @@ class Client {
             }
             model.label = model.id.replace('models/', '');
             if (!model.type) {
-              if (model.task?.name == "Text Generation") {
+              if (model.task?.name === "Text Generation") {
                 model.type = 'chat';
-              } else if (model.task?.name == "Text-to-Image") {
+              } else if (model.task?.name === "Text-to-Image") {
                 model.type = 'image';
               } else if (model.supports_chat) {
                 model.type = 'chat';
@@ -170,8 +170,14 @@ class Client {
                 model.type = 'image';
               } else if (model.task?.name) {
                 model.type = "unknown";
-              } else if (model.id.includes("embedding")) {
+              } else if (model.id.toLowerCase().includes("embedding")) {
                 model.type = "embedding";
+              } else if (model.id.toLowerCase().includes("tts") || model.id.toLowerCase().includes("whisper")) {
+                model.type = "audio";
+              } else if (model.id.toLowerCase().includes("flux") || model.id.toLowerCase().includes("image")) {
+                model.type = "image";
+              } else if (["sdxl", "nano-banana", "lucid-origin"].includes(model.id)) {
+                model.type = "image";
               } else if (model.id.includes("generate")) {
                 model.type = "image";
               }

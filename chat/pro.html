@@ -106,13 +106,6 @@
   <div class="block">
     <label>Provider:
       <select id="provider">
-        <option value="pollinations">Pollinations.AI</option>
-        <option value="airforce">Api.Airforce</option>
-        <option value="deepinfra">DeepInfra</option>
-        <option value="huggingface">HuggingFace</option>
-        <option value="worker">Worker</option>
-        <option value="puter">Puter.js</option>
-        <option value="azure">Azure</option>
       </select>
     </label>
   </div>
@@ -136,8 +129,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
 <script src="../dist/js/framework.js"></script>
 <script type="module">
-  //import { Client, PollinationsAI, DeepInfra, Together, Puter, HuggingFace } from 'https://g4f.dev/dist/js/client.js';
-  import { Client, PollinationsAI, DeepInfra, Worker, Puter, HuggingFace } from "../dist/js/client.js";
+  import providers, { createClient }  from "../dist/js/providers.js";
   
   import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
@@ -154,42 +146,15 @@
   // Set the initial height of the container to fit the viewport
   document.querySelector(".container").style.maxHeight = window.innerHeight + "px";
 
+  for (const key of Object.keys(providers)) {
+      providerSelect.appendChild(new Option(key, key));
+  }
+
   async function initClient() {
     const provider = providerSelect.value;
     const apiKey = apiKeyInput.value.trim();
     const options = apiKey ? { apiKey } : {};
-    let ClientClass;
-
-    switch (provider) {
-      case 'pollinations':
-        ClientClass = PollinationsAI;
-        break;
-      case 'deepinfra':
-        ClientClass = DeepInfra;
-        break;
-      case 'huggingface':
-        ClientClass = HuggingFace;
-        break;
-      case 'together':
-        ClientClass = Together;
-        break;
-      case 'puter':
-        ClientClass = Puter;
-        break;
-      case 'azure':
-        ClientClass = Client;
-        break;
-      case 'worker':
-        ClientClass = Worker;
-        break;
-      case 'airforce':
-        ClientClass = Client;
-        options.baseUrl = 'https://api.airforce/v1';
-        options.apiKey = localStorage.getItem('ApiAirforce-api_key');
-        break;
-    }
-
-    client = new ClientClass(options);
+    client = createClient(provider, options);
     await loadModels();
   }
 

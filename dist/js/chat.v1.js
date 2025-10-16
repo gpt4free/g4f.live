@@ -1521,7 +1521,7 @@ setInterval(() => {
     if (autoScrollEnabled) {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
-}, 500);
+}, 200);
 
 chatBody.addEventListener('scroll', () => {
     const atBottom = chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 40;
